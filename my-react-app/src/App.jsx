@@ -9,6 +9,7 @@ const App = () => {
       
       <Hero /> {/* Include the Hero component */}
       
+
       {/* Other components and content */}
       
       <Footer /> {/* Include the Footer component */}
