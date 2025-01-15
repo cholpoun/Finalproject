@@ -1,6 +1,7 @@
-import Navbar from './components/Navbar'; // Correct relative path to Navbar
-import Footer from './components/Footer'; // Correct relative path to Footer
-import Hero from './components/Hero'; // Correct relative path to Hero
+import Navbar from './components/Navbar'; 
+import Footer from './components/Footer'; 
+import Hero from './components/Hero'; 
+import FestivalCard from './components/FestivalCard';
 
 const App = () => {
   return (
@@ -9,7 +10,7 @@ const App = () => {
       
       <Hero /> {/* Include the Hero component */}
       
-
+      <FestivalCard /> {/* Include the Hero component */}
       {/* Other components and content */}
       
       <Footer /> {/* Include the Footer component */}
