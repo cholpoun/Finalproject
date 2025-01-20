@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import users from '../models/users.json' assert { type: 'json' };
-import festivals from '../models/festivals.json' assert { type: 'json' };
+// import users from '../models/users.json' assert { type: 'json' };
+// import festivals from '../models/festivals.json' assert { type: 'json' };
 
 export const purchaseTicket = (req, res) => {
   const { userId, festivalId, quantity } = req.body;
@@ -43,8 +43,8 @@ export const purchaseTicket = (req, res) => {
   user.purchasedTickets.push(newTicket);
 
   // Write changes back to JSON files
-  fs.writeFileSync(path.resolve('./models/users.json'), JSON.stringify(users, null, 2));
-  fs.writeFileSync(path.resolve('./models/festivals.json'), JSON.stringify(festivals, null, 2));
+  fs.writeFileSync(path.resolve('./data/users.json'), JSON.stringify(users, null, 2));
+  fs.writeFileSync(path.resolve('./data/festivals.json'), JSON.stringify(festivals, null, 2));
 
   res.status(201).json({
     message: "Ticket purchased successfully",

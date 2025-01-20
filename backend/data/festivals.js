@@ -1,15 +1,13 @@
-[
+export const festivals = [
     {
-        "id": 1,
         "name": "Arctic Beats",
         "location": "Tromsø, Norge",
         "genre": "Electronic",
         "date": "2025-07-10",
         "ticketPrice": 950,
-        "availableTickets": 100
+        "availableTickets": 100,
     },
     {
-        "id": 2,
         "name": "Copenhagen Jazz Festival",
         "location": "Köpenhamn, Danmark",
         "genre": "Jazz",
@@ -18,7 +16,6 @@
         "availableTickets": 120
     },
     {
-        "id": 3,
         "name": "Stockholm Indie Nights",
         "location": "Stockholm, Sverige",
         "genre": "Indie",
@@ -27,7 +24,6 @@
         "availableTickets": 90
     },
     {
-        "id": 4,
         "name": "Göteborg Rock Weekend",
         "location": "Göteborg, Sverige",
         "genre": "Rock",
@@ -36,7 +32,6 @@
         "availableTickets": 150
     },
     {
-        "id": 5,
         "name": "Oslo Metal Fest",
         "location": "Oslo, Norge",
         "genre": "Metal",
@@ -45,7 +40,6 @@
         "availableTickets": 80
     },
     {
-        "id": 6,
         "name": "Malmö Pop Sensation",
         "location": "Malmö, Sverige",
         "genre": "Pop",
@@ -54,7 +48,6 @@
         "availableTickets": 200
     },
     {
-        "id": 7,
         "name": "Helsinki Folk Festival",
         "location": "Helsingfors, Finland",
         "genre": "Folk",
@@ -63,7 +56,6 @@
         "availableTickets": 50
     },
     {
-        "id": 8,
         "name": "Bergen Beats",
         "location": "Bergen, Norge",
         "genre": "Electronic",
@@ -72,7 +64,6 @@
         "availableTickets": 100
     },
     {
-        "id": 9,
         "name": "Aarhus Summer Groove",
         "location": "Aarhus, Danmark",
         "genre": "Indie",
@@ -81,7 +72,6 @@
         "availableTickets": 120
     },
     {
-        "id": 10,
         "name": "Luleå Arctic Jazz",
         "location": "Luleå, Sverige",
         "genre": "Jazz",

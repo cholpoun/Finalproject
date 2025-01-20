@@ -1,30 +1,47 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import ticketRoutes from './routes/ticketRoutes.js';
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
+import ticketRoutes from "./routes/ticketRoutes.js";
+import festivalRouter from "./routes/festivalsRoutes.js";
 
+// Load environment variables
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Load the JSON data files
-const festivals = JSON.parse(fs.readFileSync(path.resolve('./models/festivals.json')));
-const users = JSON.parse(fs.readFileSync(path.resolve('./models/users.json')));
-const tickets = JSON.parse(fs.readFileSync(path.resolve('./models/tickets.json')));
+// Connect to MongoDB
+const connectToDB = async () => {
+  try {
+    const mongoUri = process.env.MONGO_URI;
+    await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+  }
+};
 
-// Handle GET request to the root route
+connectToDB();
+
+// Load the JSON data files (updated to include the import assertion)
+import {festivals} from './data/festivals.js';
+import users from './data/users.json' assert { type: 'json' };
+import tickets from './data/tickets.json' assert { type: 'json' };
+
+
+
+// API overview and documentation
 app.get("/", (req, res) => {
   res.send(`
     <h1>Welcome to the Festival API!</h1>
     <h2>Available Endpoints:</h2>
     <ul>
-      <li><strong>GET /</strong>: Welcome message and API overview</li>
-      <li><strong>GET /festivals/:id</strong>: Get festival by ID</li>
-      <li><strong>GET /festivals</strong>: Get all festivals</li> 
+      <li><strong>GET /festivals</strong>: Get all festivals</li>
+      <li><strong>GET /festivals/:id</strong>: Get a single festival by ID</li>
       <li><strong>POST /signup</strong>: Sign up a new user</li>
       <li><strong>POST /login</strong>: Log in a user</li>
       <li><strong>GET /users/:id/favourites</strong>: Get user's favourites</li>
@@ -35,19 +52,17 @@ app.get("/", (req, res) => {
   `);
 });
 
-// Get all festivals
-app.get("/festivals", (req, res) => {
-  res.json(festivals);
-});
+// Route to get all festivals using festivalRouter
+app.use("/festivals", festivalRouter);
 
-// Get festival by ID
-app.get("/festivals/:id", (req, res) => {
-  const festival = festivals.find(f => f.id === req.params.id);
-  if (!festival) {
-    return res.status(404).json({ message: "Festival not found" });
-  }
-  res.json(festival);
-});
+// Route to get festival by ID (using hardcoded data for now)
+// app.get("/festivals/:id", (req, res) => {
+//   const festival = festivals.find(f => f.id === parseInt(req.params.id));
+//   if (!festival) {
+//     return res.status(404).json({ message: "Festival not found" });
+//   }
+//   res.json(festival);
+// });
 
 // Sign up endpoint
 app.post("/signup", (req, res) => {
@@ -61,7 +76,7 @@ app.post("/signup", (req, res) => {
     return res.status(400).json({ message: "User already exists" });
   }
 
-  const newUser = { name, email, password };
+  const newUser = { id: users.length + 1, name, email, password };
   users.push(newUser);
   res.status(201).json({ message: "User created", user: newUser });
 });
@@ -79,7 +94,7 @@ app.post("/login", (req, res) => {
 
 // Get user favourites (simulate with an empty array)
 app.get("/users/:id/favourites", (req, res) => {
-  const user = users.find(user => user.id === req.params.id);
+  const user = users.find(user => user.id === parseInt(req.params.id));
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
@@ -88,7 +103,7 @@ app.get("/users/:id/favourites", (req, res) => {
 
 // Get user orders (simulate with an empty array)
 app.get("/users/:id/orders", (req, res) => {
-  const user = users.find(user => user.id === req.params.id);
+  const user = users.find(user => user.id === parseInt(req.params.id));
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
@@ -98,6 +113,23 @@ app.get("/users/:id/orders", (req, res) => {
 // Get all tickets
 app.get("/tickets", (req, res) => {
   res.json(tickets);
+});
+
+// Ticket purchase endpoint (simulated)
+app.post("/tickets/purchase", (req, res) => {
+  const { userId, festivalId, quantity } = req.body;
+  const festival = festivals.find(f => f.id === festivalId);
+  if (!festival) {
+    return res.status(404).json({ message: "Festival not found" });
+  }
+
+  if (festival.availableTickets < quantity) {
+    return res.status(400).json({ message: "Not enough tickets available" });
+  }
+
+  festival.availableTickets -= quantity;
+  tickets.push({ userId, festivalId, quantity });
+  res.status(201).json({ message: "Tickets purchased successfully" });
 });
 
 app.use('/tickets', ticketRoutes);
