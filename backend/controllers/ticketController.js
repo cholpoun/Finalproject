@@ -1,53 +1,55 @@
-import fs from 'fs';
-import path from 'path';
-// import users from '../models/users.json' assert { type: 'json' };
-// import festivals from '../models/festivals.json' assert { type: 'json' };
+import Festival from "../models/Festivals.js";
+import User from "../models/User.js";
+import Ticket from "../models/Ticket.js";
 
-export const purchaseTicket = (req, res) => {
+export const purchaseTickets = async (req, res) => {
   const { userId, festivalId, quantity } = req.body;
 
-  if (!userId || !festivalId || !quantity) {
-    return res.status(400).json({ message: "User ID, Festival ID, and quantity are required" });
+  try {
+    const festival = await Festival.findById(festivalId);
+    if (!festival) {
+      return res.status(404).json({ message: "Festival not found" });
+    }
+
+    if (festival.availableTickets < quantity) {
+      return res.status(400).json({ message: "Not enough tickets available" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const totalPrice = festival.ticketPrice * quantity;
+
+    // Skapa biljett
+    const ticket = new Ticket({
+      festivalId,
+      userId,
+      quantity,
+      totalPrice,
+    });
+    await ticket.save();
+
+    // Uppdatera användarens köphistorik
+    user.purchasedTickets.push({
+      festivalId,
+      quantity,
+      purchaseDate: new Date(),
+    });
+    await user.save();
+
+    // Uppdatera tillgängliga biljetter för festivalen
+    festival.availableTickets -= quantity;
+    await festival.save();
+
+    res.status(201).json({
+      message: "Tickets purchased successfully",
+      ticket,
+      user,
+      festival,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error processing ticket purchase", error });
   }
-
-  const user = users.find(u => u.id === userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  const festival = festivals.find(f => f.id === festivalId);
-  if (!festival) {
-    return res.status(404).json({ message: "Festival not found" });
-  }
-
-  const quantityInt = parseInt(quantity, 10);
-  if (isNaN(quantityInt) || quantityInt <= 0) {
-    return res.status(400).json({ message: "Quantity must be a positive integer" });
-  }
-
-  if (festival.availableTickets < quantityInt) {
-    return res.status(400).json({ message: "Not enough tickets available" });
-  }
-
-  festival.availableTickets -= quantityInt;
-
-  const newTicket = {
-    festivalId,
-    quantity: quantityInt,
-    purchaseDate: new Date().toISOString()
-  };
-
-  if (!user.purchasedTickets) {
-    user.purchasedTickets = [];
-  }
-  user.purchasedTickets.push(newTicket);
-
-  // Write changes back to JSON files
-  fs.writeFileSync(path.resolve('./data/users.json'), JSON.stringify(users, null, 2));
-  fs.writeFileSync(path.resolve('./data/festivals.json'), JSON.stringify(festivals, null, 2));
-
-  res.status(201).json({
-    message: "Ticket purchased successfully",
-    ticket: newTicket
-  });
 };
