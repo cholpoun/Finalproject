@@ -28,9 +28,9 @@ const connectToDB = async () => {
 connectToDB();
 
 // Load the JSON data files (updated to include the import assertion)
-import {festivals} from './data/festivals.js';
-import users from './data/users.json' assert { type: 'json' };
-import tickets from './data/tickets.json' assert { type: 'json' };
+import { festivals } from './data/festivals.js';
+import { users } from './data/users.js';
+import { tickets } from './data/tickets.js';
 
 
 
