@@ -1,13 +1,11 @@
 [
   {
-    "id": 1,
     "festivalId": 1,
     "userId": 1,
     "quantity": 2,
     "totalPrice": 900
   },
   {
-    "id": 2,
     "festivalId": 2,
     "userId": 2,
     "quantity": 1,

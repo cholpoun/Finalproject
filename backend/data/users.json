@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "username": "johndoe",
     "email": "johndoe@example.com",
     "password": "hashed_password",
@@ -18,7 +17,6 @@
     ]
   },
   {
-    "id": 2,
     "username": "janedoe",
     "email": "janedoe@example.com",
     "password": "hashed_password",
