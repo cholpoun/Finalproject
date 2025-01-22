@@ -4,9 +4,10 @@ const FooterContainer = styled.footer`
   background-color: #1a202c;
   color: white;
   padding: 3rem 0;
-  position: absolute;
+  position: relative;
   bottom: 0;
   width: 100%;
+  margin-top: 3rem;
 `;
 
 
