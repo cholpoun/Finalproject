@@ -132,18 +132,146 @@
 //   console.log(`Server is running on port ${port}`);
 // });
 
+// import express from "express";
+// import cors from "cors";
+// import mongoose from "mongoose";
+// import dotenv from "dotenv";
+// import ticketRoutes from "./routes/ticketRoutes.js";
+// import festivalRouter from "./routes/festivalsRoutes.js";
+// import UserModel from "./models/Users.js"; // Assuming a user model is created
+// import TicketModel from "./models/Tickets.js"; // Assuming a ticket model is created
+// import FestivalModel from "./models/Festivals.js"; // Assuming a festival model is created
+
+// // Load environment variables
+// dotenv.config();
+
+// const app = express();
+// app.use(cors());
+// app.use(express.json());
+
+// // Connect to MongoDB
+// const connectToDB = async () => {
+//   try {
+//     const mongoUri = process.env.MONGO_URI;
+//     await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+//     console.log('Connected to MongoDB');
+//   } catch (error) {
+//     console.error('Error connecting to MongoDB:', error);
+//   }
+// };
+
+// connectToDB();
+
+// // API overview and documentation
+// app.get("/", (req, res) => {
+//   res.send(`
+//     <h1>Welcome to the Festival API!</h1>
+//     <h2>Available Endpoints:</h2>
+//     <ul>
+//       <li><strong>GET /festivals</strong>: Get all festivals</li>
+//       <li><strong>GET /festivals/:id</strong>: Get a single festival by ID</li>
+//       <li><strong>POST /signup</strong>: Sign up a new user</li>
+//       <li><strong>POST /login</strong>: Log in a user</li>
+//       <li><strong>GET /users/:id/favourites</strong>: Get user's favourites</li>
+//       <li><strong>GET /users/:id/orders</strong>: Get user's orders</li>
+//       <li><strong>GET /tickets</strong>: Get all tickets</li>
+//       <li><strong>POST /tickets/purchase</strong>: Purchase tickets</li> 
+//     </ul>
+//   `);
+// });
+
+// // Route to get all festivals using festivalRouter
+// app.use("/festivals", festivalRouter);
+
+// // Sign up endpoint
+// app.post("/signup", async (req, res) => {
+//   const { name, email, password } = req.body;
+//   if (!name || !email || !password) {
+//     return res.status(400).json({ message: "Name, email, and password are required" });
+//   }
+
+//   try {
+//     const existingUser = await UserModel.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ message: "User already exists" });
+//     }
+
+//     const newUser = new UserModel({ name, email, password });
+//     await newUser.save();
+//     res.status(201).json({ message: "User created", user: newUser });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error creating user", error });
+//   }
+// });
+
+// // Login endpoint
+// app.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const user = await UserModel.findOne({ email });
+//     if (!user || user.password !== password) {
+//       return res.status(401).json({ message: "Invalid credentials" });
+//     }
+//     res.json({ message: "Login successful", user });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error logging in", error });
+//   }
+// });
+
+// // Get all tickets
+// app.get("/tickets", async (req, res) => {
+//   try {
+//     const tickets = await TicketModel.find();
+//     res.json(tickets);
+//   } catch (error) {
+//     res.status(500).json({ message: "Error retrieving tickets", error });
+//   }
+// });
+
+// // Ticket purchase endpoint
+// app.post("/tickets/purchase", async (req, res) => {
+//   const { userId, festivalId, quantity } = req.body;
+
+//   try {
+//     const festival = await FestivalModel.findById(festivalId);
+
+//     if (!festival) {
+//       return res.status(404).json({ message: "Festival not found" });
+//     }
+
+//     if (festival.availableTickets < quantity) {
+//       return res.status(400).json({ message: "Not enough tickets available" });
+//     }
+
+//     const ticket = new TicketModel({ userId, festivalId, quantity, totalPrice: festival.ticketPrice * quantity });
+//     await ticket.save();
+
+//     festival.availableTickets -= quantity;
+//     await festival.save();
+
+//     res.status(201).json({ message: "Tickets purchased successfully", ticket });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error purchasing tickets", error });
+//   }
+// });
+
+// app.use('/tickets', ticketRoutes);
+
+// // Start server
+// const port = process.env.PORT || 3000;
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
 
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import ticketRoutes from "./routes/ticketRoutes.js";
 import festivalRouter from "./routes/festivalsRoutes.js";
-import UserModel from "./models/Users.js"; // Assuming a user model is created
-import TicketModel from "./models/Tickets.js"; // Assuming a ticket model is created
-import FestivalModel from "./models/Festivals.js"; // Assuming a festival model is created
+import ticketRouter from "./routes/ticketRoutes.js";
+import userRouter from "./routes/userRoutes.js"; // Importera userRouter
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -155,112 +283,45 @@ const connectToDB = async () => {
   try {
     const mongoUri = process.env.MONGO_URI;
     await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
+    console.error("Error connecting to MongoDB:", error.message);
   }
 };
 
 connectToDB();
 
-// API overview and documentation
+// API Overview and Documentation
 app.get("/", (req, res) => {
   res.send(`
     <h1>Welcome to the Festival API!</h1>
     <h2>Available Endpoints:</h2>
     <ul>
-      <li><strong>GET /festivals</strong>: Get all festivals</li>
-      <li><strong>GET /festivals/:id</strong>: Get a single festival by ID</li>
-      <li><strong>POST /signup</strong>: Sign up a new user</li>
-      <li><strong>POST /login</strong>: Log in a user</li>
-      <li><strong>GET /users/:id/favourites</strong>: Get user's favourites</li>
-      <li><strong>GET /users/:id/orders</strong>: Get user's orders</li>
-      <li><strong>GET /tickets</strong>: Get all tickets</li>
-      <li><strong>POST /tickets/purchase</strong>: Purchase tickets</li> 
+      <li><strong>GET /festivals</strong>: Get a paginated list of all festivals</li>
+      <li><strong>GET /festivals/:id</strong>: Get details of a specific festival by ID</li>
+      <li><strong>POST /festivals/recreate-mongo-data-from-json</strong>: Recreate the MongoDB collection from JSON</li>
+      <li><strong>POST /tickets/:festivalId</strong>: Purchase tickets for a festival (authenticated users only)</li>
+      <li><strong>POST /users/favourites/:festivalId</strong>: Mark a festival as favorite (authenticated users only)</li>
+      <li><strong>GET /users/:id/profile</strong>: Get the user's profile by ID (authenticated users only)</li>
+      <li><strong>POST /signup</strong>: Register a new user</li>
+      <li><strong>POST /login</strong>: Log in an existing user</li>
     </ul>
   `);
 });
 
-// Route to get all festivals using festivalRouter
+// Routes
 app.use("/festivals", festivalRouter);
+app.use("/tickets", ticketRouter);
+app.use("/users", userRouter); // Lägg till användarspecifika rutter
 
-// Sign up endpoint
-app.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "Name, email, and password are required" });
-  }
-
-  try {
-    const existingUser = await UserModel.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    const newUser = new UserModel({ name, email, password });
-    await newUser.save();
-    res.status(201).json({ message: "User created", user: newUser });
-  } catch (error) {
-    res.status(500).json({ message: "Error creating user", error });
-  }
+// Default Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something went wrong!", details: err.message });
 });
 
-// Login endpoint
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await UserModel.findOne({ email });
-    if (!user || user.password !== password) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-    res.json({ message: "Login successful", user });
-  } catch (error) {
-    res.status(500).json({ message: "Error logging in", error });
-  }
-});
-
-// Get all tickets
-app.get("/tickets", async (req, res) => {
-  try {
-    const tickets = await TicketModel.find();
-    res.json(tickets);
-  } catch (error) {
-    res.status(500).json({ message: "Error retrieving tickets", error });
-  }
-});
-
-// Ticket purchase endpoint
-app.post("/tickets/purchase", async (req, res) => {
-  const { userId, festivalId, quantity } = req.body;
-
-  try {
-    const festival = await FestivalModel.findById(festivalId);
-
-    if (!festival) {
-      return res.status(404).json({ message: "Festival not found" });
-    }
-
-    if (festival.availableTickets < quantity) {
-      return res.status(400).json({ message: "Not enough tickets available" });
-    }
-
-    const ticket = new TicketModel({ userId, festivalId, quantity, totalPrice: festival.ticketPrice * quantity });
-    await ticket.save();
-
-    festival.availableTickets -= quantity;
-    await festival.save();
-
-    res.status(201).json({ message: "Tickets purchased successfully", ticket });
-  } catch (error) {
-    res.status(500).json({ message: "Error purchasing tickets", error });
-  }
-});
-
-app.use('/tickets', ticketRoutes);
-
-// Start server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// Start the Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
