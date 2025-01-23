@@ -62,7 +62,7 @@ const HomePage = () => {
         <FestivalGrid>
           {festivals.slice(0, 9).map((festival) => (
             <FestivalCard
-            key={festival._id} // MongoDB's unika ID
+            key={festival._id} 
             name={festival.name}
               image={festival.imageUrl}
             />

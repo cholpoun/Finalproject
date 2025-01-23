@@ -5,7 +5,7 @@ const NavbarContainer = styled.nav`
   position: top;
   top: 0;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(212, 184, 184, 0.9);
   backdrop-filter: blur(10px);
   z-index: 50;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -59,7 +59,7 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <NavbarContent>
-        <Logo>FestivalTix</Logo>
+        <Logo>NextFest</Logo>
 
         <NavLinks>
           <NavLink href="/">Home</NavLink>

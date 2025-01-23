@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const CardContainer = styled.div`
-  background-color: #f9f9f9;
+  background-color:rgb(222, 143, 143);
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;

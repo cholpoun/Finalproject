@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const FestivalPage = () => {
+const FestivalId = () => {
   const { id } = useParams(); 
   const [festival, setFestival] = useState(null);
 
@@ -31,4 +31,4 @@ const FestivalPage = () => {
   );
 };
 
-export default FestivalPage;
+export default FestivalId;
