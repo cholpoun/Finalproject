@@ -1,4 +1,4 @@
-import FestivalsList from "../components/FestivalsList"; // Justera importvägen efter din mappstruktur
+import FestivalsList from "../components/FestivalsList.jsx";
 
 const AllFestivalsPage = () => {
   return (

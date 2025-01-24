@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const CardContainer = styled.div`
-  background-color:rgb(222, 143, 143);
+  background-color: rgb(222, 143, 143);
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
@@ -21,14 +22,23 @@ const CardContainer = styled.div`
   }
 `;
 
-const FestivalCard = ({ name }) => (
-  <CardContainer>
-    <h3>{name}</h3>
-  </CardContainer>
-);
+const FestivalCard = ({ id, name }) => {
+  if (!id) return null; // Om id inte finns, rendera inget
+
+  return (
+    <CardContainer>
+      <h3>
+        <Link to={`/festivals/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          {name}
+        </Link>
+      </h3>
+    </CardContainer>
+  );
+};
 
 FestivalCard.propTypes = {
-  name: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,  // Markera id som obligatorisk
+  name: PropTypes.string.isRequired, // Markera name som obligatorisk
 };
 
 export default FestivalCard;

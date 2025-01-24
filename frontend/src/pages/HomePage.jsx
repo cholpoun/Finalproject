@@ -61,11 +61,11 @@ const HomePage = () => {
         <h2>Festivals</h2>
         <FestivalGrid>
           {festivals.slice(0, 9).map((festival) => (
-            <FestivalCard
-            key={festival._id} 
-            name={festival.name}
-              image={festival.imageUrl}
-            />
+         <FestivalCard
+         key={festival._id}
+         id={festival._id}   // Ensure you're passing the 'id'
+         name={festival.name}
+       />       
           ))}
         </FestivalGrid>
       </FestivalSection>

@@ -6,10 +6,10 @@ import AllFestivalsPage from "../pages/AllFestivalsPage.jsx";
 
 const AppRoutes = () => (
   <Routes>
-    
+
     <Route path="/" element={<HomePage />} /> 
 
-    <Route path="/festival/:id" element={<FestivalId />} />
+    <Route path="/festivals/:id" element={<FestivalId />} />
 
     <Route path="/festivals" element={<AllFestivalsPage />} />
 

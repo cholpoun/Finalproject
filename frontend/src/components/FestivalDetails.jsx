@@ -2,10 +2,11 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 const FestivalDetails = () => {
-  const { id } = useParams();  // Hämtar id från URL
+  const { id } = useParams(); // Hämtar id från URL
   const [festival, setFestival] = useState(null);
 
   useEffect(() => {
+    if (!id) return; // Om id saknas, gör inget anrop
     const fetchFestival = async () => {
       try {
         const response = await fetch(`https://finalproject-vol6.onrender.com/festivals/${id}`);
