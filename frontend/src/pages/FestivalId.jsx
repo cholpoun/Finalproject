@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 const FestivalDetails = () => {
-  const { id } = useParams();  // Hämtar id från URL
+  const { id } = useParams();  
   const [festival, setFestival] = useState(null);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ const FestivalDetails = () => {
       try {
         const response = await fetch(`https://finalproject-vol6.onrender.com/festivals/${id}`);
         const data = await response.json();
-        setFestival(data);  // Sätt festivaldata när den har hämtats
+        setFestival(data);  
       } catch (error) {
         console.error('Error fetching festival details:', error);
       }

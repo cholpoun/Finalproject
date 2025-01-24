@@ -1,6 +1,6 @@
 import FestivalsList from "../components/FestivalsList.jsx";
 
-const AllFestivalsPage = () => {
+const AllFestivals = () => {
   return (
     <div>
       <h1>All Festivals</h1>
@@ -9,4 +9,4 @@ const AllFestivalsPage = () => {
   );
 };
 
-export default AllFestivalsPage;
+export default AllFestivals;

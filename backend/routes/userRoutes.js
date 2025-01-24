@@ -6,7 +6,6 @@ import { authenticateUser } from "../middlewares/authMiddleware.js";
 
 const userRouter = express.Router();
 
-// Markera en festival som favorit
 userRouter.post("/favourites/:festivalId", authenticateUser, async (req, res) => {
   const { festivalId } = req.params;
   const userId = req.user.id;
@@ -29,7 +28,6 @@ userRouter.post("/favourites/:festivalId", authenticateUser, async (req, res) =>
   }
 });
 
-// Köp biljett till en festival
 userRouter.post("/tickets/:festivalId", authenticateUser, async (req, res) => {
   const { festivalId } = req.params;
   const userId = req.user.id;
@@ -47,7 +45,6 @@ userRouter.post("/tickets/:festivalId", authenticateUser, async (req, res) => {
 
     const totalPrice = quantity * festival.ticketPrice;
 
-    // Skapa en ny biljett
     const ticket = await TicketModel.create({
       festivalId,
       userId,
@@ -55,11 +52,9 @@ userRouter.post("/tickets/:festivalId", authenticateUser, async (req, res) => {
       totalPrice,
     });
 
-    // Minska antalet tillgängliga biljetter
     festival.availableTickets -= quantity;
     await festival.save();
 
-    // Lägg till köpet till användarens data
     const user = await UserModel.findById(userId);
     user.purchasedTickets.push({
       festivalId,
@@ -74,21 +69,18 @@ userRouter.post("/tickets/:festivalId", authenticateUser, async (req, res) => {
   }
 });
 
-// Hämta användarens profil baserat på användar-ID
 userRouter.get("/user/:id", authenticateUser, async (req, res) => {
-  const { id } = req.params; // Hämta användar-ID från URL-parametern
-  const userId = req.user.id; // Hämta autentiserad användares ID från sessionen eller token
+  const { id } = req.params; 
+  const userId = req.user.id; 
 
-  // Kontrollera om den autentiserade användaren försöker komma åt sin egen profil
   if (userId !== id) {
     return res.status(403).json({ error: "Du har inte behörighet att se den här profilen" });
   }
 
   try {
-    // Hämta användarens data baserat på användar-ID
     const user = await UserModel.findById(id)
-      .populate("purchasedTickets.festivalId", "name location date") // Populera festivaldata i köpta biljetter
-      .populate("favouriteFestivals", "name location date"); // Populera favoritfestivaldata
+      .populate("purchasedTickets.festivalId", "name location date") 
+      .populate("favouriteFestivals", "name location date"); 
 
     if (!user) {
       return res.status(404).json({ error: "Användare hittades inte" });

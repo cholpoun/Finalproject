@@ -9,7 +9,6 @@ const FestivalsList = () => {
   const [locationFilter, setLocationFilter] = useState("");
 
   useEffect(() => {
-    // Hämta festivaldata från API
     axios
       .get("https://finalproject-vol6.onrender.com/festivals")
       .then((response) => {
@@ -24,7 +23,6 @@ const FestivalsList = () => {
   }, []);
 
   useEffect(() => {
-    // Filtrera festivaler baserat på genre och plats
     let filtered = festivals;
 
     if (genreFilter) {
@@ -46,7 +44,6 @@ const FestivalsList = () => {
     return <div>Loading...</div>;
   }
 
-  // Extrahera unika genre och location baserat på festivaldata
   const uniqueGenres = [...new Set(festivals.map(festival => festival.genre))];
   const uniqueLocations = [
     ...new Set(festivals.map(festival => festival.location.split(",")[1].trim()))

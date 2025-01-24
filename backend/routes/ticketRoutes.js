@@ -6,27 +6,23 @@ import { authenticateUser } from "../middlewares/authMiddleware.js";
 
 const ticketRouter = express.Router();
 
-// Köp biljett till en festival
 ticketRouter.post("/:festivalId", authenticateUser, async (req, res) => {
   const { festivalId } = req.params;
-  const userId = req.user.id; // ID från inloggad användare
+  const userId = req.user.id; 
   const { quantity } = req.body;
 
   try {
-    // Kontrollera om festivalen finns
     const festival = await FestivalModel.findById(festivalId);
     if (!festival) {
       return res.status(404).json({ error: "Festival hittades inte" });
     }
 
-    // Kontrollera om det finns tillräckligt många biljetter
     if (festival.availableTickets < quantity) {
       return res.status(400).json({ error: "Otillräckligt antal biljetter" });
     }
 
     const totalPrice = quantity * festival.ticketPrice;
 
-    // Skapa en ny biljett
     const ticket = await TicketModel.create({
       festivalId,
       userId,
@@ -34,11 +30,9 @@ ticketRouter.post("/:festivalId", authenticateUser, async (req, res) => {
       totalPrice,
     });
 
-    // Uppdatera festivalens antal tillgängliga biljetter
     festival.availableTickets -= quantity;
     await festival.save();
 
-    // Uppdatera användarens profil med den köpta biljetten
     await UserModel.findByIdAndUpdate(
       userId,
       {

@@ -312,7 +312,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/festivals", festivalRouter);
 app.use("/tickets", ticketRouter);
-app.use("/users", userRouter); // Lägg till användarspecifika rutter
+app.use("/users", userRouter); 
 
 // Default Error Handling Middleware
 app.use((err, req, res, next) => {
