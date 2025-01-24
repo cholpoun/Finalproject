@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import HomePage from "../pages/HomePage.jsx";
-import FestivalId from "../pages/FestivalId.jsx";
+import FestivalDetails from "../pages/FestivalDetailsPage.jsx";
 import TicketPage from "../pages/TicketPage.jsx";
 import AllFestivals from "../pages/AllFestivalsPage.jsx";
 
@@ -9,7 +9,7 @@ const AppRoutes = () => (
 
     <Route path="/" element={<HomePage />} /> 
 
-    <Route path="/festivals/:id" element={<FestivalId />} />
+    <Route path="/festivals/:id" element={<FestivalDetails />} />
 
     <Route path="/festivals" element={<AllFestivals />} />
 

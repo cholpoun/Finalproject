@@ -1,34 +1,17 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import FestivalCard from '../components/FestivalCard.jsx';
-import Footer from '../components/Footer.jsx';
 import Navbar from '../components/Navbar.jsx';
-
-
+import FestivalsList from '../components/FestivalsList.jsx';
+import Footer from '../components/Footer.jsx';
 
 const FestivalSection = styled.section`
   text-align: center;
   margin: 32px 16px;
+  padding-top: 4rem;
 
   h2 {
     font-size: 2rem;
     margin-bottom: 24px;
-  }
-`;
-
-const FestivalGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px;
-
-  @media (min-width: 768px) {
-    gap: 24px;
-  }
-
-  @media (min-width: 1024px) {
-    gap: 32px;
-    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
@@ -55,21 +38,10 @@ const HomePage = () => {
   return (
     <>
       <Navbar />
-     
-
       <FestivalSection>
         <h2>Festivals</h2>
-        <FestivalGrid>
-          {festivals.slice(0, 9).map((festival) => (
-         <FestivalCard
-         key={festival._id}
-         id={festival._id}   // Ensure you're passing the 'id'
-         name={festival.name}
-       />       
-          ))}
-        </FestivalGrid>
+        <FestivalsList festivals={festivals.slice(0, 9)} displayMode="default" />
       </FestivalSection>
-
       <Footer />
     </>
   );

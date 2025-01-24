@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Heart, User } from 'lucide-react';
+import { Heart, User, Menu, X } from 'lucide-react';
 
 const NavbarContainer = styled.nav`
-  position: top;
+  position: fixed;
   top: 0;
   width: 100%;
   background-color: rgba(212, 184, 184, 0.9);
@@ -30,12 +31,12 @@ const Logo = styled.div`
 `;
 
 const NavLinks = styled.div`
-  display: none;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 
-  @media (min-width: 768px) {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
+  @media (max-width: 768px) {
+    display: none; /* Hide nav links on mobile */
   }
 `;
 
@@ -55,24 +56,98 @@ const NavLink = styled(Link)`
   }
 `;
 
+const NavbarIcons = styled.div`
+  display: flex;
+  gap: 1.5rem;
+  margin-left: auto;
+  margin-right: 1.5rem;
+`;
+
+const HamburgerMenu = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    cursor: pointer;
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+`;
+
+const Sidebar = styled.div`
+  position: fixed;
+  top: 4rem;
+  right: 0;
+  height: 100%;
+  width: auto;
+  background-color: rgba(212, 184, 184, 0.9);
+  z-index: 100;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(100%); /* Start the sidebar off-screen */
+
+  &.open {
+    transform: translateX(0); 
+  }
+`;
+
+const SidebarLinks = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  background-color: rgba(212, 184, 184, 0.9); 
+
+  & a {
+    color: inherit;
+    font-size: 1.5rem;
+  }
+`;
+
 const Navbar = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
     <NavbarContainer>
       <NavbarContent>
         <Logo>NextFest</Logo>
 
+        <NavbarIcons>
+          <NavLink to="/profile">
+            <User /> 
+          </NavLink>
+          <NavLink to="/favorites">
+            <Heart /> 
+          </NavLink>
+        </NavbarIcons>
+
         <NavLinks>
           <NavLink to="/">Home</NavLink>
           <NavLink to="/about">About Us</NavLink>
           <NavLink to="/festivals">Festivals</NavLink>
-          <NavLink to="/profile">
-            <User /> Profile
-          </NavLink>
-          <NavLink to="/favorites">
-            <Heart /> Favorites
-          </NavLink>
         </NavLinks>
+
+        <HamburgerMenu onClick={toggleSidebar}>
+          {isSidebarOpen ? <X /> : <Menu />} {/* Toggle between X and Hamburger */}
+        </HamburgerMenu>
       </NavbarContent>
+
+      <Sidebar className={isSidebarOpen ? 'open' : ''}>
+        <SidebarLinks>
+          <NavLink to="/" onClick={closeSidebar}>Home</NavLink>
+          <NavLink to="/about" onClick={closeSidebar}>About Us</NavLink>
+          <NavLink to="/festivals" onClick={closeSidebar}>Festivals</NavLink>
+        </SidebarLinks>
+      </Sidebar>
     </NavbarContainer>
   );
 };
