@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Heart, User } from 'lucide-react';
 
@@ -38,7 +39,7 @@ const NavLinks = styled.div`
   }
 `;
 
-const NavLink = styled.a`
+const NavLink = styled(Link)`
   transition: color 0.3s;
   color: inherit;
 
@@ -54,7 +55,6 @@ const NavLink = styled.a`
   }
 `;
 
-
 const Navbar = () => {
   return (
     <NavbarContainer>
@@ -62,18 +62,16 @@ const Navbar = () => {
         <Logo>NextFest</Logo>
 
         <NavLinks>
-          <NavLink href="/">Home</NavLink>
-          <NavLink href="/about">About Us</NavLink>
-          <NavLink href="/festivals">Festivals</NavLink>
-          <NavLink href="/profile">
+          <NavLink to="/">Home</NavLink>
+          <NavLink to="/about">About Us</NavLink>
+          <NavLink to="/festivals">Festivals</NavLink>
+          <NavLink to="/profile">
             <User /> Profile
           </NavLink>
-          <NavLink href="/favorites">
+          <NavLink to="/favorites">
             <Heart /> Favorites
           </NavLink>
         </NavLinks>
-
-    
       </NavbarContent>
     </NavbarContainer>
   );
