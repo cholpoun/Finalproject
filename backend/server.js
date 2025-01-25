@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";  // Importera jsonwebtoken för JWT-hantering
+import jwt from "jsonwebtoken";  
 import festivalRouter from "./routes/festivalsRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
-import userRouter from "./routes/userRouter.js"; // Importera userRouter
+import userRoutes from "./routes/userRoutes.js"; 
 
 dotenv.config();
 
@@ -15,6 +15,11 @@ app.use(express.json());
 
 // Hämta JWT_SECRET från miljövariabler
 const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {
+  console.error("JWT_SECRET is not defined in the .env file");
+  process.exit(1); // Exit the process if the JWT_SECRET is not found
+}
 
 // Connect to MongoDB
 const connectToDB = async () => {
@@ -41,8 +46,8 @@ app.get("/", (req, res) => {
       <li><strong>POST /tickets/:festivalId</strong>: Purchase tickets for a festival (authenticated users only)</li>
       <li><strong>POST /users/favourites/:festivalId</strong>: Mark a festival as favorite (authenticated users only)</li>
       <li><strong>GET /users/:id/profile</strong>: Get the user's profile by ID (authenticated users only)</li>
-      <li><strong>POST /signup</strong>: Register a new user</li>
-      <li><strong>POST /login</strong>: Log in an existing user</li>
+      <li><strong>POST /users/register</strong>: Register a new user</li>
+      <li><strong>POST /users/login</strong>: Log in an existing user</li>
     </ul>
     <h2>Authentication:</h2>
     <p>For endpoints requiring authentication, please provide a JWT token in the Authorization header as a Bearer token.</p>
@@ -52,7 +57,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/festivals", festivalRouter);
 app.use("/tickets", ticketRouter);
-app.use("/users", userRouter); 
+app.use("/users", userRoutes);
 
 // Middleware för att verifiera JWT (autentisering)
 const authenticate = (req, res, next) => {
