@@ -14,6 +14,13 @@ const UserSchema = new mongoose.Schema({
   ],
 });
 
+// Ta bort lösenord från svaret
+UserSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
+
 const UserModel = mongoose.model("users", UserSchema);
 
 export default UserModel;
