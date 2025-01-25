@@ -3,6 +3,9 @@ import HomePage from "../pages/HomePage.jsx";
 import FestivalDetails from "../pages/FestivalDetailsPage.jsx";
 import TicketPage from "../pages/TicketPage.jsx";
 import AllFestivals from "../pages/AllFestivalsPage.jsx";
+import AuthPage from "../pages/AuthPage.jsx";
+import ProfilePage from "../pages/ProfilePage.jsx";
+
 
 const AppRoutes = () => (
   <Routes>
