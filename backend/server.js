@@ -38,56 +38,60 @@ app.get("/", (req, res) => {
   res.json({
     message: "Welcome to the Festival API! Here are the available endpoints:",
     description: {
-      "/festivals": "Get a list of all festivals",
+      "/festivals": "Get a paginated list of all festivals",
       "/festivals/:id": "Get details of a specific festival",
       "/festivals/recreate-mongo-data-from-json": "Recreate the MongoDB collection from JSON",
-      "/tickets/:festivalId": "Purchase tickets for a festival (authenticated users only)",
-      "/users/favourites/:festivalId": "Mark a festival as favorite (authenticated users only)",
-      "/users/:id/profile": "Get the user's profile (authenticated users only)",
+      "/tickets/:festivalId": "Purchase tickets for a specific festival (authenticated users only)",
       "/users/register": "Register a new user",
       "/users/login": "Log in an existing user",
-      "/profil": "User profile"
+      "/users/profile": "Get the profile of the currently logged-in user (authenticated users only)"
     },
     endpoints: [
       {
         path: "/festivals",
         methods: ["GET"],
-        middlewares: ["anonymous"]
+        middlewares: ["anonymous"],
+        description: "Get a paginated list of all festivals"
       },
       {
         path: "/festivals/:id",
         methods: ["GET"],
-        middlewares: ["anonymous"]
+        middlewares: ["anonymous"],
+        description: "Get details of a specific festival"
+      },
+      {
+        path: "/festivals/recreate-mongo-data-from-json",
+        methods: ["GET"],
+        middlewares: ["anonymous"],
+        description: "Recreate the MongoDB collection from JSON"
       },
       {
         path: "/tickets/:festivalId",
         methods: ["POST"],
-        middlewares: ["authenticated"]
-      },
-      {
-        path: "/users/favourites/:festivalId",
-        methods: ["POST"],
-        middlewares: ["authenticated"]
-      },
-      {
-        path: "/users/:id/profile",
-        methods: ["GET"],
-        middlewares: ["authenticated"]
+        middlewares: ["authenticated"],
+        description: "Purchase tickets for a specific festival"
       },
       {
         path: "/users/register",
         methods: ["POST"],
-        middlewares: ["anonymous"]
+        middlewares: ["anonymous"],
+        description: "Register a new user"
       },
       {
         path: "/users/login",
         methods: ["POST"],
-        middlewares: ["anonymous"]
+        middlewares: ["anonymous"],
+        description: "Log in an existing user"
+      },
+      {
+        path: "/users/profile",
+        methods: ["GET"],
+        middlewares: ["authenticated"],
+        description: "Get the profile of the currently logged-in user"
       }
     ]
   });
 });
-
 
 // Routes
 app.use("/festivals", festivalRouter);
@@ -124,7 +128,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start the Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

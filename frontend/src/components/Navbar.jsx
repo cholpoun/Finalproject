@@ -119,7 +119,9 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <NavbarContent>
+      <NavLink to="/">
         <Logo>NextFest</Logo>
+        </NavLink>
 
         <NavbarIcons>
           <NavLink to="/profile">

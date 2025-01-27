@@ -9,7 +9,7 @@ const FestivalTickets = ({ festivalId, userToken }) => {
   useEffect(() => {
     const fetchFestival = async () => {
       try {
-        const response = await fetch(`https://finalproject-vol6.onrender.com/festivals/${festivalId}`);
+        const response = await fetch(`http://localhost:3000/festivals/${festivalId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch festival information");
         }

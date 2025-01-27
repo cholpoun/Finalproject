@@ -22,7 +22,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchFestivals = async () => {
       try {
-        const response = await fetch('https://finalproject-vol6.onrender.com/festivals');
+        const response = await fetch('http://localhost:3000/festivals');
         const data = await response.json();
         console.log('API Response:', data);
         setFestivals(Array.isArray(data.data) ? data.data : []);

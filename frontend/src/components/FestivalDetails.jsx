@@ -9,7 +9,7 @@ const FestivalDetails = () => {
     if (!id) return; 
     const fetchFestival = async () => {
       try {
-        const response = await fetch(`https://finalproject-vol6.onrender.com/festivals/${id}`);
+        const response = await fetch(`http://localhost:3000/festivals/${id}`);
         const data = await response.json();
         setFestival(data);  
       } catch (error) {

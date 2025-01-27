@@ -1,37 +1,41 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate for v6
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [token, setToken] = useState('');
-  const navigate = useNavigate(); // useNavigate instead of useHistory
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    console.log('Submit button clicked')
+
     if (!email || !password) {
-      setMessage('All fields are required.');
+      setMessage('Alla fält är obligatoriska.');
       return;
     }
-  
+
     try {
-      const response = await axios.post('https://finalproject-vol6.onrender.com/users/login', { email, password });
+      const response = await axios.post('http://localhost:3000/users/login', { email, password });
       const { token } = response.data;
-      localStorage.setItem('token', token);  // Save token in localStorage
-      setToken(token);
-      setMessage('Login successful!');
-      navigate('/profile');  // Redirect to user profile page
+console.log(response.data);
+      // Spara JWT-token i localStorage
+      localStorage.setItem('token', token);
+
+      // Visa ett meddelande och navigera användaren till /profile
+      setMessage('Inloggning lyckades!');
+      navigate('/profile');
     } catch (error) {
-      setMessage(error.response?.data?.error || 'Failed to log in.');
+      console.error(error);
+      setMessage(error.response?.data?.error || 'Inloggningen misslyckades.');
     }
   };
-  
+
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Logga In</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -42,15 +46,14 @@ const Login = () => {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Lösenord"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Log In</button>
+        <button type="submit">Logga In</button>
       </form>
       {message && <p>{message}</p>}
-      {token && <p>Your JWT token: {token}</p>}
     </div>
   );
 };
