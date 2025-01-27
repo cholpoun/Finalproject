@@ -5,7 +5,7 @@ import {festivals} from "../data/festivals.js";
 
 const festivalRouter = express.Router();  // Correct router initialization
 
-// *** (WARNING) RE-CREATES ALL DATA in the Festival Collection ***
+// *** (WARNING) RE-CREATES ALL DATA in the Festival Collection ***node server.js
 festivalRouter.get("/recreate-mongo-data-from-json", async (req, res)=> {
  try { 
     const deleteNullResults  = await FestivalModel.deleteMany({ _id: null });

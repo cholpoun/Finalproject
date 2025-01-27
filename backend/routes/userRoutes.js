@@ -46,9 +46,9 @@ router.post(
         password: hashedPassword,
       });
 
-      await newUser.save();
+      const result = await newUser.save();
 
-      res.status(201).json({ message: "Användare registrerad" });
+      res.status(201).json({ message: "Användare registrerad", result });
     } catch (error) {
       res.status(500).json({ error: "Kunde inte registrera användaren", details: error.message });
     }
@@ -81,10 +81,12 @@ router.post(
       }
 
       // Skapa JWT-token
-      const token = jwt.sign({ userId: user._id, email: user.email }, jwtSecret, { expiresIn: "1h" });
+      const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET , { expiresIn: "1h" });
 
+      console.log("Inloggning lyckades", { user, token})
       res.json({ message: "Inloggning lyckades", token });
     } catch (error) {
+      console.error({error, jwtSecret})
       res.status(500).json({ error: "Fel vid inloggning", details: error.message });
     }
   }
