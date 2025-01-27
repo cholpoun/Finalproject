@@ -15,7 +15,7 @@ const AppRoutes = () => (
 
     <Route path="/festivals" element={<AllFestivals />} />
 
-    <Route path="/auth" element={<AuthPage />} /> 
+    <Route path="/users/authenticate" element={<AuthPage />} /> 
 
     <Route path="/profile" element={<ProfilePage />} />
 

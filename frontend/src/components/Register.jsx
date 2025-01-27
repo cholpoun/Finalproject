@@ -1,31 +1,35 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Importera useNavigate för v6
+import { useNavigate } from 'react-router-dom';
 
-const SignupPage = () => {
+const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();  // useNavigate från v6
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // Skicka data till API
-      const response = await axios.post('https://finalproject-vol6.onrender.com/signup', { username, email, password });
-      console.log(response.data); 
-      alert('Signup successful!');
-      navigate('/login');  // Omdirigera till inloggningssidan
-    } catch (error) {
-      console.error('Error signing up:', error);
-      alert('Signup failed!');
+  
+    if (!username || !email || !password) {
+      setMessage('All fields are required.');
+      return;
     }
-  };
+  
+    try {
+      await axios.post('https://finalproject-vol6.onrender.com/signup', { username, email, password });
+      setMessage('Registration successful!');
+      navigate('/login');
+    } catch (error) {
+      setMessage(error.response?.data?.error || 'Failed to register user.');
+    }
+  };  
 
   return (
     <div>
       <h1>Sign Up</h1>
-      <form onSubmit={handleSignup}>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Username"
@@ -47,10 +51,11 @@ const SignupPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Sign Up</button>
+        <button type="submit">Register</button>
       </form>
+      {message && <p>{message}</p>}
     </div>
   );
 };
 
-export default SignupPage;
+export default Register;

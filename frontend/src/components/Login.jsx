@@ -1,49 +1,54 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate for v6
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [token, setToken] = useState('');
+  const navigate = useNavigate(); // useNavigate instead of useHistory
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
-      setMessage('Alla fält är obligatoriska.');
+      setMessage('All fields are required.');
       return;
     }
 
     try {
-      const response = await axios.post('/login', { email, password });
+      const response = await axios.post('https://finalproject-vol6.onrender.com/login', { email, password });
       setToken(response.data.token);
-      setMessage('Inloggning lyckades!');
+      setMessage('Login successful!');
+      navigate('/profile'); // Redirect to user profile page
     } catch (error) {
-      setMessage(error.response?.data?.error || 'Kunde inte logga in användaren.');
+      setMessage(error.response?.data?.error || 'Failed to log in.');
     }
   };
 
   return (
     <div>
-      <h2>Logga in</h2>
+      <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="E-post"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
-          placeholder="Lösenord"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <button type="submit">Logga in</button>
+        <button type="submit">Log In</button>
       </form>
       {message && <p>{message}</p>}
-      {token && <p>Din JWT-token: {token}</p>}
+      {token && <p>Your JWT token: {token}</p>}
     </div>
   );
 };
