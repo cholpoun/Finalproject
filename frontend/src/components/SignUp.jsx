@@ -1,33 +1,25 @@
-import { useState } from "react";
+import { useState } from 'react';
+import axios from 'axios';
 
 const SignUp = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Behåller error och visar det vid behov.
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!username || !email || !password) {
+      setMessage('Alla fält är obligatoriska.');
+      return;
+    }
+
     try {
-      const response = await fetch("http://localhost:5000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Registrering misslyckades");
-      }
-
-      const data = await response.json();
-      console.log("Registrerad användare:", data);
-
-      // Rensa fel om registreringen lyckas
-      setError(null);
-    } catch (err) {
-      setError(err.message); // Sätt error med felmeddelandet
+      const response = await axios.post('/signup', { username, email, password });
+      setMessage(response.data.message); // Visa meddelande från servern, t.ex. "Registrering lyckades!"
+    } catch (error) {
+      setMessage(error.response?.data?.error || 'Kunde inte registrera användaren.');
     }
   };
 
@@ -35,33 +27,27 @@ const SignUp = () => {
     <div>
       <h2>Registrera dig</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Användarnamn:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label>
-          Lösenord:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
+        <input
+          type="text"
+          placeholder="Användarnamn"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="E-post"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Lösenord"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <button type="submit">Registrera</button>
       </form>
-      {error && <p className="error">{error}</p>} {/* Visa felmeddelandet */}
+      {message && <p>{message}</p>}
     </div>
   );
 };

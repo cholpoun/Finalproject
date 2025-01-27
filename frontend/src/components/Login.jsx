@@ -1,32 +1,26 @@
-import { useState } from "react";
+import { useState } from 'react';
+import axios from 'axios';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Behåller error och visar det vid behov.
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [token, setToken] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!email || !password) {
+      setMessage('Alla fält är obligatoriska.');
+      return;
+    }
+
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Inloggning misslyckades");
-      }
-
-      const data = await response.json();
-      console.log("Inloggad användare:", data);
-
-      // Rensa fel om inloggningen lyckas
-      setError(null);
-    } catch (err) {
-      setError(err.message); // Sätt error med felmeddelandet
+      const response = await axios.post('/login', { email, password });
+      setToken(response.data.token);
+      setMessage('Inloggning lyckades!');
+    } catch (error) {
+      setMessage(error.response?.data?.error || 'Kunde inte logga in användaren.');
     }
   };
 
@@ -34,25 +28,22 @@ const Login = () => {
     <div>
       <h2>Logga in</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label>
-          Lösenord:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
+        <input
+          type="email"
+          placeholder="E-post"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Lösenord"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <button type="submit">Logga in</button>
       </form>
-      {error && <p className="error">{error}</p>} {/* Visa felmeddelandet */}
+      {message && <p>{message}</p>}
+      {token && <p>Din JWT-token: {token}</p>}
     </div>
   );
 };

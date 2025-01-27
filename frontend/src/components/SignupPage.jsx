@@ -1,21 +1,21 @@
-//Komponent för registrering av användare.
-
 import { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';  // Importera useNavigate för v6
 
 const SignupPage = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();  // useNavigate från v6
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://finalproject-vol6.onrender.com/signup', { email, password });
+      // Skicka data till API
+      const response = await axios.post('https://finalproject-vol6.onrender.com/signup', { username, email, password });
       console.log(response.data); 
       alert('Signup successful!');
-      history.push('/login'); // Redirect to login page
+      navigate('/login');  // Omdirigera till inloggningssidan
     } catch (error) {
       console.error('Error signing up:', error);
       alert('Signup failed!');
@@ -26,6 +26,13 @@ const SignupPage = () => {
     <div>
       <h1>Sign Up</h1>
       <form onSubmit={handleSignup}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
         <input
           type="email"
           placeholder="Email"

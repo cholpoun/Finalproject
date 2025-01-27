@@ -13,12 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Hämta JWT_SECRET från miljövariabler
 const jwtSecret = process.env.JWT_SECRET;
 
 if (!jwtSecret) {
   console.error("JWT_SECRET is not defined in the .env file");
-  process.exit(1); // Exit the process if the JWT_SECRET is not found
+  process.exit(1); 
 }
 
 // Connect to MongoDB
@@ -36,23 +35,59 @@ connectToDB();
 
 // API Overview and Documentation
 app.get("/", (req, res) => {
-  res.send(`
-    <h1>Welcome to the Festival API!</h1>
-    <h2>Available Endpoints:</h2>
-    <ul>
-      <li><strong>GET /festivals</strong>: Get a paginated list of all festivals</li>
-      <li><strong>GET /festivals/:id</strong>: Get details of a specific festival by ID</li>
-      <li><strong>POST /festivals/recreate-mongo-data-from-json</strong>: Recreate the MongoDB collection from JSON</li>
-      <li><strong>POST /tickets/:festivalId</strong>: Purchase tickets for a festival (authenticated users only)</li>
-      <li><strong>POST /users/favourites/:festivalId</strong>: Mark a festival as favorite (authenticated users only)</li>
-      <li><strong>GET /users/:id/profile</strong>: Get the user's profile by ID (authenticated users only)</li>
-      <li><strong>POST /users/register</strong>: Register a new user</li>
-      <li><strong>POST /users/login</strong>: Log in an existing user</li>
-    </ul>
-    <h2>Authentication:</h2>
-    <p>For endpoints requiring authentication, please provide a JWT token in the Authorization header as a Bearer token.</p>
-  `);
+  res.json({
+    message: "Welcome to the Festival API! Here are the available endpoints:",
+    description: {
+      "/festivals": "Get a list of all festivals",
+      "/festivals/:id": "Get details of a specific festival",
+      "/festivals/recreate-mongo-data-from-json": "Recreate the MongoDB collection from JSON",
+      "/tickets/:festivalId": "Purchase tickets for a festival (authenticated users only)",
+      "/users/favourites/:festivalId": "Mark a festival as favorite (authenticated users only)",
+      "/users/:id/profile": "Get the user's profile (authenticated users only)",
+      "/users/register": "Register a new user",
+      "/users/login": "Log in an existing user",
+      "/profil": "User profile"
+    },
+    endpoints: [
+      {
+        path: "/festivals",
+        methods: ["GET"],
+        middlewares: ["anonymous"]
+      },
+      {
+        path: "/festivals/:id",
+        methods: ["GET"],
+        middlewares: ["anonymous"]
+      },
+      {
+        path: "/tickets/:festivalId",
+        methods: ["POST"],
+        middlewares: ["authenticated"]
+      },
+      {
+        path: "/users/favourites/:festivalId",
+        methods: ["POST"],
+        middlewares: ["authenticated"]
+      },
+      {
+        path: "/users/:id/profile",
+        methods: ["GET"],
+        middlewares: ["authenticated"]
+      },
+      {
+        path: "/users/register",
+        methods: ["POST"],
+        middlewares: ["anonymous"]
+      },
+      {
+        path: "/users/login",
+        methods: ["POST"],
+        middlewares: ["anonymous"]
+      }
+    ]
+  });
 });
+
 
 // Routes
 app.use("/festivals", festivalRouter);
