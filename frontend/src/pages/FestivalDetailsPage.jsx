@@ -1,7 +1,9 @@
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import styled from 'styled-components';
 import FestivalDetails from '../components/FestivalDetails.jsx';  
+import FestivalTickets from '../components/Tickets.jsx';
 
 const FestivalDetailsSection = styled.section`
   text-align: center;
@@ -20,6 +22,8 @@ const FestivalDetailsSection = styled.section`
 `;
 
 const FestivalDetailsPage = () => {
+  const { id: festivalId } = useParams();  // Get the festival ID from the route params
+
   return (
     <>
       <Navbar />
@@ -27,10 +31,11 @@ const FestivalDetailsPage = () => {
         <Link to="/festivals" style={{ marginBottom: '1rem', display: 'inline-block' }}>
           ← Festivals
         </Link>
-        
-        <FestivalDetails /> {/* Använd komponenten här */}
-        
+        <FestivalDetails /> 
       </FestivalDetailsSection>
+      <div>
+        <FestivalTickets festivalId={festivalId} userToken="YOUR_USER_TOKEN" /> {/* Pass festivalId */}
+      </div>
     </>
   );
 };

@@ -11,22 +11,24 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!email || !password) {
       setMessage('All fields are required.');
       return;
     }
-
+  
     try {
       const response = await axios.post('https://finalproject-vol6.onrender.com/login', { email, password });
-      setToken(response.data.token);
+      const { token } = response.data;
+      localStorage.setItem('token', token);  // Save token in localStorage
+      setToken(token);
       setMessage('Login successful!');
-      navigate('/profile'); // Redirect to user profile page
+      navigate('/profile');  // Redirect to user profile page
     } catch (error) {
       setMessage(error.response?.data?.error || 'Failed to log in.');
     }
   };
-
+  
   return (
     <div>
       <h1>Login</h1>

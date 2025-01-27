@@ -22,6 +22,7 @@ const TicketPage = () => {
   };
 
   return (
+    <>
     <div>
       <h1>Purchase Tickets for Festival {festivalId}</h1>
       <input
@@ -35,6 +36,7 @@ const TicketPage = () => {
         {purchasing ? 'Purchasing...' : 'Purchase Ticket'}
       </button>
     </div>
+      </>
   );
 };
 
