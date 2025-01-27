@@ -18,7 +18,7 @@ const Login = () => {
     }
   
     try {
-      const response = await axios.post('https://finalproject-vol6.onrender.com/login', { email, password });
+      const response = await axios.post('https://finalproject-vol6.onrender.com/users/login', { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token);  // Save token in localStorage
       setToken(token);
