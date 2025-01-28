@@ -7,7 +7,7 @@ const FestivalSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   ticketPrice: { type: Number, required: true },
   availableTickets: { type: Number, required: true },
-  photo: {type: String, required: false},
+  imageUrl: { type: String, required: true }, // Länk till bilden i Cloudinary
 });
 
 const FestivalModel = mongoose.model("festivals", FestivalSchema);

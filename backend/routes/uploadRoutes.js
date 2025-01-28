@@ -1,18 +1,27 @@
-// import express from 'express';
-// import { parser } from '../middlewares/cloudinaryConfig.js';
+import express from "express";
+import { parser } from "../config/cloudinaryConfig.js";
+import Image from "../models/Image.js";
 
-// const router = express.Router();
+const router = express.Router();
 
-// // Define an upload route
-// router.post('/upload', parser.single('image'), (req, res) => {
-//   try {
-//     // Access the uploaded file details
-//     const fileUrl = req.file.path; // Cloudinary URL of the uploaded file
-//     res.status(200).json({ success: true, fileUrl });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: 'Upload failed', error });
-//   }
-// });
+// Uppladdnings-API
+router.post("/", parser.single("image"), async (req, res) => {
+  try {
+    const { path, filename } = req.file;
 
-// export default router;
+    // Spara metadata i MongoDB
+    const image = new Image({
+      url: path, // Cloudinary URL
+      public_id: filename, // Public ID
+    });
+
+    await image.save();
+
+    res.status(200).json({ message: "Image uploaded and saved!", image });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ error: "Upload failed" });
+  }
+});
+
+export default router;

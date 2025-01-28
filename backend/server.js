@@ -6,67 +6,76 @@ import jwt from "jsonwebtoken";
 import festivalRouter from "./routes/festivalsRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import uploadRoutes from './routes/uploadRoutes.js'; // Corrected path
+import uploadRoutes from "./routes/uploadRoutes.js";
 
-dotenv.config();
+dotenv.config(); // Ladda miljövariabler tidigt
 
 const app = express();
 
-// CORS configuration - allow only your frontend URL
-app.use(cors({
-  origin: 'http://localhost:5173', // Your React frontend's URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-}));
+// CORS-konfiguration - Tillåt bara din frontend-URL
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Din React frontends URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // Tillåtna HTTP-metoder
+    allowedHeaders: ["Content-Type", "Authorization"], // Tillåtna headers
+  })
+);
 
-app.use(express.json());
+app.use(express.json()); // Middleware för att hantera JSON-data
 
 // Routes
 app.use("/festivals", festivalRouter);
 app.use("/tickets", ticketRouter);
 app.use("/users", userRoutes);
-app.use('/upload', uploadRoutes); // Corrected usage
+app.use("/upload", uploadRoutes); // Upload-routes för filhantering
 
-// JWT Authentication Middleware
+// JWT Autentisering Middleware
 const authenticate = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {
-    return res.status(401).json({ error: 'No token, authorization denied' });
+    return res.status(401).json({ error: "Ingen token, åtkomst nekad" });
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: "Ogiltig token" });
   }
 };
 
-// Protected Route Example
-app.get('/users/:id/profile', authenticate, (req, res) => {
-  const userProfile = { userId: req.user.userId, username: "JohnDoe" }; // Example
+// Exempel på skyddad route
+app.get("/users/:id/profile", authenticate, (req, res) => {
+  const userProfile = { userId: req.user.userId, username: "JohnDoe" }; // Exempeldata
   res.json(userProfile);
 });
 
-// Error Handling Middleware
+// Felhantering Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!", details: err.message });
+  res.status(500).json({
+    error: "Något gick fel!",
+    details: err.message,
+  });
 });
 
-// Connect to MongoDB
+// Anslutning till MongoDB
 const connectToDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log("Connected to MongoDB");
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Ansluten till MongoDB");
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error.message);
+    console.error("Fel vid anslutning till MongoDB:", error.message);
+    process.exit(1); // Avsluta processen om databasen inte ansluter
   }
 };
 connectToDB();
 
-// Start the Server
+// Starta servern
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Servern körs på http://localhost:${PORT}`);
 });

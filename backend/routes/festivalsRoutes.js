@@ -2,7 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import FestivalModel from "../models/Festivals.js"; // Import your Festival model
 import { festivals } from "../data/festivals.js";
-import { parser } from "../middlewares/cloudinaryConfig.js"; // Import Cloudinary parser
 
 const festivalRouter = express.Router(); // Router initialization
 
@@ -13,26 +12,15 @@ festivalRouter.get("/recreate-mongo-data-from-json", async (req, res) => {
     const deleteResults = await FestivalModel.deleteMany({});
     console.log("Deleted old data", { deleteNullResults, deleteResults });
 
-    const createResults = await FestivalModel.insertMany(festivals, { rawResult: true });
+    const createResults = await FestivalModel.insertMany(festivals, {
+      rawResult: true,
+    });
     console.log("Re-created data from JSON file", { createResults });
 
     res.sendStatus(201);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
-  }
-});
-
-// Route to upload a festival image
-festivalRouter.post("/upload", parser.single("image"), async (req, res) => {
-  try {
-    // Access the uploaded file's Cloudinary URL
-    const imageUrl = req.file.path;
-
-    res.status(200).json({ message: "Image uploaded successfully", imageUrl });
-  } catch (error) {
-    console.error("Image upload failed", error);
-    res.status(500).json({ error: "Failed to upload image", details: error.message });
   }
 });
 
@@ -54,7 +42,9 @@ festivalRouter.get("/", async (req, res) => {
       totalItems,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch festivals", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch festivals", details: error.message });
   }
 });
 
@@ -70,7 +60,9 @@ festivalRouter.get("/:id", async (req, res) => {
 
     res.json(festival);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch festival", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch festival", details: error.message });
   }
 });
 
