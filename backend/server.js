@@ -2,11 +2,12 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";  
+import jwt from "jsonwebtoken";
 import festivalRouter from "./routes/festivalsRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
-import userRoutes from "./routes/userRoutes.js"; 
-
+import userRoutes from "./routes/userRoutes.js";
+import imgRouter from "./routes/imgRoutes.js";
+import { parser } from "./config/cloudinaryConfig.js";
 
 dotenv.config();
 
@@ -45,7 +46,9 @@ app.get("/", (req, res) => {
       "/tickets/:festivalId": "Purchase tickets for a specific festival (authenticated users only)",
       "/users/register": "Register a new user",
       "/users/login": "Log in an existing user",
-      "/users/profile": "Get the profile of the currently logged-in user (authenticated users only)"
+      "/users/profile": "Get the profile of the currently logged-in user (authenticated users only)",
+      "/img": "Upload an image and save metadata to the database",
+      "/home": "Upload an image directly to Cloudinary and return URL and ID"
     },
     endpoints: [
       {
@@ -85,10 +88,22 @@ app.get("/", (req, res) => {
         description: "Log in an existing user"
       },
       {
-        path: "/users/profile",
-        methods: ["GET"],
+        "path": "/users/profile",
+        "methods": ["GET"],
+        "middlewares": ["authenticateUser"],
+        "description": "Get the profile of the currently logged-in user"
+      },
+      {
+        path: "/img",
+        methods: ["POST"],
         middlewares: ["authenticated"],
-        description: "Get the profile of the currently logged-in user"
+        description: "Upload an image and save metadata to the database"
+      },
+      {
+        path: "/home",
+        methods: ["POST"],
+        middlewares: ["anonymous"],
+        description: "Upload an image directly to Cloudinary and return URL and ID"
       }
     ]
   });
@@ -98,27 +113,28 @@ app.get("/", (req, res) => {
 app.use("/festivals", festivalRouter);
 app.use("/tickets", ticketRouter);
 app.use("/users", userRoutes);
+app.use('/img', imgRouter);
 
-// Middleware för att verifiera JWT (autentisering)
+// Middleware to Verify JWT (Authentication)
 const authenticate = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', ''); // Hämta token från headers
+  const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
     return res.status(401).json({ error: 'No token, authorization denied' });
   }
 
   try {
-    const decoded = jwt.verify(token, jwtSecret); // Verifiera token
-    req.user = decoded;  // Lägg till den dekodade användarinformationen i request
-    next();  // Gå vidare till nästa middleware eller ruta
+    const decoded = jwt.verify(token, jwtSecret);
+    req.user = decoded;
+    next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
 
-// Skyddad rutt som kräver autentisering
+// Protected Route (Requires Authentication)
 app.get('/users/:id/profile', authenticate, (req, res) => {
-  const userProfile = { userId: req.user.userId, username: "JohnDoe" }; // Detta är en exempelprofil, ersätt med riktig logik.
+  const userProfile = { userId: req.user.userId, username: "JohnDoe" }; // Example profile
   res.json(userProfile);
 });
 

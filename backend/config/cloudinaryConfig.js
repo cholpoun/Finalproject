@@ -1,27 +1,21 @@
-import cloudinaryFramework from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-const cloudinary = cloudinaryFramework.v2;
-
-// Configure Cloudinary
+// Konfigurera Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // From .env
-  api_key: process.env.CLOUDINARY_API_KEY,      // From .env
-  api_secret: process.env.CLOUDINARY_API_SECRET // From .env
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure Cloudinary Storage
+// Konfigurera CloudinaryStorage för Multer
 const storage = new CloudinaryStorage({
-  cloudinary,
+  cloudinary: cloudinary,
   params: {
-    folder: 'pets', // Folder name in Cloudinary
-    allowed_formats: ['jpg', 'png'], // Allowed image formats
-    transformation: [{ width: 500, height: 500, crop: 'limit' }], // Resize options
+    folder: 'festival-images', // Cloudinary-mapp för att spara bilder
+    allowed_formats: ['jpg', 'png', 'jpeg'],
   },
 });
 
-// Set up Multer parser
-const parser = multer({ storage });
-
-export { cloudinary, parser };
+const parser = multer({ storage }); // Multer konfigurerad för Cloudinary
