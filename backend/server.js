@@ -7,6 +7,7 @@ import festivalRouter from "./routes/festivalsRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
 import userRoutes from "./routes/userRoutes.js"; 
 
+
 dotenv.config();
 
 const app = express();
