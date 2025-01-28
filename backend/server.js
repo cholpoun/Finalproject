@@ -11,7 +11,14 @@ import uploadRoutes from './routes/uploadRoutes.js'; // Corrected path
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// CORS configuration - allow only your frontend URL
+app.use(cors({
+  origin: 'http://localhost:5173', // Your React frontend's URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+}));
+
 app.use(express.json());
 
 // Routes

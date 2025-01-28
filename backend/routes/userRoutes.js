@@ -8,7 +8,7 @@ import { authenticateUser } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 const jwtSecret = process.env.JWT_SECRET;
 
-// Centraliserad funktion för att hantera valideringsfel
+// Centralized function to handle validation errors
 const handleValidationErrors = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -16,30 +16,34 @@ const handleValidationErrors = (req, res) => {
   }
 };
 
-// Registrering av användare
+// User registration
 router.post(
   "/register",
   [
-    body("username").notEmpty().withMessage("Användarnamn är obligatoriskt"),
-    body("email").isEmail().withMessage("Ogiltig e-postadress"),
-    body("password").isLength({ min: 6 }).withMessage("Lösenordet måste vara minst 6 tecken"),
+    body("username").notEmpty().withMessage("Username is required"),
+    body("email").isEmail().withMessage("Invalid email address"),
+    body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
   ],
   async (req, res) => {
-    handleValidationErrors(req, res);
+    const validationErrorResponse = handleValidationErrors(req, res);
+    if (validationErrorResponse) return validationErrorResponse;
 
-    const { username, email, password } = req.body;
+    let { username, email, password } = req.body;
+
+    // Convert email to lowercase
+    email = email.toLowerCase();
 
     try {
-      // Kontrollera om användaren redan finns
+      // Check if the user already exists
       const existingUser = await UserModel.findOne({ email });
       if (existingUser) {
-        return res.status(400).json({ error: "Användaren finns redan" });
+        return res.status(400).json({ error: "User already exists" });
       }
 
-      // Hasha lösenordet
+      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Skapa en ny användare
+      // Create a new user
       const newUser = new UserModel({
         username,
         email,
@@ -48,58 +52,60 @@ router.post(
 
       const result = await newUser.save();
 
-      res.status(201).json({ message: "Användare registrerad", result });
+      res.status(201).json({ message: "User registered", result });
     } catch (error) {
-      res.status(500).json({ error: "Kunde inte registrera användaren", details: error.message });
+      res.status(500).json({ error: "Could not register user", details: error.message });
     }
   }
 );
 
-// Inloggning av användare
+// User login
 router.post(
   "/login",
   [
-    body("email").isEmail().withMessage("Ogiltig e-postadress"),
-    body("password").notEmpty().withMessage("Lösenord är obligatoriskt"),
+    body("email").isEmail().withMessage("Invalid email address"),
+    body("password").notEmpty().withMessage("Password is required"),
   ],
   async (req, res) => {
-    handleValidationErrors(req, res);
+    const validationErrorResponse = handleValidationErrors(req, res);
+    if (validationErrorResponse) return validationErrorResponse;
 
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+    // Convert email to lowercase
+    email = email.toLowerCase();
 
     try {
-      // Hitta användaren i databasen
+      // Find the user in the database
       const user = await UserModel.findOne({ email });
       if (!user) {
-        return res.status(400).json({ error: "Användaren finns inte" });
+        return res.status(400).json({ error: "User not found" });
       }
 
-      // Kontrollera lösenordet
+      // Check if the password is correct
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).json({ error: "Felaktigt lösenord" });
+        return res.status(400).json({ error: "Incorrect password" });
       }
 
-      // Skapa JWT-token
-      const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET , { expiresIn: "1h" });
+      // Create a JWT token
+      const token = jwt.sign({ userId: user._id, email: user.email }, jwtSecret, { expiresIn: "1h" });
 
-      console.log("Inloggning lyckades", { user, token})
-      res.json({ message: "Inloggning lyckades", token });
+      res.json({ message: "Login successful", token });
     } catch (error) {
-      console.error({error, jwtSecret})
-      res.status(500).json({ error: "Fel vid inloggning", details: error.message });
+      res.status(500).json({ error: "Login failed", details: error.message });
     }
   }
 );
 
-// Visa användarprofil
+// View user profile
 router.get("/profile", authenticateUser, async (req, res) => {
   try {
-    const user = req.user; // `req.user` sätts av `authenticateUser`-middleware
+    const user = req.user; // `req.user` is set by `authenticateUser` middleware
     res.status(200).json({ user });
   } catch (error) {
-    res.status(500).json({ error: "Fel vid hämtning av användarprofil", details: error.message });
+    res.status(500).json({ error: "Failed to retrieve user profile", details: error.message });
   }
 });
 
-export default router;
+export default router; // Correct export

@@ -14,7 +14,7 @@ const Profile = () => {
 
       if (!token) {
         setMessage('Ingen token funnen. Du måste logga in först.');
-        navigate('/users/login');
+        navigate('/users/authenticate');
         return;
       }
 
@@ -27,7 +27,7 @@ const Profile = () => {
         console.error(error);
         setMessage('Misslyckades med att hämta profilen.');
         localStorage.removeItem('token'); // Rensar token vid fel
-        navigate('/login');
+        navigate('/users/authenticate');
       }
     };
 
