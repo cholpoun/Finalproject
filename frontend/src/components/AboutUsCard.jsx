@@ -1,92 +1,96 @@
-import AspectRatio from '@mui/joy/AspectRatio';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import IconButton from '@mui/joy/IconButton';
-import Typography from '@mui/joy/Typography';
-
 const AboutUsCard = () => {
   return (
-    <div>
-      <h2>About US</h2>
-      <p>Hey we met at Technigo.</p>
-    <Card sx={{ width: 320 }}>
-      <div>
-        <Typography level="title-lg">Nella</Typography>
-        <Typography level="body-sm">April 24 to May 02, 2021</Typography>
-        <IconButton
-          variant="plain"
-          color="neutral"
-          size="sm"
-          sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }}
-        >
-          {/* <BookmarkAdd /> */}
-        </IconButton>
-      </div>
-      <AspectRatio minHeight="120px" maxHeight="200px">
-        <img
-          src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-          srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-          loading="lazy"
-          alt=""
-        />
-      </AspectRatio>
-      <CardContent orientation="horizontal">
-        <div>
-          <Typography level="body-xs">Total price:</Typography>
-          <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>$2,900</Typography>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h2 style={styles.heading}>About Us</h2>
+        <p style={styles.description}>
+          We are a team of passionate individuals dedicated to providing you with the best experience. Our mission is to make your life easier and more enjoyable through our innovative solutions.
+        </p>
+
+        <div style={styles.columns}>
+          {/* Column 1 */}
+          <div style={styles.column}>
+            <img
+              src="https://media.licdn.com/dms/image/v2/D4E03AQGldh7m-J00pw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1711381838628?e=1743638400&v=beta&t=ZlKi8TVwgFkbdTKDDdfGEHuilSX9cMH_lB-5ITV6DE4"
+              alt="Team"
+              style={styles.image}
+            />
+            <h3 style={styles.subHeading}>Our Team</h3>
+            <p style={styles.text}>
+              Meet our talented team of professionals who are passionate about what they do.
+            </p>
+          </div>
+
+          {/* Column 2 */}
+          <div style={styles.column}>
+            <img
+              src="https://media.licdn.com/dms/image/v2/D4D03AQEDlUvCLFPr2w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1723646065626?e=1743638400&v=beta&t=7L3cH081ym7SECyLyTBvJ2-Mq9xcDJapFkdlkIf1Jno"
+              alt="Mission"
+              style={styles.image}
+            />
+            <h3 style={styles.subHeading}>Our Mission</h3>
+            <p style={styles.text}>
+              We strive to deliver innovative solutions that make a difference in your life.
+            </p>
+          </div>
         </div>
-        <Button
-          variant="solid"
-          size="md"
-          color="primary"
-          aria-label="Explore Bahamas Islands"
-          sx={{ ml: 'auto', alignSelf: 'center', fontWeight: 600 }}
-        >
-          Explore
-        </Button>
-      </CardContent>
-    </Card>
-    <Card sx={{ width: 320 }}>
-      <div>
-        <Typography level="title-lg">Nella</Typography>
-        <Typography level="body-sm">April 24 to May 02, 2021</Typography>
-        <IconButton
-          variant="plain"
-          color="neutral"
-          size="sm"
-          sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }}
-        >
-          {/* <BookmarkAdd /> */}
-        </IconButton>
       </div>
-      <AspectRatio minHeight="120px" maxHeight="200px">
-        <img
-          src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-          srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-          loading="lazy"
-          alt=""
-        />
-      </AspectRatio>
-      <CardContent orientation="horizontal">
-        <div>
-          <Typography level="body-xs">Total price:</Typography>
-          <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>$2,900</Typography>
-        </div>
-        <Button
-          variant="solid"
-          size="md"
-          color="primary"
-          aria-label="Explore Bahamas Islands"
-          sx={{ ml: 'auto', alignSelf: 'center', fontWeight: 600 }}
-        >
-          Explore
-        </Button>
-      </CardContent>
-    </Card>
     </div>
   );
-}
+};
 
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center', // Horizontally center
+    alignItems: 'center', // Vertically center
+    height: '100vh', // Full viewport height
+    backgroundColor: '#121212', // Optional: Add a background color to contrast with the card
+  },
+  card: {
+    backgroundColor: 'black',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(238, 229, 229, 0.1)',
+    maxWidth: '800px',
+    margin: '0 auto',
+    textAlign: 'center',
+    color: 'white',
+  },
+  heading: {
+    fontSize: '2rem',
+    marginBottom: '1rem',
+  },
+  description: {
+    fontSize: '1rem',
+    marginBottom: '2rem',
+  },
+  columns: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '2rem',
+    justifyContent: 'center',
+  },
+  column: {
+    flex: '1 1 300px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  image: {
+    width: '120px',
+    height: '120px',
+    borderRadius: '50%',
+    marginBottom: '1rem',
+  },
+  subHeading: {
+    fontSize: '1.25rem',
+    marginBottom: '0.5rem',
+  },
+  text: {
+    fontSize: '1rem',
+    lineHeight: '1.5',
+  },
+};
 
 export default AboutUsCard;

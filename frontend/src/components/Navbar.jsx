@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Heart, User, Menu, X } from 'lucide-react';
@@ -43,6 +43,7 @@ const NavLinks = styled.div`
 const NavLink = styled(Link)`
   transition: color 0.3s;
   color: inherit;
+  text-decoration: none;
 
   &:hover {
     color: #6b46c1;
@@ -63,16 +64,19 @@ const NavbarIcons = styled.div`
   margin-right: 1.5rem;
 `;
 
-const HamburgerMenu = styled.div`
+const HamburgerMenu = styled.button`
   display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
 
   @media (max-width: 768px) {
     display: block;
-    cursor: pointer;
-    svg {
-      width: 2rem;
-      height: 2rem;
-    }
+  }
+
+  svg {
+    width: 2rem;
+    height: 2rem;
   }
 `;
 
@@ -88,7 +92,7 @@ const Sidebar = styled.div`
   transform: translateX(100%); /* Start the sidebar off-screen */
 
   &.open {
-    transform: translateX(0); 
+    transform: translateX(0);
   }
 `;
 
@@ -97,16 +101,19 @@ const SidebarLinks = styled.div`
   flex-direction: column;
   gap: 1.5rem;
   align-items: center;
-  background-color: rgba(212, 184, 184, 0.9); 
+  background-color: rgba(212, 184, 184, 0.9);
+  padding: 1rem;
 
   & a {
     color: inherit;
     font-size: 1.5rem;
+    text-decoration: none;
   }
 `;
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const sidebarRef = useRef(null);
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -116,19 +123,36 @@ const Navbar = () => {
     setIsSidebarOpen(false);
   };
 
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        closeSidebar();
+      }
+    };
+
+    if (isSidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSidebarOpen]);
+
   return (
     <NavbarContainer>
       <NavbarContent>
-      <NavLink to="/">
-        <Logo>NextFest</Logo>
+        <NavLink to="/">
+          <Logo>NextFest</Logo>
         </NavLink>
 
         <NavbarIcons>
-          <NavLink to="/profile">
-            <User /> 
+          <NavLink to="/profile" aria-label="Profile">
+            <User />
           </NavLink>
-          <NavLink to="/favorites">
-            <Heart /> 
+          <NavLink to="/favorites" aria-label="Favorites">
+            <Heart />
           </NavLink>
         </NavbarIcons>
 
@@ -138,16 +162,22 @@ const Navbar = () => {
           <NavLink to="/festivals">Festivals</NavLink>
         </NavLinks>
 
-        <HamburgerMenu onClick={toggleSidebar}>
-          {isSidebarOpen ? <X /> : <Menu />} {/* Toggle between X and Hamburger */}
+        <HamburgerMenu onClick={toggleSidebar} aria-label="Toggle Menu">
+          {isSidebarOpen ? <X /> : <Menu />}
         </HamburgerMenu>
       </NavbarContent>
 
-      <Sidebar className={isSidebarOpen ? 'open' : ''}>
+      <Sidebar className={isSidebarOpen ? 'open' : ''} ref={sidebarRef}>
         <SidebarLinks>
-          <NavLink to="/" onClick={closeSidebar}>Home</NavLink>
-          <NavLink to="/about" onClick={closeSidebar}>About Us</NavLink>
-          <NavLink to="/festivals" onClick={closeSidebar}>Festivals</NavLink>
+          <NavLink to="/" onClick={closeSidebar}>
+            Home
+          </NavLink>
+          <NavLink to="/about" onClick={closeSidebar}>
+            About Us
+          </NavLink>
+          <NavLink to="/festivals" onClick={closeSidebar}>
+            Festivals
+          </NavLink>
         </SidebarLinks>
       </Sidebar>
     </NavbarContainer>

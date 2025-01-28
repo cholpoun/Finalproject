@@ -1,30 +1,40 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "../pages/HomePage.jsx";
-import FestivalDetails from "../pages/FestivalDetailsPage.jsx";
-import AllFestivals from "../pages/AllFestivalsPage.jsx";
-import AuthPage from "../pages/AuthPage.jsx";
-import Profile from "../pages/UserProfilePage.jsx";
-import ProtectedRoute from "../components/ProtectedRoute.jsx"; 
+import React, { Suspense, lazy } from "react";
+import ProtectedRoute from "../components/ProtectedRoute.jsx";
+
+// Lazy-loaded components
+const HomePage = lazy(() => import("../pages/HomePage.jsx"));
+const FestivalDetails = lazy(() => import("../pages/FestivalDetailsPage.jsx"));
+const AllFestivals = lazy(() => import("../pages/AllFestivalsPage.jsx"));
+const AuthPage = lazy(() => import("../pages/AuthPage.jsx"));
+const Profile = lazy(() => import("../pages/UserProfilePage.jsx"));
+const AboutUs = lazy(() => import("../pages/AboutUs.jsx"));
+const NotFound = lazy(() => import("../pages/NotFound.jsx")); // Ensure this path is correct
 
 const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<HomePage />} /> 
+  <Suspense fallback={<div>Loading...</div>}>
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/festivals" element={<AllFestivals />} />
+      <Route path="/festivals/:id" element={<FestivalDetails />} />
+      <Route path="/users/authenticate" element={<AuthPage />} />
 
-    <Route path="/festivals/:id" element={<FestivalDetails />} />
+      {/* Protected Routes */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
 
-    <Route path="/festivals" element={<AllFestivals />} />
-
-    <Route path="/users/authenticate" element={<AuthPage />} /> 
-
-    <Route 
-      path="/profile" 
-      element={
-        <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
-      } 
-    />
-  </Routes>
+      {/* 404 Route */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </Suspense>
 );
 
 export default AppRoutes;
