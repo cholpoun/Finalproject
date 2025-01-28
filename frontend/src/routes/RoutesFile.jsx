@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 // Lazy-loaded components

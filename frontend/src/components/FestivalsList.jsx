@@ -4,7 +4,7 @@ import FestivalCard from './FestivalCard.jsx';
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(1, 1fr); 
+  grid-template-columns: repeat(1, 1fr);
   gap: 16px;
   padding: 16px;
 
@@ -21,7 +21,12 @@ const FestivalsList = ({ festivals }) => {
   return (
     <GridContainer>
       {festivals.map((festival) => (
-        <FestivalCard key={festival._id} id={festival._id} name={festival.name} />
+        <FestivalCard 
+          key={festival._id} 
+          id={festival._id} 
+          name={festival.name} 
+          imageUrl={festival.image}
+        />
       ))}
     </GridContainer>
   );
@@ -32,6 +37,7 @@ FestivalsList.propTypes = {
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired,
     })
   ).isRequired,
 };

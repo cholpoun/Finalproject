@@ -11,8 +11,8 @@ router.post("/", parser.single("image"), async (req, res) => {
 
     // Spara metadata i MongoDB
     const image = new Image({
-      url: path, // Cloudinary URL
-      public_id: filename, // Public ID
+      url: path,
+      public_id: filename,
     });
 
     await image.save();

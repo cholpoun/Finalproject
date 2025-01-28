@@ -15,7 +15,6 @@ const FestivalSection = styled.section`
   }
 `;
 
-
 const HomePage = () => {
   const [festivals, setFestivals] = useState([]);
 
@@ -25,7 +24,7 @@ const HomePage = () => {
         const response = await fetch('http://localhost:3000/festivals');
         const data = await response.json();
         console.log('API Response:', data);
-        setFestivals(Array.isArray(data.data) ? data.data : []);
+        setFestivals(data.data); // Correctly set data to state
       } catch (error) {
         console.error('Error fetching festival data:', error);
         setFestivals([]);
@@ -40,7 +39,7 @@ const HomePage = () => {
       <Navbar />
       <FestivalSection>
         <h2>Festivals</h2>
-        <FestivalsList festivals={festivals.slice(0, 9)} displayMode="default" />
+        <FestivalsList festivals={festivals.slice(0, 9)} />
       </FestivalSection>
       <Footer />
     </>
