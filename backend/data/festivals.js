@@ -6,6 +6,7 @@ export const festivals = [
         "date": "2025-07-10",
         "ticketPrice": 950,
         "availableTickets": 100,
+        "photo": "https://res.cloudinary.com/dx2p0tijc/image/upload/v1738055696/yvette-de-wit-NYrVisodQ2M-unsplash_bynece.jpg"
     },
     {
         "name": "Copenhagen Jazz Festival",

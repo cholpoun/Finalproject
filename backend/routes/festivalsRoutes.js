@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import FestivalModel from "../models/Festivals.js"; // Import your Festival model
 import { festivals } from "../data/festivals.js";
-import { parser } from "../config/cloudinaryConfig.js"; // Import Cloudinary parser
+import { parser } from "../middlewares/cloudinaryConfig.js"; // Import Cloudinary parser
 
 const festivalRouter = express.Router(); // Router initialization
 
