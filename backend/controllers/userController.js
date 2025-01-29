@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/Users.js";
 
@@ -17,22 +16,24 @@ export const signup = async (req, res) => {
         .json({ error: "E-postadressen är redan registrerad" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Skapa användaren utan att hashningen görs här
     const user = await UserModel.create({
       username,
       email,
-      password: hashedPassword,
+      password, // Lösenordet skickas oförändrat till databasen
     });
 
+    // Skapa JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
     res.status(201).json({ user, token });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Registrering misslyckades", details: error.message });
+    res.status(500).json({
+      error: "Registrering misslyckades",
+      details: error.message,
+    });
   }
 };
 

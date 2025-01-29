@@ -7,6 +7,7 @@ import festivalRouter from "./routes/festivalsRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import { authenticateUser } from "./middlewares/authMiddleware.js"; // Lägg till autentisering
 
 dotenv.config(); // Ladda miljövariabler tidigt
 
@@ -26,26 +27,12 @@ app.use(express.json()); // Middleware för att hantera JSON-data
 // Routes
 app.use("/festivals", festivalRouter);
 app.use("/tickets", ticketRouter);
-app.use("/users", userRoutes);
+app.use("/users", userRoutes); // Använd användarrutter för registrering, inloggning och profil
 app.use("/upload", uploadRoutes); // Upload-routes för filhantering
 
-// JWT Autentisering Middleware
-const authenticate = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
-  if (!token) {
-    return res.status(401).json({ error: "Ingen token, åtkomst nekad" });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ error: "Ogiltig token" });
-  }
-};
-
-// Exempel på skyddad route
-app.get("/users/:id/profile", authenticate, (req, res) => {
+// Skyddade routes exempel - Autentisering via JWT
+app.get("/users/:id/profile", authenticateUser, (req, res) => {
+  // Profilruta skyddad av JWT
   const userProfile = { userId: req.user.userId, username: "JohnDoe" }; // Exempeldata
   res.json(userProfile);
 });

@@ -47,14 +47,14 @@ router.post(
       console.log("Password before hashing:", password);
 
       // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-      console.log("Hashed password:", hashedPassword);
+      // const hashedPassword = await bcrypt.hash(password, 10);
+      // console.log("Hashed password:", hashedPassword);
 
       // Create a new user
       const newUser = new UserModel({
         username,
         email,
-        password: hashedPassword,
+        password,
       });
 
       const result = await newUser.save();
@@ -112,7 +112,7 @@ router.post(
       // Create a JWT token
       const token = jwt.sign(
         { userId: user._id, email: user.email },
-        jwtSecret,
+        process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
 
