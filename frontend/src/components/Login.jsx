@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +18,7 @@ const Login = () => {
     }
   
     try {
-      const response = await axios.post('http://localhost:3000/users/authenticate', { email, password });
+      const response = await axios.post('http://localhost:3000/users/login', { email, password });
       const { token } = response.data;
   
       // Save the JWT token in localStorage
@@ -26,19 +26,19 @@ const Login = () => {
   
       // Display success message and navigate to profile
       setMessage('Login successful!');
-      navigate('/profile');
-    } catch (error) {
-      console.error('Error details:', error); // Log complete error object
+      navigate('/users/profile');
+    } catch (err) { // Rättade från 'error' till 'err'
+      console.error('Error details:', err); // Log complete error object
   
-      if (error.response) {
-        if (error.response.status === 404) {
+      if (err.response) {
+        if (err.response.status === 404) {
           setMessage('User not found. Please check your email and try again.');
-        } else if (error.response.status === 401) {
+        } else if (err.response.status === 401) {
           setMessage('Incorrect password. Please try again.');
         } else {
           setMessage('An error occurred. Please try again later.');
         }
-      } else if (error.request) {
+      } else if (err.request) {
         // Axios request was made but no response was received
         setMessage('No response received from the server. Please check the server status.');
       } else {
@@ -47,7 +47,6 @@ const Login = () => {
       }
     }
   };
-  
 
   return (
     <div>

@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children, redirectTo = "/users/authenticate" }) => {
+const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-  return token ? children : <Navigate to={redirectTo} replace />;
+  return token ? children : <Navigate to="/users/authenticate" />;
 };
 
 // Validera att children är en React-node

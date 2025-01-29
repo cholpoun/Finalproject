@@ -23,7 +23,7 @@ const AppRoutes = () => (
 
       {/* Protected Routes */}
       <Route
-        path="/profile"
+        path="/users/profile"
         element={
           <ProtectedRoute>
             <Profile />
