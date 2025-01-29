@@ -21,10 +21,10 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next(); // Om lösenordet inte är ändrat, gör ingenting
   try {
-    console.log("Password before saving:", this.password); // Logga lösenordet innan hashning
+    console.log("Password before saving:", this.password);
 
-    const hashedPassword = await bcrypt.hash(this.password, 10); // Hasha lösenordet om det är ändrat
-    this.password = hashedPassword; // Ersätt det o-hashade lösenordet med det hashade
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashedPassword;
     next();
   } catch (err) {
     next(err);
@@ -34,7 +34,7 @@ UserSchema.pre("save", async function (next) {
 // Remove password from response (no need to expose password)
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
-  delete user.password; // Ta bort lösenordet från svaret
+  delete user.password;
   return user;
 };
 

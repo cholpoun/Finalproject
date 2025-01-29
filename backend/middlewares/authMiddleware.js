@@ -10,10 +10,8 @@ export const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    console.log("Token received:", token); // Debugging - visa den mottagna token
-
-    // Visa vilken JWT Secret som används för verifiering
-    console.log("Verifying token with secret:", process.env.JWT_SECRET);
+    // Debugging - visa den mottagna token
+    console.log("Token received:", token);
 
     // Verifiera JWT-token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -29,17 +27,19 @@ export const authenticateUser = async (req, res, next) => {
       return res.status(401).json({ error: "Invalid user" });
     }
 
-    // Kontrollera om den begärda användaren matchar den autentiserade användaren
-    console.log("Requested User ID:", req.params.id);
+    // Logga användarens ID och den begärda användaren
     console.log("Authenticated User ID:", user._id.toString());
 
-    // Om användarens ID inte matchar, ge åtkomstvägran
+    // Kontrollera om den begärda användaren matchar den autentiserade användaren
     if (user._id.toString() !== req.params.id) {
       return res.status(403).json({ error: "Access denied. User mismatch." });
     }
 
     // Fäst användaren till requesten (utan lösenord)
     req.user = user;
+
+    // Skicka användar-ID till nästa middleware eller rutt
+    req.userId = user._id.toString();
     next();
   } catch (error) {
     console.log("Error verifying token:", error.message); // Debugging - visa eventuella fel vid verifikation

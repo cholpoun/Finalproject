@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { Heart, User, Menu, X } from 'lucide-react';
+import { useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { User, Menu, X } from "lucide-react";
 
 const NavbarContainer = styled.nav`
   position: fixed;
@@ -36,7 +36,7 @@ const NavLinks = styled.div`
   gap: 2rem;
 
   @media (max-width: 768px) {
-    display: none; /* Hide nav links on mobile */
+    display: none;
   }
 `;
 
@@ -47,13 +47,6 @@ const NavLink = styled(Link)`
 
   &:hover {
     color: #6b46c1;
-  }
-
-  svg {
-    margin-right: 0.25rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    display: inline-block;
   }
 `;
 
@@ -89,7 +82,7 @@ const Sidebar = styled.div`
   background-color: rgba(212, 184, 184, 0.9);
   z-index: 100;
   transition: transform 0.3s ease-in-out;
-  transform: translateX(100%); /* Start the sidebar off-screen */
+  transform: translateX(100%);
 
   &.open {
     transform: translateX(0);
@@ -114,6 +107,7 @@ const SidebarLinks = styled.div`
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -123,22 +117,14 @@ const Navbar = () => {
     setIsSidebarOpen(false);
   };
 
-  // Close sidebar when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        closeSidebar();
-      }
-    };
-
-    if (isSidebarOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+  const handleProfileClick = () => {
+    const userId = localStorage.getItem("userId"); // Hämta userId från localStorage
+    if (userId) {
+      navigate(`/profile/${userId}`);
+    } else {
+      navigate("/users/authenticate");
     }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isSidebarOpen]);
+  };
 
   return (
     <NavbarContainer>
@@ -148,12 +134,9 @@ const Navbar = () => {
         </NavLink>
 
         <NavbarIcons>
-          <NavLink to="/profile" aria-label="Profile">
+          <button onClick={handleProfileClick} aria-label="Profile">
             <User />
-          </NavLink>
-          <NavLink to="/favorites" aria-label="Favorites">
-            <Heart />
-          </NavLink>
+          </button>
         </NavbarIcons>
 
         <NavLinks>
@@ -167,7 +150,7 @@ const Navbar = () => {
         </HamburgerMenu>
       </NavbarContent>
 
-      <Sidebar className={isSidebarOpen ? 'open' : ''} ref={sidebarRef}>
+      <Sidebar className={isSidebarOpen ? "open" : ""} ref={sidebarRef}>
         <SidebarLinks>
           <NavLink to="/" onClick={closeSidebar}>
             Home

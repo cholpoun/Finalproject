@@ -17,6 +17,7 @@ const FestivalSection = styled.section`
 
 const HomePage = () => {
   const [festivals, setFestivals] = useState([]);
+  const [favoriteFestivals, setFavoriteFestivals] = useState([]);
 
   useEffect(() => {
     const fetchFestivals = async () => {
@@ -34,12 +35,28 @@ const HomePage = () => {
     fetchFestivals();
   }, []);
 
+  const onFavoriteToggle = (festivalId) => {
+    setFavoriteFestivals((prevFavorites) => {
+      if (prevFavorites.includes(festivalId)) {
+        // Remove from favorites if already in the list
+        return prevFavorites.filter((id) => id !== festivalId);
+      } else {
+        // Add to favorites if not already in the list
+        return [...prevFavorites, festivalId];
+      }
+    });
+  };
+
   return (
     <>
       <Navbar />
       <FestivalSection>
         <h2>Festivals</h2>
-        <FestivalsList festivals={festivals.slice(0, 9)} />
+        <FestivalsList
+          festivals={festivals.slice(0, 9)}
+          favoriteFestivals={favoriteFestivals}
+          onFavoriteToggle={onFavoriteToggle} // Passing the function here
+        />
       </FestivalSection>
       <Footer />
     </>

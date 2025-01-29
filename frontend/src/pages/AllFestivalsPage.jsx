@@ -18,6 +18,9 @@ const AllFestivals = () => {
   const [genreFilter, setGenreFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [sortOption, setSortOption] = useState("");
+  const [favoriteFestivals, setFavoriteFestivals] = useState(
+    JSON.parse(localStorage.getItem("favoriteFestivals")) || []
+  );
 
   useEffect(() => {
     axios
@@ -64,6 +67,20 @@ const AllFestivals = () => {
     setFilteredFestivals(filtered);
   }, [genreFilter, locationFilter, sortOption, festivals]);
 
+  const handleFavoriteToggle = (festivalId, isFavorite) => {
+    let updatedFavorites = [...favoriteFestivals];
+    if (isFavorite) {
+      updatedFavorites.push(festivalId);
+    } else {
+      updatedFavorites = updatedFavorites.filter((id) => id !== festivalId);
+    }
+
+    setFavoriteFestivals(updatedFavorites);
+    localStorage.setItem("favoriteFestivals", JSON.stringify(updatedFavorites));
+
+    // Om användaren är inloggad, här kan du skicka uppdatering till servern via API.
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -97,7 +114,11 @@ const AllFestivals = () => {
         <SortOptions sortOption={sortOption} setSortOption={setSortOption} />
 
         {/* Festival List */}
-        <FestivalsList festivals={filteredFestivals} />
+        <FestivalsList
+          festivals={filteredFestivals}
+          favoriteFestivals={favoriteFestivals}
+          onFavoriteToggle={handleFavoriteToggle} // Funktion för att toggla favoritstatus
+        />
       </StyledSection>
     </>
   );

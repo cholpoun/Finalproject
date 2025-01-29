@@ -44,11 +44,6 @@ router.post(
 
       // Trim and log the password before hashing
       password = password.trim();
-      console.log("Password before hashing:", password);
-
-      // Hash the password
-      // const hashedPassword = await bcrypt.hash(password, 10);
-      // console.log("Hashed password:", hashedPassword);
 
       // Create a new user
       const newUser = new UserModel({
@@ -58,8 +53,6 @@ router.post(
       });
 
       const result = await newUser.save();
-      console.log("User registered with hashed password:", result.password);
-
       res.status(201).json({ message: "User registered", result });
     } catch (error) {
       res
@@ -92,19 +85,8 @@ router.post(
         return res.status(400).json({ error: "User not found" });
       }
 
-      // Trim input password and log it for debugging
-      password = password.trim();
-      console.log("Entered password (trimmed):", password);
-      console.log("Entered password length:", password.length);
-
-      // Log the stored hashed password for debugging
-      console.log("Stored hashed password:", user.password);
-      console.log("Stored hash length:", user.password.length);
-
       // Compare the entered password with the stored hashed password
       const isMatch = await bcrypt.compare(password, user.password);
-      console.log("Password match result:", isMatch); // Should be true if they match
-
       if (!isMatch) {
         return res.status(400).json({ error: "Incorrect password" });
       }
@@ -116,16 +98,12 @@ router.post(
         { expiresIn: "1h" }
       );
 
-      console.log("User ID sent in response:", user._id);
-
-      // Skicka tillbaka både token och användarens ID
       res.json({
         message: "Login successful",
         token,
-        userId: user._id, // Skicka med userId här
+        userId: user._id,
       });
     } catch (error) {
-      console.error("Login error:", error);
       res.status(500).json({ error: "Login failed", details: error.message });
     }
   }
@@ -134,9 +112,13 @@ router.post(
 // View user profile
 router.get("/:id/profile", authenticateUser, async (req, res) => {
   try {
-    console.log("Requested User ID from URL:", req.params.id); // Lägg till detta för att felsöka
+    // Här använder vi req.userId istället för req.params.id
+    const user = req.user; // `req.user` sätts av `authenticateUser` middleware
 
-    const user = req.user; // `req.user` is set by `authenticateUser` middleware
+    // Debugging: Visa användar-ID för att säkerställa att det finns
+    console.log("Requested User ID:", req.params.id); // Logga begärd ID
+    console.log("Authenticated User ID:", req.userId); // Logga autentiserad ID
+
     res.status(200).json({ user });
   } catch (error) {
     res.status(500).json({
@@ -145,5 +127,95 @@ router.get("/:id/profile", authenticateUser, async (req, res) => {
     });
   }
 });
+
+// Add a festival to favorites
+router.put(
+  "/:userId/favorite/:festivalId",
+  authenticateUser,
+  async (req, res) => {
+    const { userId, festivalId } = req.params;
+
+    try {
+      const user = await UserModel.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Check if the festival is already in the favorites list
+      const isAlreadyFavorite = user.favouriteFestivals.includes(festivalId);
+      if (isAlreadyFavorite) {
+        return res
+          .status(400)
+          .json({ error: "Festival is already in favorites" });
+      }
+
+      // Add the festival to favorites
+      user.favouriteFestivals.push(festivalId);
+      await user.save();
+
+      res.status(200).json({ message: "Festival added to favorites", user });
+    } catch (error) {
+      res.status(500).json({
+        error: "Failed to add festival to favorites",
+        details: error.message,
+      });
+    }
+  }
+);
+
+// Get user's favorite festivals
+router.get("/:userId/favorites", authenticateUser, async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ favorites: user.favouriteFestivals });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to retrieve favorite festivals",
+      details: error.message,
+    });
+  }
+});
+
+// Remove a festival from favorites
+router.delete(
+  "/:userId/favorite/:festivalId",
+  authenticateUser,
+  async (req, res) => {
+    const { userId, festivalId } = req.params;
+
+    try {
+      const user = await UserModel.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Check if the festival is in the favorites list
+      const index = user.favouriteFestivals.indexOf(festivalId);
+      if (index === -1) {
+        return res.status(400).json({ error: "Festival is not in favorites" });
+      }
+
+      // Remove the festival from favorites
+      user.favouriteFestivals.splice(index, 1);
+      await user.save();
+
+      res
+        .status(200)
+        .json({ message: "Festival removed from favorites", user });
+    } catch (error) {
+      res.status(500).json({
+        error: "Failed to remove festival from favorites",
+        details: error.message,
+      });
+    }
+  }
+);
 
 export default router;

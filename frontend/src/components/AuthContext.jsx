@@ -1,33 +1,36 @@
-// src/components/authContext.js
+// src/components/AuthContext.jsx
 import { createContext, useContext, useState } from 'react';
-import PropTypes from 'prop-types'; // PropTypes för att validera props
+import PropTypes from 'prop-types';
+import { login, logout } from './authActions';  // Importera login/logout logik
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    return token && userId ? { token, userId } : null;
+  });
 
-  const login = (userData) => {
+  const handleLogin = (userData) => {
     setUser(userData);
-    localStorage.setItem('token', userData.token);
+    login(userData);  // Hämta login funktion från authUtils
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('token');
+    logout();  // Hämta logout funktion från authUtils
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login: handleLogin, logout: handleLogout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Validering för children prop
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// Exportera useAuth för att använda contexten i andra komponenter
 export const useAuth = () => useContext(AuthContext);
