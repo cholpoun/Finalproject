@@ -9,64 +9,78 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-    console.log('Submit button clicked');
-  
+    e.preventDefault();
+
+    // Kontrollera om användaren fyllt i alla fält
     if (!email || !password) {
-      setMessage('All fields are required.');
+      setMessage('Alla fält är obligatoriska.');
       return;
     }
-  
+
     try {
       const response = await axios.post('http://localhost:3000/users/login', { email, password });
-      const { token } = response.data;
-  
-      // Save the JWT token in localStorage
-      localStorage.setItem('token', token);
-  
-      // Display success message and navigate to profile
-      setMessage('Login successful!');
-      navigate('/users/profile');
-    } catch (err) { // Rättade från 'error' till 'err'
-      console.error('Error details:', err); // Log complete error object
-  
-      if (err.response) {
-        if (err.response.status === 404) {
-          setMessage('User not found. Please check your email and try again.');
-        } else if (err.response.status === 401) {
-          setMessage('Incorrect password. Please try again.');
-        } else {
-          setMessage('An error occurred. Please try again later.');
-        }
-      } else if (err.request) {
-        // Axios request was made but no response was received
-        setMessage('No response received from the server. Please check the server status.');
+
+      // Logga hela svaret för att se vad som returneras från servern
+      console.log(response.data);
+
+      const { token, userId } = response.data;
+
+      // Kontrollera att token och userId finns i svaret
+      if (token && userId) {
+        // Sätt token och userId i localStorage
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', userId);
+
+        // Visa meddelande om inloggning lyckades
+        setMessage('Inloggning lyckades!');
+
+        // Navigera till profil sidan med användarens ID
+        navigate(`/profile/${userId}`);
       } else {
-        // Something else went wrong
-        setMessage('An unknown error occurred. Please try again.');
+        setMessage('Felaktig inloggning. Kontrollera användarnamn och lösenord.');
+      }
+    } catch (error) {
+      // Hantera fel från servern
+      console.error("Inloggningsfel:", error);
+      if (error.response) {
+        // Mer specifik felhantering
+        switch (error.response.status) {
+          case 404:
+            setMessage('Användaren hittades inte. Kontrollera din e-post och försök igen.');
+            break;
+          case 401:
+            setMessage('Felaktigt lösenord. Försök igen.');
+            break;
+          default:
+            setMessage('Ett fel inträffade. Försök igen senare.');
+        }
+      } else if (error.request) {
+        setMessage('Inget svar mottaget från servern. Kontrollera serverstatusen.');
+      } else {
+        setMessage('Ett okänt fel inträffade. Försök igen.');
       }
     }
   };
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Logga in</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="E-post"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Lösenord"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Log In</button>
+        <button type="submit">Logga in</button>
       </form>
       {message && <p>{message}</p>}
     </div>

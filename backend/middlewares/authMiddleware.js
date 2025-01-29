@@ -21,10 +21,21 @@ export const authenticateUser = async (req, res, next) => {
     // Debugging - visa den dekrypterade token
     console.log("Decoded JWT:", decoded);
 
-    // Hämta användaren baserat på ID lagrat i token
-    const user = await UserModel.findById(decoded.id).select("-password");
+    // Hämta användaren baserat på userId från den dekrypterade token
+    const user = await UserModel.findById(decoded.userId).select("-password");
+
+    // Kontrollera om användaren finns
     if (!user) {
       return res.status(401).json({ error: "Invalid user" });
+    }
+
+    // Kontrollera om den begärda användaren matchar den autentiserade användaren
+    console.log("Requested User ID:", req.params.id);
+    console.log("Authenticated User ID:", user._id.toString());
+
+    // Om användarens ID inte matchar, ge åtkomstvägran
+    if (user._id.toString() !== req.params.id) {
+      return res.status(403).json({ error: "Access denied. User mismatch." });
     }
 
     // Fäst användaren till requesten (utan lösenord)

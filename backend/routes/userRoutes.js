@@ -116,7 +116,14 @@ router.post(
         { expiresIn: "1h" }
       );
 
-      res.json({ message: "Login successful", token });
+      console.log("User ID sent in response:", user._id);
+
+      // Skicka tillbaka både token och användarens ID
+      res.json({
+        message: "Login successful",
+        token,
+        userId: user._id, // Skicka med userId här
+      });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ error: "Login failed", details: error.message });
@@ -125,8 +132,10 @@ router.post(
 );
 
 // View user profile
-router.get("/profile", authenticateUser, async (req, res) => {
+router.get("/:id/profile", authenticateUser, async (req, res) => {
   try {
+    console.log("Requested User ID from URL:", req.params.id); // Lägg till detta för att felsöka
+
     const user = req.user; // `req.user` is set by `authenticateUser` middleware
     res.status(200).json({ user });
   } catch (error) {

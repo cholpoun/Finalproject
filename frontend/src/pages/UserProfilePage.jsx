@@ -1,54 +1,97 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const { userId } = useParams(); // Få userId från URL-parametrarna
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const token = localStorage.getItem('token');
+    let isMounted = true; // För att undvika att uppdatera state efter att komponenten har avmonterats
 
-      if (!token) {
-        setMessage('Ingen token funnen. Du måste logga in först.');
-        navigate('/users/authenticate');
-        return;
-      }
+    // När du gör en GET-begäran till servern, se till att token skickas och rätt userId används
+const fetchUserProfile = async () => {
+  setLoading(true);
 
-      try {
-        const response = await axios.get('http://localhost:3000/users/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(response.data.user);
-      } catch (error) {
-        console.error(error);
-        setMessage('Misslyckades med att hämta profilen.');
-        localStorage.removeItem('token'); // Rensar token vid fel
-        navigate('/users/authenticate');
-      }
-    };
+  const token = localStorage.getItem('token');  // Hämta token från localStorage
+  const storedUserId = localStorage.getItem('userId'); // Hämta userId från localStorage
+
+  if (!token) {
+    setMessage('Ingen användare är inloggad.');
+    navigate('/users/authenticate');
+    return;
+  }
+
+  const profileId = userId || storedUserId; // Använd userId från URL eller localStorage
+
+  if (!profileId) {
+    setMessage('Ogiltigt användar-ID.');
+    navigate('/users/authenticate');
+    return;
+  }
+
+  try {
+    const response = await axios.get(`http://localhost:3000/users/${profileId}/profile`, {
+      headers: { Authorization: `Bearer ${token}` }, // Skicka token som Authorization-header
+    });
+
+    if (isMounted && response.data && response.data.user) {
+      setUser(response.data.user);
+      setMessage('');
+    } else if (isMounted) {
+      setMessage('Ogiltig profildata.');
+      localStorage.removeItem('token');
+      navigate('/users/authenticate');
+    }
+  } catch (error) {
+    console.error("Fel vid hämtning av profil:", error);
+
+    if (error.response && error.response.status === 401) {
+      setMessage('Token är ogiltig eller har löpt ut. Vänligen logga in igen.');
+      localStorage.removeItem('token');
+      navigate('/users/authenticate');
+    } else {
+      setMessage('Något gick fel vid hämtning av profilen. Försök igen senare.');
+    }
+  } finally {
+    if (isMounted) {
+      setLoading(false);
+    }
+  }
+};
+
 
     fetchUserProfile();
-  }, [navigate]);
 
-  if (message) return <p>{message}</p>;
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate, userId]); // Om `userId` ändras, triggas useEffect igen.
+
+  if (message) {
+    return <p>{message}</p>;
+  }
+
+  if (loading) {
+    return <p>Laddar profil...</p>;
+  }
+
+  if (!user) {
+    return <p>Ingen profil hittades.</p>;
+  }
 
   return (
-    <>      
-    <Navbar />
-    <div>
-      {user ? (
-        <>
-          <h1>Välkommen, {user.username}!</h1>
-          <p>Email: {user.email}</p>
-        </>
-      ) : (
-        <p>Laddar profil...</p>
-      )}
-    </div>
+    <>
+      <Navbar />
+      <div>
+        <h1>Välkommen, {user.username}!</h1>
+        <p>E-post: {user.email}</p>
+        {/* Lägg till mer användardata här */}
+      </div>
     </>
   );
 };

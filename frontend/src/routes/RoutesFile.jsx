@@ -23,11 +23,11 @@ const AppRoutes = () => (
 
       {/* Protected Routes */}
       <Route
-        path="/users/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
+  path="/profile/:userId"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
         }
       />
 
