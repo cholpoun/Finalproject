@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe("your-publishable-key-here"); // Replace with your actual publishable key
 
 const FestivalTickets = ({ festivalId, userToken }) => {
   const [festival, setFestival] = useState(null);
@@ -20,7 +23,6 @@ const FestivalTickets = ({ festivalId, userToken }) => {
         setMessage(`Error: ${err.message}`);
       }
     };
-    
 
     fetchFestival();
   }, [festivalId]);
@@ -32,23 +34,32 @@ const FestivalTickets = ({ festivalId, userToken }) => {
     }
 
     try {
+      // Request the backend to create a Stripe session
       const response = await fetch(
-        `https://finalproject-vol6.onrender.com/tickets/${festivalId}`,
+        `https://finalproject-vol6.onrender.com/api/stripe/create-checkout-session`, 
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userToken}`,
           },
-          body: JSON.stringify({ quantity }),
+          body: JSON.stringify({ festivalId, quantity }),
         }
       );
 
       const result = await response.json();
+
       if (response.ok) {
-        setMessage(result.message);
+        // Redirect to Stripe Checkout with the session ID
+        const stripe = await stripePromise;
+        const { error } = await stripe.redirectToCheckout({ sessionId: result.id });
+
+        if (error) {
+          console.error('Stripe Checkout error:', error);
+          setMessage("There was an issue redirecting to Stripe Checkout.");
+        }
       } else {
-        setMessage(result.error || "Failed to buy tickets.");
+        setMessage(result.error || "Failed to create checkout session.");
       }
     } catch (err) {
       console.error("An error occurred:", err.message);
@@ -90,7 +101,3 @@ FestivalTickets.propTypes = {
 };
 
 export default FestivalTickets;
-
-
-
-

@@ -7,6 +7,7 @@ import festivalRouter from "./routes/festivalsRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import stripeRoutes from "./routes/stripeRoutes.js";  // Import the stripe routes
 import { authenticateUser } from "./middlewares/authMiddleware.js"; // Lägg till autentisering
 
 dotenv.config(); // Ladda miljövariabler tidigt
@@ -29,6 +30,7 @@ app.use("/festivals", festivalRouter);
 app.use("/tickets", ticketRouter);
 app.use("/users", userRoutes); // Använd användarrutter för registrering, inloggning och profil
 app.use("/upload", uploadRoutes); // Upload-routes för filhantering
+app.use("/api/stripe", stripeRoutes); // Add Stripe routes
 
 // Skyddade routes exempel - Autentisering via JWT
 app.get("/users/:id/profile", authenticateUser, (req, res) => {
