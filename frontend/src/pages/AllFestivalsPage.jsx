@@ -40,7 +40,7 @@ const AllFestivals = () => {
 
   useEffect(() => {
     axios
-      .get("https://finalproject-jan30.onrender.com/festivals")
+      .get("http://localhost:3000/festivals")
       .then((response) => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);

@@ -18,7 +18,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('https://finalproject-jan30.onrender.com/users/login', { email, password });
+      const response = await axios.post('http://localhost:3000/users/login', { email, password });
 
       // Logga hela svaret för att se vad som returneras från servern
       console.log(response.data);

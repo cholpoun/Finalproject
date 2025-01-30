@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://https://finalproject-jan30.onrender.com"; // Update this for production
+const API_URL = "http://localhost:3000"; // Update this for production
 
 // Set up Axios instance with Authorization header
 const axiosInstance = axios.create({
