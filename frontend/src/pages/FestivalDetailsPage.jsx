@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
+import { useParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import styled from "styled-components";
 import FestivalDetails from "../components/FestivalDetails.jsx";
