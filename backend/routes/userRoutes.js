@@ -113,7 +113,7 @@ router.post(
 router.get("/:id/profile", authenticateUser, async (req, res) => {
   try {
     // Här använder vi req.userId istället för req.params.id
-    const user = req.user; // `req.user` sätts av `authenticateUser` middleware
+    const user = req.user; // req.user sätts av authenticateUser middleware
 
     // Debugging: Visa användar-ID för att säkerställa att det finns
     console.log("Requested User ID:", req.params.id); // Logga begärd ID

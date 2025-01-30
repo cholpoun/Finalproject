@@ -1,7 +1,8 @@
-import { useParams } from 'react-router-dom';
-import Navbar from '../components/Navbar.jsx';
-import styled from 'styled-components';
-import FestivalDetails from '../components/FestivalDetails.jsx';
+import { useParams } from "react-router-dom";
+import Navbar from "../components/Navbar.jsx";
+import styled from "styled-components";
+import FestivalDetails from "../components/FestivalDetails.jsx";
+import TicketPurchase from "../components/TicketPurchase.jsx";
 
 const FestivalDetailsSection = styled.section`
   text-align: center;
@@ -20,13 +21,21 @@ const FestivalDetailsSection = styled.section`
 `;
 
 const FestivalDetailsPage = () => {
-  const { id: festivalId } = useParams(); // Hämta festivalId från URL:en
+  const { id: festivalId } = useParams(); // Get festivalId from URL
+  const token = localStorage.getItem("token"); // Get stored user token
 
   return (
     <>
       <Navbar />
       <FestivalDetailsSection>
-        <FestivalDetails festivalId={festivalId} /> {/* Skicka festivalId som prop */}
+        <FestivalDetails festivalId={festivalId} /> {/* Show festival details */}
+        
+        {/* Add Ticket Purchase Component */}
+        {token ? (
+          <TicketPurchase festivalId={festivalId} token={token} />
+        ) : (
+          <p>You need to log in to purchase a ticket.</p>
+        )}
       </FestivalDetailsSection>
     </>
   );

@@ -1,55 +1,125 @@
+// import mongoose from "mongoose";
+// import bcrypt from "bcryptjs";
+
+// const UserSchema = new mongoose.Schema(
+//   {
+//     username: { type: String, required: true },
+//     email: { type: String, required: true, unique: true, lowercase: true },
+//     password: { type: String, required: true },
+
+//     favouriteFestivals: [
+//       { type: mongoose.Schema.Types.ObjectId, ref: "festivals" },
+//     ],
+
+//     purchasedTickets: [
+//       {
+//         festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "festivals" },
+//         quantity: { type: Number, required: true },
+//         purchaseDate: { type: Date, required: true },
+//       },
+//     ],
+
+//     payments: [
+//       {
+//         amount: { type: Number, required: true },
+//         paymentMethod: { type: String, required: true }, // Example: "Credit Card", "PayPal"
+//         status: { type: String, enum: ["Pending", "Completed", "Failed"], default: "Completed" },
+//         paymentDate: { type: Date, default: Date.now },
+//       },
+//     ],
+
+//     role: { type: String, enum: ["user", "admin"], default: "user" },
+
+//     // Timestamps for user creation & updates
+//   },
+//   { timestamps: true }
+// );
+
+// // Hash password before saving (via pre-save hook)
+// UserSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next(); // Om lösenordet inte är ändrat, gör ingenting
+//   try {
+//     console.log("Password before saving:", this.password);
+
+//     const hashedPassword = await bcrypt.hash(this.password, 10);
+//     this.password = hashedPassword;
+//     next();
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// // Remove password from response (no need to expose password)
+// UserSchema.methods.toJSON = function () {
+//   const user = this.toObject();
+//   delete user.password;
+//   return user;
+// };
+
+// const UserModel = mongoose.model("users", UserSchema);
+// export default UserModel;
+
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema(
   {
-    username: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
+    username: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
 
     favouriteFestivals: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "festivals" },
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "festivals",
+        unique: true, // Prevent duplicate festivals
+      },
     ],
 
     purchasedTickets: [
       {
-        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "festivals" },
-        quantity: { type: Number, required: true },
-        purchaseDate: { type: Date, required: true },
+        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "festivals", required: true },
+        quantity: { type: Number, required: true, min: 1 },
+        purchaseDate: { type: Date, required: true, default: Date.now },
       },
     ],
 
     payments: [
       {
-        amount: { type: Number, required: true },
-        paymentMethod: { type: String, required: true }, // Example: "Credit Card", "PayPal"
+        amount: { type: Number, required: true, min: 1 },
+        paymentMethod: { type: String, required: true, enum: ["Credit Card", "PayPal", "Bank Transfer"] },
         status: { type: String, enum: ["Pending", "Completed", "Failed"], default: "Completed" },
         paymentDate: { type: Date, default: Date.now },
       },
     ],
 
     role: { type: String, enum: ["user", "admin"], default: "user" },
-
-    // Timestamps for user creation & updates
   },
-  { timestamps: true }
+  { timestamps: true } // Adds `createdAt` & `updatedAt` fields
 );
 
-// Hash password before saving (via pre-save hook)
+// ✅ Hash password before saving (only if modified)
 UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next(); // Om lösenordet inte är ändrat, gör ingenting
-  try {
-    console.log("Password before saving:", this.password);
+  if (!this.isModified("password")) return next();
 
-    const hashedPassword = await bcrypt.hash(this.password, 10);
-    this.password = hashedPassword;
+  try {
+    console.log("Hashing password before saving...");
+    this.password = await bcrypt.hash(this.password, 10);
     next();
   } catch (err) {
     next(err);
   }
 });
 
-// Remove password from response (no need to expose password)
+// ✅ Prevent duplicate festival IDs in `favouriteFestivals`
+UserSchema.methods.addFavoriteFestival = async function (festivalId) {
+  if (!this.favouriteFestivals.includes(festivalId)) {
+    this.favouriteFestivals.push(festivalId);
+    await this.save();
+  }
+};
+
+// ✅ Remove password from API responses
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;

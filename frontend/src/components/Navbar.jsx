@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { User, Menu, X } from "lucide-react";
+import { Smile, Menu, X } from "lucide-react";
 
 const NavbarContainer = styled.nav`
   position: fixed;
@@ -10,7 +10,7 @@ const NavbarContainer = styled.nav`
   background-color: rgba(212, 184, 184, 0.9);
   backdrop-filter: blur(10px);
   z-index: 50;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(192, 54, 54, 0.1);
   margin-bottom: 10px;
 `;
 
@@ -55,13 +55,16 @@ const NavbarIcons = styled.div`
   gap: 1.5rem;
   margin-left: auto;
   margin-right: 1.5rem;
+  background-color: rgba(212, 184, 184, 0.9);
+
 `;
 
 const HamburgerMenu = styled.button`
   display: none;
-  background: none;
   border: none;
   cursor: pointer;
+  background-color: rgba(212, 184, 184, 0.9);
+
 
   @media (max-width: 768px) {
     display: block;
@@ -135,7 +138,7 @@ const Navbar = () => {
 
         <NavbarIcons>
           <button onClick={handleProfileClick} aria-label="Profile">
-            <User />
+            <Smile />
           </button>
         </NavbarIcons>
 
