@@ -68,13 +68,10 @@ const Footer = () => {
             <ul>
               <li><a href="/about">About Us</a></li>
               <li><a href="/festivals">Festivals</a></li>
-              <li><a href="/contact">Contact</a></li>
+              <li><a href="/users/authenticate">Join us</a></li>
             </ul>
           </FooterColumn>
-          <FooterColumn>
-            <h4>Connect With Us</h4>
         
-          </FooterColumn>
           <FooterColumn>
             <h4>Join Us!</h4>
             <p>Be part of the biggest festival community in Scandinavia</p>
