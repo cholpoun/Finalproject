@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
 import Navbar from "../components/Navbar.jsx";
 import styled from "styled-components";
 import FestivalDetails from "../components/FestivalDetails.jsx";
@@ -18,6 +18,17 @@ const FestivalDetailsSection = styled.section`
     font-size: 1.2rem;
     margin: 8px 0;
   }
+
+  .login-link {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      color: darkblue;
+    }
+  }
 `;
 
 const FestivalDetailsPage = () => {
@@ -30,11 +41,16 @@ const FestivalDetailsPage = () => {
       <FestivalDetailsSection>
         <FestivalDetails festivalId={festivalId} /> {/* Show festival details */}
         
-        {/* Add Ticket Purchase Component */}
+        {/* Show TicketPurchase or Login Prompt */}
         {token ? (
           <TicketPurchase festivalId={festivalId} token={token} />
         ) : (
-          <p>You need to log in to purchase a ticket.</p>
+          <p>
+            You need to log in to purchase a ticket.{" "}
+            <Link to="/users/authenticate" className="login-link">
+              Log in here
+            </Link>.
+          </p>
         )}
       </FestivalDetailsSection>
     </>
@@ -42,3 +58,4 @@ const FestivalDetailsPage = () => {
 };
 
 export default FestivalDetailsPage;
+
