@@ -3,6 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Smile, Menu, X } from "lucide-react";
 
+const breakpoints = {
+  tablet: "768px",
+  laptop: "1200px",
+};
+
 const NavbarContainer = styled.nav`
   position: fixed;
   top: 0;
@@ -16,30 +21,61 @@ const NavbarContainer = styled.nav`
 `;
 
 const NavbarContent = styled.div`
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 1rem;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
   height: 4rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    max-width: 90%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    justify-content: space-between;
+  }
+
+  @media (min-width: ${breakpoints.laptop}) {
+    max-width: 1200px;
+  }
 `;
 
 const Logo = styled.div`
-  font-size: 2rem; 
+  font-size: 1.5rem; /* Smaller logo on mobile */
   font-weight: bold;
   color: #fff;
   font-family: "Poppins", sans-serif;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    font-size: 2rem; /* Larger logo on tablet and up */
+  }
 `;
 
-
 const NavLinks = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  width: 100%;
+  background: rgba(248, 205, 218, 0.9);
+  padding: 1rem;
+  gap: 1.5rem;
 
-  @media (max-width: 768px) {
-    display: none;
+  &.open {
+    display: flex; /* Show links when sidebar is open */
+  }
+
+  @media (min-width: ${breakpoints.tablet}) {
+    display: flex;
+    flex-direction: row;
+    position: static;
+    background: transparent;
+    padding: 0;
+    width: auto;
+    gap: 2rem;
   }
 `;
 
@@ -50,19 +86,25 @@ const NavLink = styled(Link)`
   font-weight: bold;
   font-size: 1.1rem;
   font-family: "Quicksand", sans-serif;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 
   &:hover {
     color: #ffd700;
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
   }
+
+  @media (min-width: ${breakpoints.tablet}) {
+    padding: 0;
+    border-radius: 0;
+  }
 `;
 
 const NavbarIcons = styled.div`
   display: flex;
-  gap: 1.5rem;
+  gap: 1.1rem;
   margin-left: auto;
-  margin-right: 1.5rem;
 
   button {
     background-color: transparent;
@@ -77,25 +119,29 @@ const NavbarIcons = styled.div`
     transform: scale(1.2);
     transition: transform 0.3s ease-in-out;
   }
+
+  @media (min-width: ${breakpoints.tablet}) {
+    margin-right: 1.5 rem;
+  }
 `;
 
 const HamburgerMenu = styled.button`
-  display: none;
   border: none;
   cursor: pointer;
   background-color: transparent;
 
-  @media (max-width: 768px) {
-    display: block;
-  }
-
   svg {
     width: 2rem;
     height: 2rem;
+    color: white;
   }
 
   &:hover {
     opacity: 0.8;
+  }
+
+  @media (min-width: ${breakpoints.tablet}) {
+    display: none;
   }
 `;
 
@@ -103,7 +149,7 @@ const Sidebar = styled.div`
   position: fixed;
   top: 4rem;
   right: 0;
-  height: 100%;
+  min-height: 100%;
   width: auto;
   background: rgba(248, 205, 218, 0.9);
   z-index: 100;
@@ -144,7 +190,9 @@ const Navbar = () => {
     setIsSidebarOpen(false);
   };
 
-  const handleProfileClick = () => {
+  // Hantera klick på "Profile"-länken
+  const handleProfileClick = (e) => {
+    e.preventDefault(); // Förhindrar att NavLink följer sin vanliga länklogik
     const userId = localStorage.getItem("userId");
     if (userId) {
       navigate(`/profile/${userId}`);
@@ -176,7 +224,7 @@ const Navbar = () => {
 
         <NavbarIcons>
           <button onClick={handleProfileClick} aria-label="Profile">
-            <Smile />
+            <Smile style={{ color: "white" }} />
           </button>
         </NavbarIcons>
 
@@ -184,6 +232,10 @@ const Navbar = () => {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/about">About Us</NavLink>
           <NavLink to="/festivals">Festivals</NavLink>
+
+          <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
+            Profile
+          </NavLink>
         </NavLinks>
 
         <HamburgerMenu onClick={toggleSidebar} aria-label="Toggle Menu">
@@ -201,6 +253,10 @@ const Navbar = () => {
           </NavLink>
           <NavLink to="/festivals" onClick={closeSidebar}>
             Festivals
+          </NavLink>
+          {/* Uppdaterad NavLink för Profile i sidomenyn */}
+          <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
+            Profile
           </NavLink>
         </SidebarLinks>
       </Sidebar>

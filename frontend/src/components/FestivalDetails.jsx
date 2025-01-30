@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
 const DetailsContainer = styled.div`
   background: linear-gradient(135deg, #e07ba1 0%, #176b91 100%);
@@ -32,9 +32,13 @@ const FestivalDetails = ({ festivalId }) => {
       setError("");
 
       try {
-        const response = await fetch(`http://localhost:3000/festivals/${festivalId}`);
+        const response = await fetch(
+          `http://localhost:3000/festivals/${festivalId}`
+        );
         if (!response.ok) {
-          throw new Error(`Failed to fetch festival details. Status: ${response.status}`);
+          throw new Error(
+            `Failed to fetch festival details. Status: ${response.status}`
+          );
         }
         const data = await response.json();
         setFestival(data);
@@ -58,18 +62,28 @@ const FestivalDetails = ({ festivalId }) => {
   return (
     <DetailsContainer>
       <h1>{festival.name}</h1>
-      <p><strong>Location:</strong> {festival.location}</p>
-      <p><strong>Genre:</strong> {festival.genre}</p>
-      <p><strong>Date:</strong> {new Date(festival.date).toLocaleDateString()}</p>
-      <p><strong>Ticket Price:</strong> {festival.ticketPrice} SEK</p>
-      <p><strong>Available Tickets:</strong> {festival.availableTickets}</p>
+      <p>
+        <strong>Location:</strong> {festival.location}
+      </p>
+      <p>
+        <strong>Genre:</strong> {festival.genre}
+      </p>
+      <p>
+        <strong>Date:</strong> {new Date(festival.date).toLocaleDateString()}
+      </p>
+      <p>
+        <strong>Ticket Price:</strong> {festival.ticketPrice} SEK
+      </p>
+      <p>
+        <strong>Available Tickets:</strong> {festival.availableTickets}
+      </p>
       <FestivalImage src={festival.image} alt={festival.name} />
     </DetailsContainer>
   );
 };
 
 FestivalDetails.propTypes = {
-  festivalId: PropTypes.string.isRequired
+  festivalId: PropTypes.string.isRequired,
 };
 
 export default FestivalDetails;

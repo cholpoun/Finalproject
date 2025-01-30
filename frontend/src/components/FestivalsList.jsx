@@ -1,20 +1,19 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import FestivalCard from './FestivalCard.jsx';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import FestivalCard from "./FestivalCard.jsx";
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(1, 1fr); /* 1 card per row on mobile */
+  grid-template-columns: repeat(1, 1fr);
   gap: 16px;
   padding: 16px;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr); /* 3 cards per row on tablet and above */
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
-const FestivalsList = ({ festivals, favoriteFestivals, onFavoriteToggle }) => {
-  // Kontrollera om festivals finns och är en array
+const FestivalsList = ({ festivals }) => {
   if (!Array.isArray(festivals) || festivals.length === 0) {
     return <p>No festivals available</p>;
   }
@@ -22,20 +21,18 @@ const FestivalsList = ({ festivals, favoriteFestivals, onFavoriteToggle }) => {
   return (
     <GridContainer>
       {festivals.map((festival) => {
-        // Kontrollera att favoriteFestivals är en array och använd .includes() på den
-        const isFavorite = Array.isArray(favoriteFestivals) && favoriteFestivals.includes(festival._id);
-        
-        // Sätt en fallback för festivalbild om den inte finns
-        const imageUrl = festival.image || 'default-image-url.jpg'; // Använd en standardbild här om festival.image är null/undefined
+        const imageUrl = festival.image || "default-image-url.jpg";
+        const location = festival.location || "Unknown location"; // Default location if not provided
+        const genre = festival.genre || "Unknown genre"; // Default genre if not provided
 
         return (
-          <FestivalCard 
-            key={festival._id} 
-            id={festival._id} 
-            name={festival.name} 
-            imageUrl={imageUrl} // Skicka med den säkerställda bild-URL
-            isFavoriteInitially={isFavorite} 
-            onFavoriteToggle={onFavoriteToggle} 
+          <FestivalCard
+            key={festival._id}
+            id={festival._id}
+            name={festival.name}
+            imageUrl={imageUrl}
+            location={location}
+            genre={genre} // Skickar med genre-propen till FestivalCard
           />
         );
       })}
@@ -48,11 +45,11 @@ FestivalsList.propTypes = {
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      image: PropTypes.string, // Bild är valfri, kan vara null/undefined
+      image: PropTypes.string,
+      location: PropTypes.string,
+      genre: PropTypes.string,
     })
   ).isRequired,
-  favoriteFestivals: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onFavoriteToggle: PropTypes.func.isRequired,
 };
 
 export default FestivalsList;

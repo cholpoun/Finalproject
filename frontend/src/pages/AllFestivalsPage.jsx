@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import Navbar from '../components/Navbar.jsx';
+import Navbar from "../components/Navbar.jsx";
 import Filters from "../components/Filters.jsx";
 import SortOptions from "../components/SortOptions.jsx";
 import FestivalsList from "../components/FestivalsList.jsx";
+import Pagination from "../components/Pagination.jsx";
 import styled from "styled-components";
 
-// Flex-container for filters and sort options on one row
 const StyledControls = styled.div`
   display: flex;
-  gap: 16px; /* Space between filters and sort options */
+  gap: 16px;
   margin: 16px 0;
   flex-wrap: wrap;
   justify-content: center;
@@ -18,12 +19,12 @@ const StyledControls = styled.div`
 `;
 
 const StyledSection = styled.section`
-  min-height: 100vh;  
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 16px;  
+  padding: 4rem 16px;
   text-align: center;
 `;
 
@@ -31,16 +32,23 @@ const AllFestivals = () => {
   const [festivals, setFestivals] = useState([]);
   const [filteredFestivals, setFilteredFestivals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [genreFilter, setGenreFilter] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-  const [sortOption, setSortOption] = useState("");
   const [favoriteFestivals, setFavoriteFestivals] = useState(
     JSON.parse(localStorage.getItem("favoriteFestivals")) || []
   );
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Hämta parametrar från URL
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const genreFilter = searchParams.get("genre") || "";
+  const locationFilter = searchParams.get("location") || "";
+  const sortOption = searchParams.get("sort") || "";
+  const limit = 12;
+
   useEffect(() => {
+    setLoading(true);
     axios
-      .get("http://localhost:3000/festivals")
+      .get(`http://localhost:3000/festivals?page=${currentPage}&limit=${limit}`)
       .then((response) => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
@@ -50,7 +58,7 @@ const AllFestivals = () => {
         console.error("Error fetching data: ", error);
         setLoading(false);
       });
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     let filtered = festivals;
@@ -95,15 +103,45 @@ const AllFestivals = () => {
     localStorage.setItem("favoriteFestivals", JSON.stringify(updatedFavorites));
   };
 
+  const handleFilterChange = (newGenre, newLocation) => {
+    setSearchParams({
+      page: currentPage,
+      genre: newGenre || "",
+      location: newLocation || "",
+      sort: sortOption || "",
+    });
+  };
+
+  const handleSortChange = (newSort) => {
+    setSearchParams({
+      page: currentPage,
+      genre: genreFilter || "",
+      location: locationFilter || "",
+      sort: newSort || "",
+    });
+  };
+
+  const handlePageChange = (newPage) => {
+    setSearchParams({
+      page: newPage,
+      genre: genreFilter || "",
+      location: locationFilter || "",
+      sort: sortOption || "",
+    });
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  const uniqueGenres = [...new Set(festivals.map((festival) => festival.genre))];
+  const uniqueGenres = [
+    ...new Set(festivals.map((festival) => festival.genre)),
+  ];
   const uniqueLocations = [
     ...new Set(
-      festivals.map((festival) =>
-        festival.location.split(",")[1]?.trim() || festival.location
+      festivals.map(
+        (festival) =>
+          festival.location.split(",")[1]?.trim() || festival.location
       )
     ),
   ];
@@ -114,24 +152,32 @@ const AllFestivals = () => {
       <StyledSection>
         <h1>All Festivals</h1>
 
-        {/* Filters and Sort Options in one row */}
         <StyledControls>
           <Filters
             genreFilter={genreFilter}
-            setGenreFilter={setGenreFilter}
+            setGenreFilter={handleFilterChange}
             locationFilter={locationFilter}
-            setLocationFilter={setLocationFilter}
+            setLocationFilter={handleFilterChange}
             uniqueGenres={uniqueGenres}
             uniqueLocations={uniqueLocations}
           />
-          <SortOptions sortOption={sortOption} setSortOption={setSortOption} />
+          <SortOptions
+            sortOption={sortOption}
+            setSortOption={handleSortChange}
+          />
         </StyledControls>
 
-        {/* Festival List */}
         <FestivalsList
           festivals={filteredFestivals}
           favoriteFestivals={favoriteFestivals}
-          onFavoriteToggle={handleFavoriteToggle} // Funktion för att toggla favoritstatus
+          onFavoriteToggle={handleFavoriteToggle}
+        />
+
+        {/* Pagination Component */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={5}
+          setCurrentPage={handlePageChange}
         />
       </StyledSection>
     </>

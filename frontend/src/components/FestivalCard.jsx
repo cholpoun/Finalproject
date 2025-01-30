@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import PropTypes from "prop-types";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const Card = styled.div`
@@ -32,38 +31,42 @@ const CardContent = styled.div`
   color: #f4f4f4;
 `;
 
-const FavoriteButton = styled.span`
-  cursor: pointer;
-  font-size: 24px;
-  transition: transform 0.3s ease-in-out;
-  &:hover {
-    transform: scale(1.2);
+const FestivalDetails = styled.p`
+  font-size: 0.9rem;
+  color: #f4f4f4;
+  margin: 4px 0;
+`;
+
+const FestivalLink = styled(Link)`
+  text-decoration: none;
+  display: inline-block;
+
+  h2 {
+    color: #f4f4f4;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+  }
+
+  &:hover h2 {
+    color: #eeffaf;
+    text-decoration: underline;
   }
 `;
 
-const FestivalCard = ({ id, name, imageUrl, isFavoriteInitially, onFavoriteToggle }) => {
-  const [isFavorite, setIsFavorite] = useState(isFavoriteInitially);
-
-  const toggleFavorite = () => {
-    const newFavoriteStatus = !isFavorite;
-    setIsFavorite(newFavoriteStatus);
-    onFavoriteToggle(id, newFavoriteStatus);
-  };
-
-  useEffect(() => {
-    setIsFavorite(isFavoriteInitially);
-  }, [isFavoriteInitially]);
-
+const FestivalCard = ({ id, name, imageUrl, location, genre }) => {
   return (
     <Card>
       <CardImage src={imageUrl} alt={name} />
       <CardContent>
-        <Link to={`/festivals/${id}`} style={{ textDecoration: 'none', color: '#f4f4f4' }}>
+        <FestivalLink to={`/festivals/${id}`}>
           <h2>{name}</h2>
+        </FestivalLink>
+        <FestivalDetails>{location}</FestivalDetails>
+        <Link
+          to={`/festivals?genre=${encodeURIComponent(genre)}`}
+          style={{ color: "#eeffaf", textDecoration: "none" }}
+        >
+          #{genre}
         </Link>
-        <FavoriteButton onClick={toggleFavorite}>
-          {isFavorite ? '❤️' : '🤍'}
-        </FavoriteButton>
       </CardContent>
     </Card>
   );
@@ -73,10 +76,8 @@ FestivalCard.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   imageUrl: PropTypes.string.isRequired,
-  location: PropTypes.string,
-  date: PropTypes.string,
-  isFavoriteInitially: PropTypes.bool.isRequired, 
-  onFavoriteToggle: PropTypes.func.isRequired,
+  location: PropTypes.string.isRequired,
+  genre: PropTypes.string.isRequired,
 };
 
 export default FestivalCard;

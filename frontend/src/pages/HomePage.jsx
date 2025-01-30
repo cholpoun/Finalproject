@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Navbar from '../components/Navbar.jsx';
-import FestivalsList from '../components/FestivalsList.jsx';
-import Footer from '../components/Footer.jsx';
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import Navbar from "../components/Navbar.jsx";
+import FestivalsList from "../components/FestivalsList.jsx";
+import Footer from "../components/Footer.jsx";
 
 const FestivalSection = styled.section`
   text-align: center;
@@ -17,17 +17,16 @@ const FestivalSection = styled.section`
 
 const HomePage = () => {
   const [festivals, setFestivals] = useState([]);
-  const [favoriteFestivals, setFavoriteFestivals] = useState([]);
 
   useEffect(() => {
     const fetchFestivals = async () => {
       try {
-        const response = await fetch('http://localhost:3000/festivals');
+        const response = await fetch("http://localhost:3000/festivals");
         const data = await response.json();
-        console.log('API Response:', data);
-        setFestivals(data.data); // Correctly set data to state
+        console.log("API Response:", data);
+        setFestivals(data.data);
       } catch (error) {
-        console.error('Error fetching festival data:', error);
+        console.error("Error fetching festival data:", error);
         setFestivals([]);
       }
     };
@@ -35,28 +34,12 @@ const HomePage = () => {
     fetchFestivals();
   }, []);
 
-  const onFavoriteToggle = (festivalId) => {
-    setFavoriteFestivals((prevFavorites) => {
-      if (prevFavorites.includes(festivalId)) {
-        // Remove from favorites if already in the list
-        return prevFavorites.filter((id) => id !== festivalId);
-      } else {
-        // Add to favorites if not already in the list
-        return [...prevFavorites, festivalId];
-      }
-    });
-  };
-
   return (
     <>
       <Navbar />
       <FestivalSection>
-        <h2>Festivals</h2>
-        <FestivalsList
-          festivals={festivals.slice(0, 9)}
-          favoriteFestivals={favoriteFestivals}
-          onFavoriteToggle={onFavoriteToggle} // Passing the function here
-        />
+        <h2>New Festivals</h2>
+        <FestivalsList festivals={festivals.slice(0, 9)} />
       </FestivalSection>
       <Footer />
     </>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getUserTickets } from "../api/ticketApi";
 import styled from "styled-components";
@@ -72,9 +73,12 @@ const Profile = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:3000/users/me/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "http://localhost:3000/users/me/profile",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (isMounted && response.data) {
           setUser(response.data.user || response.data);
@@ -86,7 +90,13 @@ const Profile = () => {
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
-        setMessage("Something went wrong while fetching the profile. Please try again later.");
+        setMessage(
+          <span>
+            It seems like you need to log in again due to session expiration.
+            Please <Link to="/users/authenticate">log in again</Link> to
+            continue.
+          </span>
+        );
       } finally {
         setLoading(false);
       }
@@ -127,8 +137,13 @@ const Profile = () => {
       <Navbar />
       <ProfileContainer>
         <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
-        <h1>Welcome, {user.username.charAt(0).toUpperCase() + user.username.slice(1)}!</h1>
-        <p><strong>Email:</strong> {user.email}</p>
+        <h1>
+          Welcome,{" "}
+          {user.username.charAt(0).toUpperCase() + user.username.slice(1)}!
+        </h1>
+        <p>
+          <strong>Email:</strong> {user.email}
+        </p>
 
         <h2>Your Tickets</h2>
         {tickets.length === 0 ? (
@@ -137,10 +152,17 @@ const Profile = () => {
           tickets.map((ticket) => (
             <TicketCard key={ticket._id}>
               <h3>{ticket.name}</h3>
-              <p><strong>Quantity:</strong> {ticket.quantity}</p>
-              <p><strong>Total Price:</strong> ${ticket.totalPrice}</p>
+              <p>
+                <strong>Quantity:</strong> {ticket.quantity}
+              </p>
+              <p>
+                <strong>Total Price:</strong> {ticket.totalPrice} SEK
+              </p>
               <QRCodeContainer>
-                <QRCode value={ticket._id ? String(ticket._id) : 'invalid-ticket'} size={100} />
+                <QRCode
+                  value={ticket._id ? String(ticket._id) : "invalid-ticket"}
+                  size={100}
+                />
               </QRCodeContainer>
             </TicketCard>
           ))

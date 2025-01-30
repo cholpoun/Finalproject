@@ -5,9 +5,9 @@ import AboutUsCard from "../components/AboutUsCard";
 const AboutUs = () => {
   return (
     <div>
-      <Navbar /> {/* Include the Navbar component */}
-      <AboutUsCard /> {/* Include the AboutUsCard component */}
-      <Footer /> {/* Include the Footer component */}
+      <Navbar />
+      <AboutUsCard />
+      <Footer />
     </div>
   );
 };

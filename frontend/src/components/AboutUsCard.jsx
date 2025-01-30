@@ -69,8 +69,11 @@ const AboutUsCard = () => {
       <Card>
         <Heading>About Us</Heading>
         <Description>
-          We are a team of passionate individuals dedicated to providing you with the best experience.
-          Our mission is to make your life easier and more enjoyable through our innovative solutions.
+          We are a duo of enthusiastic developers who&apos;ve completed the
+          Technigo Web Dev Bootcamp. Together, we&apos;re an easy-breezy team,
+          solving problems and creating seamless experiences with a
+          collaborative spirit. Our mission is to make your digital journey
+          smooth and enjoyable, one solution at a time.
         </Description>
 
         <Columns>
@@ -80,7 +83,12 @@ const AboutUsCard = () => {
               alt="Team"
             />
             <SubHeading>Nella</SubHeading>
-            <Text>Meet our talented team of professionals who are passionate about what they do.</Text>
+            <Text>
+              Nella is a Junior Developer with a background in administration
+              and education. With a natural curiosity and strong problem-solving
+              skills, she creates user-centered digital solutions that spark
+              innovation and efficiency. 💻✨
+            </Text>
           </Column>
 
           <Column>
@@ -89,7 +97,13 @@ const AboutUsCard = () => {
               alt="Mission"
             />
             <SubHeading>Cholpon</SubHeading>
-            <Text> Cholpon is a Junior Developer with a background in **marketing and product marketing**. She combines technical skills with strategic thinking to build user-friendly solutions while leveraging her expertise in branding and market analysis. 🚀</Text>
+            <Text>
+              {" "}
+              Cholpon is a Junior Developer with a background in **marketing and
+              product marketing**. She combines technical skills with strategic
+              thinking to build user-friendly solutions while leveraging her
+              expertise in branding and market analysis. 🚀
+            </Text>
           </Column>
         </Columns>
       </Card>
