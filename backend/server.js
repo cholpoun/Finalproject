@@ -7,64 +7,64 @@ import festivalRouter from "./routes/festivalsRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
-// import stripeRoutes from "./routes/stripeRoutes.js";  // Import the stripe routes
-import { authenticateUser } from "./middlewares/authMiddleware.js"; // Lägg till autentisering
+import paymentRoutes from "./routes/paymentRoutes.js"; // Import the payment routes
+// import stripeRoutes from "./routes/stripeRoutes.js";  // Future Stripe integration
+import { authenticateUser } from "./middlewares/authMiddleware.js"; 
 
-dotenv.config(); // Ladda miljövariabler tidigt
+dotenv.config(); // Load environment variables
 
 const app = express();
 
-// CORS-konfiguration - Tillåt bara din frontend-URL
+// CORS Configuration - Allow frontend access
 app.use(
   cors({
-    origin: "http://localhost:5173", // Din React frontends URL
-    methods: ["GET", "POST", "PUT", "DELETE"], // Tillåtna HTTP-metoder
-    allowedHeaders: ["Content-Type", "Authorization"], // Tillåtna headers
+    origin: ["http://localhost:5173", "https://yourfrontend.com"], // Allow local dev + production
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-app.use(express.json()); // Middleware för att hantera JSON-data
+app.use(express.json()); // Middleware to handle JSON data
 
 // Routes
 app.use("/festivals", festivalRouter);
 app.use("/tickets", ticketRouter);
-app.use("/users", userRoutes); // Använd användarrutter för registrering, inloggning och profil
-app.use("/upload", uploadRoutes); // Upload-routes för filhantering
-// app.use("/api/stripe", stripeRoutes); // Add Stripe routes
+app.use("/users", userRoutes); 
+app.use("/upload", uploadRoutes); 
+app.use("/payments", paymentRoutes); // Added payment routes
+// app.use("/api/stripe", stripeRoutes); // Uncomment when Stripe is integrated
 
-// Skyddade routes exempel - Autentisering via JWT
+// Protected route example - Authentication via JWT
 app.get("/users/:id/profile", authenticateUser, (req, res) => {
-  // Profilruta skyddad av JWT
-  const userProfile = { userId: req.user.id, username: req.user.username }; // Här använder du korrekt ID
-  res.json(userProfile);
+  res.json({ userId: req.user.id, username: req.user.username });
 });
 
-// Felhantering Middleware
+// Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
-    error: "Något gick fel!",
+    error: "Something went wrong!",
     details: err.message,
   });
 });
 
-// Anslutning till MongoDB
+// Connect to MongoDB
 const connectToDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Ansluten till MongoDB");
+    console.log("✅ Connected to MongoDB");
   } catch (error) {
-    console.error("Fel vid anslutning till MongoDB:", error.message);
-    process.exit(1); // Avsluta processen om databasen inte ansluter
+    console.error("❌ MongoDB Connection Error:", error.message);
+    process.exit(1);
   }
 };
 connectToDB();
 
-// Starta servern
+// Start Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servern körs på http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
