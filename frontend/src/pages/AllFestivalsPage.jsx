@@ -6,9 +6,25 @@ import SortOptions from "../components/SortOptions.jsx";
 import FestivalsList from "../components/FestivalsList.jsx";
 import styled from "styled-components";
 
+// Flex-container for filters and sort options on one row
+const StyledControls = styled.div`
+  display: flex;
+  gap: 16px; /* Space between filters and sort options */
+  margin: 16px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
 const StyledSection = styled.section`
-  padding-top: 4rem;  
-  margin: 0 16px;  
+  min-height: 100vh;  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 16px;  
+  text-align: center;
 `;
 
 const AllFestivals = () => {
@@ -77,8 +93,6 @@ const AllFestivals = () => {
 
     setFavoriteFestivals(updatedFavorites);
     localStorage.setItem("favoriteFestivals", JSON.stringify(updatedFavorites));
-
-    // Om användaren är inloggad, här kan du skicka uppdatering till servern via API.
   };
 
   if (loading) {
@@ -100,18 +114,18 @@ const AllFestivals = () => {
       <StyledSection>
         <h1>All Festivals</h1>
 
-        {/* Filters */}
-        <Filters
-          genreFilter={genreFilter}
-          setGenreFilter={setGenreFilter}
-          locationFilter={locationFilter}
-          setLocationFilter={setLocationFilter}
-          uniqueGenres={uniqueGenres}
-          uniqueLocations={uniqueLocations}
-        />
-
-        {/* Sort Options */}
-        <SortOptions sortOption={sortOption} setSortOption={setSortOption} />
+        {/* Filters and Sort Options in one row */}
+        <StyledControls>
+          <Filters
+            genreFilter={genreFilter}
+            setGenreFilter={setGenreFilter}
+            locationFilter={locationFilter}
+            setLocationFilter={setLocationFilter}
+            uniqueGenres={uniqueGenres}
+            uniqueLocations={uniqueLocations}
+          />
+          <SortOptions sortOption={sortOption} setSortOption={setSortOption} />
+        </StyledControls>
 
         {/* Festival List */}
         <FestivalsList

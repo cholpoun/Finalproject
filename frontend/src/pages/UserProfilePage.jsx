@@ -1,9 +1,55 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { getUserTickets } from "../api/ticketApi";
+import styled from "styled-components";
+import QRCode from "react-qr-code";
+
+const ProfileContainer = styled.div`
+  max-width: 600px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #d85a94 0%, #145a7a 100%);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #f4f4f4;
+  font-family: "Quicksand", sans-serif;
+`;
+
+const TicketCard = styled.div`
+  background: #fff;
+  color: #333;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  text-align: center;
+`;
+
+const QRCodeContainer = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  display: inline-block;
+`;
+
+const SignOutButton = styled.button`
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #ff7eb3 0%, #ff758c 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+  &:hover {
+    background: linear-gradient(135deg, #ff5c8a 0%, #ff3d6e 100%);
+  }
+`;
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -26,7 +72,7 @@ const Profile = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:3000/users/me/profile`, {
+        const response = await axios.get("http://localhost:3000/users/me/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -66,13 +112,9 @@ const Profile = () => {
     };
   }, [navigate]);
 
-  // ✅ Logout function
-  const handleLogout = () => {
-    // Clear local storage
+  const handleSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-
-    // Redirect to login page
     navigate("/users/authenticate");
   };
 
@@ -83,36 +125,29 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <div>
-        <h1>Welcome, {user.username}!</h1>
-        <p>Email: {user.email}</p>
+      <ProfileContainer>
+        <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
+        <h1>Welcome, {user.username.charAt(0).toUpperCase() + user.username.slice(1)}!</h1>
+        <p><strong>Email:</strong> {user.email}</p>
 
         <h2>Your Tickets</h2>
         {tickets.length === 0 ? (
           <p>You have not purchased any tickets yet.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {tickets.map((ticket) => (
-              <div key={ticket._id} className="p-4 border rounded-lg shadow-lg bg-white">
-                <h3 className="text-lg font-semibold">{ticket.name}</h3>
-                <p><strong>Quantity:</strong> {ticket.quantity}</p>
-                <p><strong>Total Price:</strong> ${ticket.totalPrice}</p>
-              </div>
-            ))}
-          </div>
+          tickets.map((ticket) => (
+            <TicketCard key={ticket._id}>
+              <h3>{ticket.name}</h3>
+              <p><strong>Quantity:</strong> {ticket.quantity}</p>
+              <p><strong>Total Price:</strong> ${ticket.totalPrice}</p>
+              <QRCodeContainer>
+                <QRCode value={ticket._id ? String(ticket._id) : 'invalid-ticket'} size={100} />
+              </QRCodeContainer>
+            </TicketCard>
+          ))
         )}
-
-        {/* ✅ Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600"
-        >
-          Logout
-        </button>
-      </div>
+      </ProfileContainer>
     </>
   );
 };
 
 export default Profile;
-

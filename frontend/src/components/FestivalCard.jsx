@@ -7,26 +7,38 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: black;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #e07ba1 0%, #176b91 100%);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  transition: transform 0.3s ease-in-out;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const CardImage = styled.img`
   width: 100%;
   height: 200px;
-  object-fit: cover; /* Bevarar bildens proportioner utan att sträcka ut den */
+  object-fit: cover;
+  border-radius: 8px;
 `;
 
 const CardContent = styled.div`
   padding: 16px;
   text-align: center;
+  font-family: "Quicksand", sans-serif;
+  color: #f4f4f4;
 `;
 
 const FavoriteButton = styled.span`
   cursor: pointer;
   font-size: 24px;
+  transition: transform 0.3s ease-in-out;
+  &:hover {
+    transform: scale(1.2);
+  }
 `;
 
 const FestivalCard = ({ id, name, imageUrl, isFavoriteInitially, onFavoriteToggle }) => {
@@ -35,21 +47,20 @@ const FestivalCard = ({ id, name, imageUrl, isFavoriteInitially, onFavoriteToggl
   const toggleFavorite = () => {
     const newFavoriteStatus = !isFavorite;
     setIsFavorite(newFavoriteStatus);
-    onFavoriteToggle(id, newFavoriteStatus); // Uppdatera favoritstatus i föräldern
+    onFavoriteToggle(id, newFavoriteStatus);
   };
 
   useEffect(() => {
-    setIsFavorite(isFavoriteInitially); // Uppdatera om initial status ändras
+    setIsFavorite(isFavoriteInitially);
   }, [isFavoriteInitially]);
 
   return (
     <Card>
       <CardImage src={imageUrl} alt={name} />
       <CardContent>
-      <Link to={`/festivals/${id}`}> 
-      <h2>{name} </h2>
+        <Link to={`/festivals/${id}`} style={{ textDecoration: 'none', color: '#f4f4f4' }}>
+          <h2>{name}</h2>
         </Link>
-
         <FavoriteButton onClick={toggleFavorite}>
           {isFavorite ? '❤️' : '🤍'}
         </FavoriteButton>
@@ -62,6 +73,8 @@ FestivalCard.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   imageUrl: PropTypes.string.isRequired,
+  location: PropTypes.string,
+  date: PropTypes.string,
   isFavoriteInitially: PropTypes.bool.isRequired, 
   onFavoriteToggle: PropTypes.func.isRequired,
 };

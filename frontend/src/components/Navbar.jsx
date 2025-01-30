@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Smile, Menu, X } from "lucide-react";
@@ -7,28 +7,31 @@ const NavbarContainer = styled.nav`
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgba(212, 184, 184, 0.9);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, #f8cdda 0%, #1b93d1 100%);
+  backdrop-filter: blur(15px);
   z-index: 50;
-  box-shadow: 0 1px 3px rgba(192, 54, 54, 0.1);
-  margin-bottom: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: top 0.3s ease-in-out;
+  border-radius: 0 0 12px 12px;
 `;
 
 const NavbarContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
   height: 4rem;
 `;
 
 const Logo = styled.div`
-  font-size: 1.5rem;
+  font-size: 2rem; 
   font-weight: bold;
-  color: #6b46c1;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
 `;
+
 
 const NavLinks = styled.div`
   display: flex;
@@ -42,11 +45,16 @@ const NavLinks = styled.div`
 
 const NavLink = styled(Link)`
   transition: color 0.3s;
-  color: inherit;
+  color: white;
   text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  font-family: "Quicksand", sans-serif;
 
   &:hover {
-    color: #6b46c1;
+    color: #ffd700;
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
   }
 `;
 
@@ -55,7 +63,6 @@ const NavbarIcons = styled.div`
   gap: 1.5rem;
   margin-left: auto;
   margin-right: 1.5rem;
-  background-color: rgba(212, 184, 184, 0.9);
 
   button {
     background-color: transparent;
@@ -66,8 +73,9 @@ const NavbarIcons = styled.div`
     align-items: center;
   }
 
-  button:hover {
-    opacity: 0.8;
+  button:hover svg {
+    transform: scale(1.2);
+    transition: transform 0.3s ease-in-out;
   }
 `;
 
@@ -97,10 +105,11 @@ const Sidebar = styled.div`
   right: 0;
   height: 100%;
   width: auto;
-  background-color: rgba(212, 184, 184, 0.9);
+  background: rgba(248, 205, 218, 0.9);
   z-index: 100;
   transition: transform 0.3s ease-in-out;
   transform: translateX(100%);
+  border-radius: 12px 0 0 12px;
 
   &.open {
     transform: translateX(0);
@@ -112,11 +121,10 @@ const SidebarLinks = styled.div`
   flex-direction: column;
   gap: 1.5rem;
   align-items: center;
-  background-color: rgba(212, 184, 184, 0.9);
   padding: 1rem;
 
   & a {
-    color: inherit;
+    color: #333;
     font-size: 1.5rem;
     text-decoration: none;
   }
@@ -124,6 +132,7 @@ const SidebarLinks = styled.div`
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [prevScroll, setPrevScroll] = useState(0);
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
 
@@ -136,13 +145,27 @@ const Navbar = () => {
   };
 
   const handleProfileClick = () => {
-    const userId = localStorage.getItem("userId"); // Hämta userId från localStorage
+    const userId = localStorage.getItem("userId");
     if (userId) {
       navigate(`/profile/${userId}`);
     } else {
       navigate("/users/authenticate");
     }
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      if (prevScroll > currentScroll) {
+        document.querySelector("nav").style.top = "0";
+      } else {
+        document.querySelector("nav").style.top = "-80px";
+      }
+      setPrevScroll(currentScroll);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScroll]);
 
   return (
     <NavbarContainer>
