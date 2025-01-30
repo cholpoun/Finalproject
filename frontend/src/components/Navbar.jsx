@@ -57,14 +57,25 @@ const NavbarIcons = styled.div`
   margin-right: 1.5rem;
   background-color: rgba(212, 184, 184, 0.9);
 
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  button:hover {
+    opacity: 0.8;
+  }
 `;
 
 const HamburgerMenu = styled.button`
   display: none;
   border: none;
   cursor: pointer;
-  background-color: rgba(212, 184, 184, 0.9);
-
+  background-color: transparent;
 
   @media (max-width: 768px) {
     display: block;
@@ -73,6 +84,10 @@ const HamburgerMenu = styled.button`
   svg {
     width: 2rem;
     height: 2rem;
+  }
+
+  &:hover {
+    opacity: 0.8;
   }
 `;
 
