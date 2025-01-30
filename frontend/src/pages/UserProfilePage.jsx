@@ -72,7 +72,7 @@ const Profile = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:3000/users/me/profile", {
+        const response = await axios.get("https://finalproject-jan30.onrender.com/users/me/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

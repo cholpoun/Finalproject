@@ -18,7 +18,7 @@ const Register = () => {
     }
   
     try {
-      await axios.post('http://localhost:3000/users/register', { username, email, password });
+      await axios.post('https://finalproject-jan30.onrender.com/users/register', { username, email, password });
       setMessage('Registration successful!');
       navigate('/users/authenticate');
     } catch (error) {
