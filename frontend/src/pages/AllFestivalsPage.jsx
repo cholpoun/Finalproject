@@ -52,10 +52,13 @@ const AllFestivals = () => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
 
+        // Uppdatera unika genrer utan att rensa tidigare värden
         const genres = [
           ...new Set(response.data.data.map((festival) => festival.genre)),
         ];
-        setUniqueGenres(genres);
+
+        // Se till att alla genrer finns kvar
+        setUniqueGenres((prevGenres) => [...prevGenres, ...genres]);
 
         const allLocations = response.data.data.map(
           (festival) => festival.location
