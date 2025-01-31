@@ -1,11 +1,11 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { ChevronDown } from 'lucide-react';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { ChevronDown } from "lucide-react";
 
 const SelectWrapper = styled.div`
   position: relative;
   display: inline-block;
-  width: 200px; /* Justera bredden efter behov */
+  width: 200px;
 `;
 
 const Select = styled.select`
@@ -14,7 +14,7 @@ const Select = styled.select`
   background-color: white;
   border: 2px solid black;
   border-radius: 8px;
-  padding: 10px 40px 10px 10px; /* Extra padding till höger för att ge plats åt ikonen */
+  padding: 10px 40px 10px 10px;
   font-size: 16px;
   cursor: pointer;
   outline: none;
@@ -36,12 +36,12 @@ const IconWrapper = styled.div`
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
-  pointer-events: none; /* Ser till att ikonen inte blockerar klick */
+  pointer-events: none;
 `;
 
 const StyledFiltersWrapper = styled.div`
   display: flex;
-  gap: 16px;  /* Justera gapet mellan filtren */
+  gap: 16px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -59,7 +59,10 @@ const Filters = ({
   return (
     <StyledFiltersWrapper>
       <SelectWrapper>
-        <Select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
+        <Select
+          value={genreFilter}
+          onChange={(e) => setGenreFilter(e.target.value, locationFilter)}
+        >
           <option value="">All Genres</option>
           {uniqueGenres.map((genre) => (
             <option key={genre} value={genre}>
@@ -73,7 +76,10 @@ const Filters = ({
       </SelectWrapper>
 
       <SelectWrapper>
-        <Select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)}>
+        <Select
+          value={locationFilter}
+          onChange={(e) => setLocationFilter(genreFilter, e.target.value)}
+        >
           <option value="">All Locations</option>
           {uniqueLocations.map((location) => (
             <option key={location} value={location}>

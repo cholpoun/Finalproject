@@ -210,7 +210,7 @@
 
 //   useEffect(() => {
 //     console.log("🎯 Sending data to API:", { festivalId, quantity }); // Log the payload
-  
+
 //     fetch("http://localhost:3000/api/tickets/create-payment-intent", {
 //       method: "POST",
 //       headers: {
@@ -234,8 +234,6 @@
 //         console.error("❌ Error fetching clientSecret:", err.message);
 //       });
 //   }, [festivalId, quantity]);
-  
-  
 
 //   return (
 //     <div>
@@ -258,7 +256,6 @@
 //   quantity: PropTypes.number.isRequired,
 // };
 
-
 import { useEffect, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import PropTypes from "prop-types";
@@ -267,7 +264,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import StripeCheckout from "./Stripe/StripeCheckout";
 
 const TicketPurchaseContainer = styled.div`
-  background-color: #000; /
+  background-color: #000;
   color: #fff; /* Ensure text is visible on a dark background */
   padding: 20px;
   border-radius: 8px;
@@ -334,7 +331,9 @@ export default function TicketPurchase({ festivalId }) {
   useEffect(() => {
     const fetchFestival = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/festivals/${festivalId}`);
+        const response = await fetch(
+          `http://localhost:3000/festivals/${festivalId}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch festival details.");
         }
@@ -354,14 +353,17 @@ export default function TicketPurchase({ festivalId }) {
 
     const fetchClientSecret = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/tickets/create-payment-intent", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ festivalId, quantity }),
-        });
+        const response = await fetch(
+          "http://localhost:3000/api/tickets/create-payment-intent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ festivalId, quantity }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch client secret.");
@@ -378,7 +380,8 @@ export default function TicketPurchase({ festivalId }) {
   }, [festival, quantity, festivalId]);
 
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
-  const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const decreaseQuantity = () =>
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const totalPrice = festival ? quantity * festival.ticketPrice : 0;
 

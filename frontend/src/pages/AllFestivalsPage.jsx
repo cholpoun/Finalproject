@@ -29,40 +29,58 @@ const StyledSection = styled.section`
 const AllFestivals = () => {
   const [festivals, setFestivals] = useState([]);
   const [filteredFestivals, setFilteredFestivals] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [favoriteFestivals, setFavoriteFestivals] = useState(
-    JSON.parse(localStorage.getItem("favoriteFestivals")) || []
-  );
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Hämta parametrar från URL
   const genreFilter = searchParams.get("genre") || "";
   const locationFilter = searchParams.get("location") || "";
   const sortOption = searchParams.get("sort") || "";
-  const limit = 15; // Visar endast 15 festivaler
+  const limit = 15;
+
+  const [uniqueGenres, setUniqueGenres] = useState([]);
+  const [uniqueLocations, setUniqueLocations] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
-
-    // Om genre är definierad, hämta festivaler baserat på genre
     const genreQuery = genreFilter ? `&genre=${genreFilter}` : "";
     const locationQuery = locationFilter ? `&location=${locationFilter}` : "";
 
     axios
       .get(
         `http://localhost:3000/festivals?limit=${limit}${genreQuery}${locationQuery}`
-      ) // Fokuserar på genre och location
+      )
       .then((response) => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
-        setLoading(false);
+
+        const genres = [
+          ...new Set(response.data.data.map((festival) => festival.genre)),
+        ];
+        setUniqueGenres(genres);
+
+        const allLocations = response.data.data.map(
+          (festival) => festival.location
+        );
+        const uniqueLocationsSet = new Set();
+
+        allLocations.forEach((locationString) => {
+          if (locationString) {
+            const parts = locationString.split(",");
+            if (parts.length > 1) {
+              const city = parts[0].trim();
+              const country = parts[1].trim();
+              uniqueLocationsSet.add(`${city}, ${country}`);
+            } else {
+              uniqueLocationsSet.add(locationString.trim());
+            }
+          }
+        });
+
+        setUniqueLocations(Array.from(uniqueLocationsSet));
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
-        setLoading(false);
       });
-  }, [genreFilter, locationFilter, limit]); // Lägg till genreFilter och locationFilter som beroende
+  }, [genreFilter, locationFilter, limit, sortOption]);
 
   useEffect(() => {
     let filtered = festivals;
@@ -95,49 +113,27 @@ const AllFestivals = () => {
     setFilteredFestivals(filtered);
   }, [genreFilter, locationFilter, sortOption, festivals]);
 
-  const handleFavoriteToggle = (festivalId, isFavorite) => {
-    let updatedFavorites = [...favoriteFestivals];
-    if (isFavorite) {
-      updatedFavorites.push(festivalId);
-    } else {
-      updatedFavorites = updatedFavorites.filter((id) => id !== festivalId);
-    }
-
-    setFavoriteFestivals(updatedFavorites);
-    localStorage.setItem("favoriteFestivals", JSON.stringify(updatedFavorites));
-  };
-
   const handleFilterChange = (newGenre, newLocation) => {
-    setSearchParams({
-      genre: newGenre || "",
-      location: newLocation || "",
-      sort: sortOption || "",
+    setSearchParams((prevParams) => {
+      return {
+        ...prevParams,
+        genre: newGenre || "",
+        location: newLocation || "",
+        sort: prevParams.get("sort") || "",
+      };
     });
   };
 
   const handleSortChange = (newSort) => {
-    setSearchParams({
-      genre: genreFilter || "",
-      location: locationFilter || "",
-      sort: newSort || "",
+    setSearchParams((prevParams) => {
+      return {
+        ...prevParams,
+        sort: newSort || "",
+        genre: prevParams.get("genre") || "",
+        location: prevParams.get("location") || "",
+      };
     });
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  const uniqueGenres = [
-    ...new Set(festivals.map((festival) => festival.genre)),
-  ];
-  const uniqueLocations = [
-    ...new Set(
-      festivals.map(
-        (festival) =>
-          festival.location.split(",")[1]?.trim() || festival.location
-      )
-    ),
-  ];
 
   return (
     <>
@@ -159,11 +155,7 @@ const AllFestivals = () => {
           />
         </StyledControls>
 
-        <FestivalsList
-          festivals={filteredFestivals}
-          favoriteFestivals={favoriteFestivals}
-          onFavoriteToggle={handleFavoriteToggle}
-        />
+        <FestivalsList festivals={filteredFestivals} />
       </StyledSection>
     </>
   );

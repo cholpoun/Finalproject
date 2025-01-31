@@ -22,8 +22,8 @@ const FestivalsList = ({ festivals }) => {
     <GridContainer>
       {festivals.map((festival) => {
         const imageUrl = festival.image || "default-image-url.jpg";
-        const location = festival.location || "Unknown location"; // Default location if not provided
-        const genre = festival.genre || "Unknown genre"; // Default genre if not provided
+        const location = festival.location || "Unknown location";
+        const genre = festival.genre || "Unknown genre";
 
         return (
           <FestivalCard
@@ -32,7 +32,7 @@ const FestivalsList = ({ festivals }) => {
             name={festival.name}
             imageUrl={imageUrl}
             location={location}
-            genre={genre} // Skickar med genre-propen till FestivalCard
+            genre={genre}
           />
         );
       })}
