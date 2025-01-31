@@ -12,8 +12,8 @@ const NavbarContainer = styled.nav`
   position: fixed;
   top: 0;
   width: 100%;
-  max-width: 1440px; /* Begränsar maxbredden till 1440px */
-  margin: 0 auto; /* Centrerar navbaren när den är mindre än 1440px */
+  max-width: 1440px;
+  margin: 0 auto;
   background: linear-gradient(135deg, #f8cdda 0%, #1b93d1 100%);
   backdrop-filter: blur(15px);
   z-index: 50;
@@ -21,12 +21,12 @@ const NavbarContainer = styled.nav`
   transition: top 0.3s ease-in-out;
   border-radius: 0 0 12px 12px;
   width: 100%;
-  left: 0; /* Ensures the navbar aligns with the body */
+  left: 0;
 `;
 
 const NavbarContent = styled.div`
-  max-width: 1200px; /* Sets the max-width */
-  margin: 0 auto; /* Centers the navbar content */
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   align-items: center;
@@ -45,13 +45,13 @@ const NavbarContent = styled.div`
 `;
 
 const Logo = styled.div`
-  font-size: 1.5rem; /* Smaller logo on mobile */
+  font-size: 1.5rem;
   font-weight: bold;
   color: #fff;
   font-family: "Poppins", sans-serif;
 
   @media (min-width: ${breakpoints.tablet}) {
-    font-size: 2rem; /* Larger logo on tablet and up */
+    font-size: 2rem;
   }
 `;
 
@@ -67,7 +67,7 @@ const NavLinks = styled.div`
   gap: 1.5rem;
 
   &.open {
-    display: flex; /* Show links when sidebar is open */
+    display: flex;
   }
 
   @media (min-width: ${breakpoints.tablet}) {
@@ -143,7 +143,7 @@ const HamburgerMenu = styled.button`
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    display: none; /* Hamburgerikonen ska döljas på större skärmar */
+    display: none;
   }
 `;
 
@@ -156,15 +156,15 @@ const Sidebar = styled.div`
   background: rgba(248, 205, 218, 0.9);
   z-index: 100;
   transition: transform 0.3s ease-in-out;
-  transform: translateX(100%); /* Sidomenyn är gömd som standard */
+  transform: translateX(100%);
   border-radius: 12px 0 0 12px;
 
   &.open {
-    transform: translateX(0); /* Visar sidomenyn när den är öppen */
+    transform: translateX(0);
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    display: none; /* Sidomenyn ska inte visas på tablet eller större skärmar */
+    display: none;
   }
 `;
 
@@ -196,9 +196,8 @@ const Navbar = () => {
     setIsSidebarOpen(false);
   };
 
-  // Hantera klick på "Profile"-länken
   const handleProfileClick = (e) => {
-    e.preventDefault(); // Förhindrar att NavLink följer sin vanliga länklogik
+    e.preventDefault();
     const userId = localStorage.getItem("userId");
     if (userId) {
       navigate(`/profile/${userId}`);
@@ -206,6 +205,19 @@ const Navbar = () => {
       navigate("/users/authenticate");
     }
   };
+
+  // Close sidebar when clicking outside or on a link
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+        closeSidebar();
+      }
+    };
+
+    // Event listener to handle click outside
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -260,7 +272,6 @@ const Navbar = () => {
           <NavLink to="/festivals" onClick={closeSidebar}>
             Festivals
           </NavLink>
-          {/* Uppdaterad NavLink för Profile i sidomenyn */}
           <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
             Profile
           </NavLink>

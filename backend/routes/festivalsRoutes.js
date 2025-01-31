@@ -12,17 +12,15 @@ const attachRandomImages = async (festivals) => {
   try {
     const images = await ImageModel.find();
 
-    // Kontrollera om vi har några bilder att koppla
     if (!images.length) {
       throw new Error("No images found in the database.");
     }
 
-    // Koppla en slumpmässig bild till varje festival
     return festivals.map((festival) => {
       const randomImage = images[Math.floor(Math.random() * images.length)];
       return {
-        ...festival.toObject(), // Mongoose till vanlig JavaScript-objekt
-        image: randomImage.url, // Slumpmässig bild URL
+        ...festival.toObject(),
+        image: randomImage.url,
       };
     });
   } catch (error) {
@@ -35,21 +33,15 @@ const attachRandomImages = async (festivals) => {
 
 festivalRouter.get("/recreate-mongo-data-from-json", async (req, res) => {
   try {
-    // Radera gammal data
-    const deleteNullResults = await FestivalModel.deleteMany({ _id: null });
-    const deleteResults = await FestivalModel.deleteMany({});
-    console.log("Deleted old data", { deleteNullResults, deleteResults });
+    await FestivalModel.deleteMany({});
+    console.log("Deleted old festival data");
 
-    // Kontrollera om `festivals` är tillgängligt från din fil
     if (!festivals || !festivals.length) {
       return res.status(400).json({ error: "No festival data available." });
     }
 
-    // Skapa festivaler från JSON-filen
-    const createResults = await FestivalModel.insertMany(festivals, {
-      rawResult: true,
-    });
-    console.log("Re-created data from JSON file", { createResults });
+    await FestivalModel.insertMany(festivals);
+    console.log("Re-created data from JSON file");
 
     res.sendStatus(201);
   } catch (err) {
@@ -62,30 +54,29 @@ festivalRouter.get("/recreate-mongo-data-from-json", async (req, res) => {
 });
 
 /**
- * Route to fetch festivals with pagination and random images attached
+ * Route to fetch all festivals with random images attached
  */
 festivalRouter.get("/", async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
+  const genreFilter = req.query.genre || "";
 
   try {
-    // Fetch paginated festivals
-    const festivals = await FestivalModel.find().skip(skip).limit(limit);
-    const totalItems = await FestivalModel.countDocuments();
+    let festivalsQuery = FestivalModel.find();
+
+    if (genreFilter) {
+      festivalsQuery = festivalsQuery.where("genre").equals(genreFilter);
+    }
+
+    const festivals = await festivalsQuery;
 
     if (!festivals.length) {
       return res.status(404).json({ error: "No festivals found." });
     }
 
-    // Koppla slumpmässiga bilder till festivaler
     const festivalsWithImages = await attachRandomImages(festivals);
 
     res.status(200).json({
       data: festivalsWithImages,
-      currentPage: page,
-      totalPages: Math.ceil(totalItems / limit),
-      totalItems,
+      totalItems: festivals.length,
     });
   } catch (error) {
     console.error("Error fetching festivals:", error);
