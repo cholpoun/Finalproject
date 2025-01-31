@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import Navbar from "../components/Navbar.jsx";
 import Filters from "../components/Filters.jsx";
 import SortOptions from "../components/SortOptions.jsx";
 import FestivalsList from "../components/FestivalsList.jsx";
-import Pagination from "../components/Pagination.jsx";
 import styled from "styled-components";
 
 const StyledControls = styled.div`
@@ -39,16 +37,22 @@ const AllFestivals = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Hämta parametrar från URL
-  const currentPage = Number(searchParams.get("page")) || 1;
   const genreFilter = searchParams.get("genre") || "";
   const locationFilter = searchParams.get("location") || "";
   const sortOption = searchParams.get("sort") || "";
-  const limit = 12;
+  const limit = 15; // Visar endast 15 festivaler
 
   useEffect(() => {
     setLoading(true);
+
+    // Om genre är definierad, hämta festivaler baserat på genre
+    const genreQuery = genreFilter ? `&genre=${genreFilter}` : "";
+    const locationQuery = locationFilter ? `&location=${locationFilter}` : "";
+
     axios
-      .get(`http://localhost:3000/festivals?page=${currentPage}&limit=${limit}`)
+      .get(
+        `http://localhost:3000/festivals?limit=${limit}${genreQuery}${locationQuery}`
+      ) // Fokuserar på genre och location
       .then((response) => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
@@ -58,7 +62,7 @@ const AllFestivals = () => {
         console.error("Error fetching data: ", error);
         setLoading(false);
       });
-  }, [currentPage]);
+  }, [genreFilter, locationFilter, limit]); // Lägg till genreFilter och locationFilter som beroende
 
   useEffect(() => {
     let filtered = festivals;
@@ -105,7 +109,6 @@ const AllFestivals = () => {
 
   const handleFilterChange = (newGenre, newLocation) => {
     setSearchParams({
-      page: currentPage,
       genre: newGenre || "",
       location: newLocation || "",
       sort: sortOption || "",
@@ -114,19 +117,9 @@ const AllFestivals = () => {
 
   const handleSortChange = (newSort) => {
     setSearchParams({
-      page: currentPage,
       genre: genreFilter || "",
       location: locationFilter || "",
       sort: newSort || "",
-    });
-  };
-
-  const handlePageChange = (newPage) => {
-    setSearchParams({
-      page: newPage,
-      genre: genreFilter || "",
-      location: locationFilter || "",
-      sort: sortOption || "",
     });
   };
 
@@ -148,7 +141,6 @@ const AllFestivals = () => {
 
   return (
     <>
-      <Navbar />
       <StyledSection>
         <h1>All Festivals</h1>
 
@@ -171,13 +163,6 @@ const AllFestivals = () => {
           festivals={filteredFestivals}
           favoriteFestivals={favoriteFestivals}
           onFavoriteToggle={handleFavoriteToggle}
-        />
-
-        {/* Pagination Component */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={5}
-          setCurrentPage={handlePageChange}
         />
       </StyledSection>
     </>

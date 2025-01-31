@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import styled from "styled-components";
-import Footer from "../components/Footer";
 
 const PageContainer = styled.div`
   display: flex;
@@ -64,9 +62,6 @@ const AuthPage = () => {
 
   return (
     <PageContainer>
-      {" "}
-      {/* Wrap everything in PageContainer */}
-      <Navbar />
       <HeroImage>
         <FormContainer>
           {isLogin ? (
@@ -81,7 +76,6 @@ const AuthPage = () => {
           </ToggleButton>
         </FormContainer>
       </HeroImage>
-      <Footer />
     </PageContainer>
   );
 };

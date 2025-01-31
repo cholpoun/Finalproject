@@ -8,11 +8,12 @@ import styled from "styled-components";
 import QRCode from "react-qr-code";
 
 const ProfileContainer = styled.div`
-  max-width: 600px;
-  margin: 40px auto;
+  width: 90%;
+  max-width: 1200px;
+  margin: 80px auto 40px auto; /* Lägger till marginal upptill */
   background: linear-gradient(135deg, #d85a94 0%, #145a7a 100%);
   border-radius: 12px;
-  padding: 20px;
+  padding: 40px 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   color: #f4f4f4;

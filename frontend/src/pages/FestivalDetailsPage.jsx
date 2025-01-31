@@ -1,9 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import Navbar from "../components/Navbar.jsx";
 import styled from "styled-components";
 import FestivalDetails from "../components/FestivalDetails.jsx";
 import TicketPurchase from "../components/TicketPurchase.jsx";
-import Footer from "../components/Footer.jsx";
 
 const FestivalDetailsSection = styled.section`
   display: flex;
@@ -63,7 +61,6 @@ const FestivalDetailsPage = () => {
 
   return (
     <>
-      <Navbar />
       <FestivalDetailsSection>
         <div className="festival-content">
           <div className="festival-info">
@@ -85,7 +82,6 @@ const FestivalDetailsPage = () => {
           </div>
         </div>
       </FestivalDetailsSection>
-      <Footer />
     </>
   );
 };

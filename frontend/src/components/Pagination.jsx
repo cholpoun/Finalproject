@@ -23,13 +23,24 @@ const Button = styled.button`
 `;
 
 const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
+  console.log("Current Page:", currentPage);
+  console.log("Total Pages:", totalPages);
+
   return (
     <PaginationContainer>
-      <Button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+      <Button
+        disabled={currentPage === 1}
+        onClick={() => setCurrentPage(currentPage - 1)}
+      >
         Previous
       </Button>
-      <span>Page {currentPage} of {totalPages}</span>
-      <Button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
+      <span>
+        Page {currentPage} of {totalPages}
+      </span>
+      <Button
+        disabled={currentPage === totalPages}
+        onClick={() => setCurrentPage(currentPage + 1)}
+      >
         Next
       </Button>
     </PaginationContainer>

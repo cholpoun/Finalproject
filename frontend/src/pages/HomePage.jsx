@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Navbar from "../components/Navbar.jsx";
 import FestivalsList from "../components/FestivalsList.jsx";
-import Footer from "../components/Footer.jsx";
 
 const FestivalSection = styled.section`
   text-align: center;
@@ -36,12 +34,10 @@ const HomePage = () => {
 
   return (
     <>
-      <Navbar />
       <FestivalSection>
         <h2>New Festivals</h2>
         <FestivalsList festivals={festivals.slice(0, 9)} />
       </FestivalSection>
-      <Footer />
     </>
   );
 };

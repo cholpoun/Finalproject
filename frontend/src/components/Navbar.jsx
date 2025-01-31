@@ -12,29 +12,31 @@ const NavbarContainer = styled.nav`
   position: fixed;
   top: 0;
   width: 100%;
+  max-width: 1440px; /* Begränsar maxbredden till 1440px */
+  margin: 0 auto; /* Centrerar navbaren när den är mindre än 1440px */
   background: linear-gradient(135deg, #f8cdda 0%, #1b93d1 100%);
   backdrop-filter: blur(15px);
   z-index: 50;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   transition: top 0.3s ease-in-out;
   border-radius: 0 0 12px 12px;
+  width: 100%;
+  left: 0; /* Ensures the navbar aligns with the body */
 `;
 
 const NavbarContent = styled.div`
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 1rem;
+  max-width: 1200px; /* Sets the max-width */
+  margin: 0 auto; /* Centers the navbar content */
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   height: 4rem;
   justify-content: space-between;
   gap: 0.5rem;
 
-  @media (min-width: ${breakpoints.tablet}) {
+  @media (max-width: ${breakpoints.laptop}) {
     max-width: 90%;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    justify-content: space-between;
+    padding: 0 1.5rem;
   }
 
   @media (min-width: ${breakpoints.laptop}) {
@@ -121,7 +123,7 @@ const NavbarIcons = styled.div`
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    margin-right: 1.5 rem;
+    margin-right: 1.5rem;
   }
 `;
 
@@ -141,7 +143,7 @@ const HamburgerMenu = styled.button`
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    display: none;
+    display: none; /* Hamburgerikonen ska döljas på större skärmar */
   }
 `;
 
@@ -154,11 +156,15 @@ const Sidebar = styled.div`
   background: rgba(248, 205, 218, 0.9);
   z-index: 100;
   transition: transform 0.3s ease-in-out;
-  transform: translateX(100%);
+  transform: translateX(100%); /* Sidomenyn är gömd som standard */
   border-radius: 12px 0 0 12px;
 
   &.open {
-    transform: translateX(0);
+    transform: translateX(0); /* Visar sidomenyn när den är öppen */
+  }
+
+  @media (min-width: ${breakpoints.tablet}) {
+    display: none; /* Sidomenyn ska inte visas på tablet eller större skärmar */
   }
 `;
 

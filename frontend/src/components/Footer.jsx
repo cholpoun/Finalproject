@@ -12,7 +12,7 @@ const FooterContainer = styled.footer`
 const FooterContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem; /* Added padding to push content inward */
+  padding: 0 2rem;
 `;
 
 const FooterGrid = styled.div`
