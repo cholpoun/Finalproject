@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Login from "../components/Login";
 import Register from "../components/Register";
+import Navbar from "../components/Navbar"; // Import Navbar
+import Footer from "../components/Footer"; // Import Footer
 import styled from "styled-components";
 
 const PageContainer = styled.div`
@@ -18,6 +20,7 @@ const HeroImage = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;
 
 const FormContainer = styled.div`
@@ -29,6 +32,10 @@ const FormContainer = styled.div`
   text-align: center;
   width: 90%;
   max-width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const ToggleButton = styled.button`
@@ -62,6 +69,7 @@ const AuthPage = () => {
 
   return (
     <PageContainer>
+      <Navbar />
       <HeroImage>
         <FormContainer>
           {isLogin ? (
@@ -76,6 +84,7 @@ const AuthPage = () => {
           </ToggleButton>
         </FormContainer>
       </HeroImage>
+      <Footer />
     </PageContainer>
   );
 };

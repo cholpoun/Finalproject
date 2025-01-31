@@ -12,7 +12,6 @@ const NavbarContainer = styled.nav`
   position: fixed;
   top: 0;
   width: 100%;
-  max-width: 1440px;
   margin: 0 auto;
   background: linear-gradient(135deg, #f8cdda 0%, #1b93d1 100%);
   backdrop-filter: blur(15px);
@@ -20,27 +19,27 @@ const NavbarContainer = styled.nav`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   transition: top 0.3s ease-in-out;
   border-radius: 0 0 12px 12px;
-  width: 100%;
   left: 0;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: ${breakpoints.laptop}) {
+    padding: 0 1.5rem;
+  }
 `;
 
 const NavbarContent = styled.div`
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   align-items: center;
   height: 4rem;
-  justify-content: space-between;
-  gap: 0.5rem;
+  gap: 1rem;
 
   @media (max-width: ${breakpoints.laptop}) {
-    max-width: 90%;
-    padding: 0 1.5rem;
-  }
-
-  @media (min-width: ${breakpoints.laptop}) {
-    max-width: 1200px;
+    max-width: 100%;
   }
 `;
 
@@ -76,7 +75,6 @@ const NavLinks = styled.div`
     position: static;
     background: transparent;
     padding: 0;
-    width: auto;
     gap: 2rem;
   }
 `;
@@ -206,7 +204,6 @@ const Navbar = () => {
     }
   };
 
-  // Close sidebar when clicking outside or on a link
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
@@ -214,7 +211,6 @@ const Navbar = () => {
       }
     };
 
-    // Event listener to handle click outside
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -239,23 +235,23 @@ const Navbar = () => {
         <NavLink to="/">
           <Logo>NextFest</Logo>
         </NavLink>
-
-        <NavbarIcons>
-          <button onClick={handleProfileClick} aria-label="Profile">
-            <Smile style={{ color: "white" }} />
-          </button>
-        </NavbarIcons>
-
-        <NavLinks>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/about">About Us</NavLink>
-          <NavLink to="/festivals">Festivals</NavLink>
-
-          <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
-            Profile
-          </NavLink>
-        </NavLinks>
-
+        <div
+          style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}
+        >
+          <NavbarIcons>
+            <button onClick={handleProfileClick} aria-label="Profile">
+              <Smile style={{ color: "white" }} />
+            </button>
+          </NavbarIcons>
+          <NavLinks>
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/about">About Us</NavLink>
+            <NavLink to="/festivals">Festivals</NavLink>
+            <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
+              Profile
+            </NavLink>
+          </NavLinks>
+        </div>
         <HamburgerMenu onClick={toggleSidebar} aria-label="Toggle Menu">
           {isSidebarOpen ? <X /> : <Menu />}
         </HamburgerMenu>

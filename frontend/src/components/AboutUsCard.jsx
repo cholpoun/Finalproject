@@ -4,9 +4,7 @@ const AboutUsContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #d85a94 0%, #145a7a 100%);
-  padding: 40px 20px;
+  margin-top: 60px;
 `;
 
 const Card = styled.div`
@@ -14,35 +12,47 @@ const Card = styled.div`
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  max-width: 800px;
+  width: 100%;
+  max-width: 1024px;
   text-align: center;
   color: #333;
   font-family: "Quicksand", sans-serif;
 `;
 
 const Heading = styled.h2`
-  font-size: 2rem;
+  font-size: 1.75rem;
   margin-bottom: 1rem;
-  color: #d85a94;
 `;
 
 const Description = styled.p`
   font-size: 1rem;
   margin-bottom: 2rem;
+  line-height: 1.6;
+  padding: 2rem;
 `;
 
 const Columns = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 3rem;
   justify-content: center;
 `;
 
 const Column = styled.div`
-  flex: 1 1 300px;
+  flex: 1 1 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+
+  @media (min-width: 768px) {
+    flex: 1 1 45%;
+    text-align: left;
+  }
+
+  @media (min-width: 1024px) {
+    flex: 1 1 45%;
+  }
 `;
 
 const Image = styled.img`
@@ -98,7 +108,6 @@ const AboutUsCard = () => {
             />
             <SubHeading>Cholpon</SubHeading>
             <Text>
-              {" "}
               Cholpon is a Junior Developer with a background in **marketing and
               product marketing**. She combines technical skills with strategic
               thinking to build user-friendly solutions while leveraging her

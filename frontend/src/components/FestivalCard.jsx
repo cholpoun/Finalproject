@@ -44,6 +44,7 @@ const FestivalLink = styled(Link)`
   h2 {
     color: #f4f4f4;
     transition: color 0.3s ease, text-decoration 0.3s ease;
+    font-size: 20px;
   }
 
   &:hover h2 {

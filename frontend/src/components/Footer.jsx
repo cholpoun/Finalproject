@@ -7,10 +7,10 @@ const FooterContainer = styled.footer`
   width: 100%;
   border-radius: 12px 12px 0 0;
   box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+  position: relative; /* Lägg till för att kunna positionera inre innehåll om det behövs */
 `;
 
 const FooterContent = styled.div`
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
 `;
