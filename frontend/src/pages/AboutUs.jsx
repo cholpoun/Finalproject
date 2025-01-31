@@ -1,4 +1,4 @@
-import Navbar from "../components/Navbar"; // Corrected import path
+import Navbar from "../components/Navbar"; 
 import Footer from "../components/Footer";
 import AboutUsCard from "../components/AboutUsCard";
 

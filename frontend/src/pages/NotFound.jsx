@@ -1,5 +1,3 @@
-// src/pages/NotFound.jsx
-
 const NotFound = () => {
   return (
     <div style={styles.container}>
