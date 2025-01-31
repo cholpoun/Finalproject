@@ -49,11 +49,59 @@
 // };
 
 
+// import jwt from "jsonwebtoken";
+// import UserModel from "../models/Users.js";
+
+// export const authenticateUser = async (req, res, next) => {
+//   // Get token from Authorization header
+//   const token = req.header("Authorization")?.replace("Bearer ", "");
+
+//   if (!token) {
+//     console.log("❌ No token provided");
+//     return res.status(401).json({ error: "Authentication required" });
+//   }
+
+//   try {
+//     // Debugging - Show received token
+//     console.log("✅ Token received:", token);
+
+//     // Verify JWT token
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+//     // Debugging - Show decoded token
+//     console.log("✅ Decoded JWT:", decoded);
+
+//     // Extract the correct user ID (Fix: use `userId` instead of `id`)
+//     const userId = decoded.userId; // ✅ Corrected!
+//     console.log("🔍 Extracted User ID from token:", userId);
+
+//     // Fetch user from database
+//     const user = await UserModel.findById(userId).select("-password");
+
+//     if (!user) {
+//       console.log("❌ No user found in database for this ID");
+//       return res.status(401).json({ error: "Invalid user" });
+//     }
+
+//     // Debugging - Log authenticated user ID
+//     console.log("✅ Authenticated User ID:", user._id.toString());
+
+//     // Attach user to request
+//     req.user = user;
+//     req.userId = user._id.toString();
+
+//     next(); // Continue to next middleware/route
+//   } catch (error) {
+//     console.log("❌ Error verifying token:", error.message);
+//     res.status(401).json({ error: "Invalid or expired token" });
+//   }
+// };
+
+
 import jwt from "jsonwebtoken";
 import UserModel from "../models/Users.js";
 
 export const authenticateUser = async (req, res, next) => {
-  // Get token from Authorization header
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
@@ -62,35 +110,26 @@ export const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    // Debugging - Show received token
     console.log("✅ Token received:", token);
-
-    // Verify JWT token
+    
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Debugging - Show decoded token
     console.log("✅ Decoded JWT:", decoded);
 
-    // Extract the correct user ID (Fix: use `userId` instead of `id`)
-    const userId = decoded.userId; // ✅ Corrected!
+    const userId = decoded.userId; // ✅ Always extract `userId`
     console.log("🔍 Extracted User ID from token:", userId);
 
-    // Fetch user from database
+    // Fetch user from the database
     const user = await UserModel.findById(userId).select("-password");
 
     if (!user) {
-      console.log("❌ No user found in database for this ID");
+      console.log("❌ No user found for this token");
       return res.status(401).json({ error: "Invalid user" });
     }
 
-    // Debugging - Log authenticated user ID
-    console.log("✅ Authenticated User ID:", user._id.toString());
+    req.user = user; // ✅ Attach full user object
+    req.user.id = userId; // ✅ Explicitly set user ID
 
-    // Attach user to request
-    req.user = user;
-    req.userId = user._id.toString();
-
-    next(); // Continue to next middleware/route
+    next(); // Continue
   } catch (error) {
     console.log("❌ Error verifying token:", error.message);
     res.status(401).json({ error: "Invalid or expired token" });

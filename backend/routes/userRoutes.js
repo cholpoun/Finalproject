@@ -110,21 +110,42 @@ router.post(
 );
 
 // View user profile
-router.get("/:id/profile", authenticateUser, async (req, res) => {
+router.get("/me/profile", authenticateUser, async (req, res) => {
   try {
-    // Här använder vi req.userId istället för req.params.id
-    const user = req.user; // req.user sätts av authenticateUser middleware
+    const userId = req.user.id; // ✅ Use authenticated user ID
 
-    // Debugging: Visa användar-ID för att säkerställa att det finns
-    console.log("Requested User ID:", req.params.id); // Logga begärd ID
-    console.log("Authenticated User ID:", req.userId); // Logga autentiserad ID
+    console.log("✅ Authenticated User ID:", userId);
 
-    res.status(200).json({ user });
-  } catch (error) {
-    res.status(500).json({
-      error: "Failed to retrieve user profile",
-      details: error.message,
+    // Fetch the user's profile with purchased tickets
+    const user = await UserModel.findById(userId)
+      .select("username email purchasedTickets")
+      .populate({
+        path: "purchasedTickets.festivalId",
+        model: "Festival", // Ensure the model matches your FestivalModel name
+        select: "name ticketPrice location date",
+      });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Format purchased tickets
+    const formattedTickets = user.purchasedTickets.map(ticket => ({
+      festivalName: ticket.festivalId ? ticket.festivalId.name : "Unknown Festival",
+      quantity: ticket.quantity,
+      totalPrice: ticket.quantity * (ticket.festivalId ? ticket.festivalId.ticketPrice : 0),
+      location: ticket.festivalId ? ticket.festivalId.location : "N/A",
+      date: ticket.festivalId ? ticket.festivalId.date : "N/A",
+    }));
+
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      purchasedTickets: formattedTickets,
     });
+  } catch (error) {
+    console.error("❌ Error fetching user profile:", error.message);
+    res.status(500).json({ error: "Failed to retrieve user profile." });
   }
 });
 
@@ -217,5 +238,29 @@ router.delete(
     }
   }
 );
+
+// Get user's purchased tickets
+router.get("/me/tickets", authenticateUser, async (req, res) => {
+  try {
+    // Find the authenticated user's purchased tickets
+    const user = await UserModel.findById(req.user.id).select("purchasedTickets").populate({
+      path: "purchasedTickets.festivalId",
+      select: "name ticketPrice location date", // Include relevant festival fields
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ tickets: user.purchasedTickets });
+  } catch (error) {
+    console.error("❌ Error fetching user's purchased tickets:", error.message);
+    res.status(500).json({
+      error: "Failed to fetch purchased tickets.",
+      details: error.message,
+    });
+  }
+});
+
 
 export default router;

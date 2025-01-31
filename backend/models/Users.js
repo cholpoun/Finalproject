@@ -10,14 +10,14 @@ const UserSchema = new mongoose.Schema(
     favouriteFestivals: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "festivals",
-        unique: true, // Prevent duplicate festivals
+        ref: "Festival", // ✅ Ensure it matches the correct model name
+        unique: true,
       },
     ],
 
     purchasedTickets: [
       {
-        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "festivals", required: true },
+        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival", required: true }, // ✅ Correct reference
         quantity: { type: Number, required: true, min: 1 },
         purchaseDate: { type: Date, required: true, default: Date.now },
       },
@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     payments: [
       {
         amount: { type: Number, required: true, min: 1 },
-        paymentMethod: { type: String, required: true, enum: ["Credit Card", "PayPal", "Bank Transfer"] },
+        paymentMethod: { type: String, required: true, enum: ["Credit Card", "Stripe"] },
         status: { type: String, enum: ["Pending", "Completed", "Failed"], default: "Completed" },
         paymentDate: { type: Date, default: Date.now },
       },
@@ -34,8 +34,9 @@ const UserSchema = new mongoose.Schema(
 
     role: { type: String, enum: ["user", "admin"], default: "user" },
   },
-  { timestamps: true } // Adds `createdAt` & `updatedAt` fields
+  { timestamps: true }
 );
+
 
 // ✅ Hash password before saving (only if modified)
 UserSchema.pre("save", async function (next) {
