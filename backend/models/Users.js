@@ -10,14 +10,14 @@ const UserSchema = new mongoose.Schema(
     favouriteFestivals: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Festival", // ✅ Ensure it matches the correct model name
-        unique: true,
+        ref: "Festival", // ✅ Ensure correct reference
       },
     ],
 
     purchasedTickets: [
       {
-        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival", required: true }, // ✅ Correct reference
+        ticketId: { type: mongoose.Schema.Types.ObjectId, ref: "Ticket", required: true }, // ✅ Store the actual Ticket ID
+        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival", required: true }, // ✅ Reference festival
         quantity: { type: Number, required: true, min: 1 },
         purchaseDate: { type: Date, required: true, default: Date.now },
       },
@@ -29,6 +29,7 @@ const UserSchema = new mongoose.Schema(
         paymentMethod: { type: String, required: true, enum: ["Credit Card", "Stripe"] },
         status: { type: String, enum: ["Pending", "Completed", "Failed"], default: "Completed" },
         paymentDate: { type: Date, default: Date.now },
+        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival" }, // ✅ Link payment to a festival
       },
     ],
 
@@ -36,7 +37,6 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
 
 // ✅ Hash password before saving (only if modified)
 UserSchema.pre("save", async function (next) {
@@ -53,17 +53,25 @@ UserSchema.pre("save", async function (next) {
 
 // ✅ Prevent duplicate festival IDs in `favouriteFestivals`
 UserSchema.methods.addFavoriteFestival = async function (festivalId) {
-  if (!this.favouriteFestivals.includes(festivalId)) {
+  if (!this.favouriteFestivals.includes(festivalId.toString())) {
     this.favouriteFestivals.push(festivalId);
     await this.save();
   }
 };
 
-// ✅ Remove password from API responses
+// ✅ Remove password & sensitive data from API responses
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;
   return user;
+};
+
+// ✅ Ensure proper population of `purchasedTickets`
+UserSchema.methods.getPurchasedTickets = async function () {
+  return await this.populate({
+    path: "purchasedTickets.festivalId",
+    select: "name ticketPrice location date",
+  }).execPopulate();
 };
 
 const UserModel = mongoose.model("users", UserSchema);
