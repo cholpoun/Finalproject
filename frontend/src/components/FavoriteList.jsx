@@ -1,51 +1,57 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import FestivalCard from './FestivalCard.jsx';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(1, 1fr); /* 1 card per row on mobile */
-  gap: 16px;
-  padding: 16px;
+const API_BASE_URL = "http://localhost:3000"; // Ersätt med din backend-URL
 
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr); /* 3 cards per row on tablet and above */
-  }
-`;
+const FavoriteList = () => {
+  const [favorites, setFavorites] = useState([]);
 
-const FavoriteFestivalsList = ({ favoriteFestivals, onFavoriteToggle }) => {
-  if (!Array.isArray(favoriteFestivals) || favoriteFestivals.length === 0) {
-    return <p>No favorite festivals available</p>;
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.log("Ingen token hittades.");
+          return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/users/me/favorites`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Kunde inte hämta favoriter:", response.statusText);
+          return;
+        }
+
+        const data = await response.json();
+        setFavorites(data.favorites);
+      } catch (error) {
+        console.error("Fel vid hämtning av favoritfestivaler:", error);
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
+  if (favorites.length === 0) {
+    return <p>Du har inga favoriter sparade.</p>;
   }
 
   return (
-    <GridContainer>
-      {favoriteFestivals.map((festival) => {
-        const imageUrl = festival.image || 'default-image-url.jpg'; // Use a fallback image if not available
-        return (
-          <FestivalCard 
-            key={festival._id} 
-            id={festival._id} 
-            name={festival.name} 
-            imageUrl={imageUrl}
-            isFavoriteInitially={true}  
-            onFavoriteToggle={onFavoriteToggle} 
-          />
-        );
-      })}
-    </GridContainer>
+    <div>
+      <h2>Dina favoriter</h2>
+      <ul>
+        {favorites.map((festival) => (
+          <li key={festival._id}>
+            <Link to={`/festival/${festival._id}`}>{festival.name}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
-FavoriteFestivalsList.propTypes = {
-  favoriteFestivals: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      image: PropTypes.string, // Image is optional
-    })
-  ).isRequired,
-  onFavoriteToggle: PropTypes.func.isRequired,
-};
-
-export default FavoriteFestivalsList;
+export default FavoriteList;

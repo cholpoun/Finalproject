@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar"; // Importera Navbar
-import Footer from "../components/Footer"; // Importera Footer
 import styled from "styled-components";
 import QRCode from "react-qr-code";
+import FavoriteList from "../components/FavoriteList";
 
 const ProfileContainer = styled.div`
   width: 90%;
@@ -53,6 +52,15 @@ const SignOutButton = styled.button`
   }
 `;
 
+const Message = styled.span`
+  margin-top: 100px;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  display: inline-block;
+  font-size: 20px;
+`;
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -91,11 +99,11 @@ const Profile = () => {
       } catch (error) {
         console.error("Error fetching profile:", error);
         setMessage(
-          <span>
+          <Message>
             It seems like you need to log in again due to session expiration.
             Please <Link to="/users/authenticate">log in again</Link> to
             continue.
-          </span>
+          </Message>
         );
       } finally {
         setLoading(false);
@@ -121,7 +129,6 @@ const Profile = () => {
 
   return (
     <>
-      <Navbar /> {/* Placera Navbar här */}
       <ProfileContainer>
         <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
         <h1>
@@ -154,8 +161,9 @@ const Profile = () => {
             </TicketCard>
           ))
         )}
+        <h2>Your Favorite Festivals</h2>
+        <FavoriteList />
       </ProfileContainer>
-      <Footer /> {/* Placera Footer här */}
     </>
   );
 };

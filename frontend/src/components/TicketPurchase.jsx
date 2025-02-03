@@ -74,7 +74,9 @@ export default function TicketPurchase({ festivalId }) {
   useEffect(() => {
     const fetchFestival = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/festivals/${festivalId}`);
+        const response = await fetch(
+          `http://localhost:3000/festivals/${festivalId}`
+        );
         if (!response.ok) throw new Error("Failed to fetch festival details.");
         const data = await response.json();
         setFestival(data);
@@ -99,14 +101,17 @@ export default function TicketPurchase({ festivalId }) {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/api/tickets/create-payment-intent", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ festivalId, quantity }),
-        });
+        const response = await fetch(
+          "http://localhost:3000/api/tickets/create-payment-intent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ festivalId, quantity }),
+          }
+        );
 
         if (!response.ok) throw new Error("Failed to fetch client secret.");
         const data = await response.json();
@@ -129,17 +134,20 @@ export default function TicketPurchase({ festivalId }) {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/tickets/${festivalId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          quantity,
-          paymentIntentId: paymentIntent.id, // Send the Stripe Payment ID
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/tickets/${festivalId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            quantity,
+            paymentIntentId: paymentIntent.id, // Send the Stripe Payment ID
+          }),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to save ticket purchase.");
 
@@ -152,7 +160,8 @@ export default function TicketPurchase({ festivalId }) {
   };
 
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
-  const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const decreaseQuantity = () =>
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const totalPrice = festival ? quantity * festival.ticketPrice : 0;
 
@@ -173,7 +182,10 @@ export default function TicketPurchase({ festivalId }) {
           <TotalPrice>Total Price: {totalPrice} SEK</TotalPrice>
 
           {paymentSuccess ? (
-            <p>✅ Payment Successful! Your tickets are confirmed.</p>
+            <p>
+              ✅ Payment Successful! Your tickets are confirmed and saved to
+              your profile!
+            </p>
           ) : clientSecret ? (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
               <StripeCheckout

@@ -4,7 +4,13 @@ import bcrypt from "bcryptjs";
 const UserSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, trim: true },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     password: { type: String, required: true },
 
     favouriteFestivals: [
@@ -16,8 +22,16 @@ const UserSchema = new mongoose.Schema(
 
     purchasedTickets: [
       {
-        ticketId: { type: mongoose.Schema.Types.ObjectId, ref: "Ticket", required: true }, // ✅ Store the actual Ticket ID
-        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival", required: true }, // ✅ Reference festival
+        ticketId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Ticket",
+          required: true,
+        }, // ✅ Store the actual Ticket ID
+        festivalId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Festival",
+          required: true,
+        }, // ✅ Reference festival
         quantity: { type: Number, required: true, min: 1 },
         purchaseDate: { type: Date, required: true, default: Date.now },
       },
@@ -26,8 +40,16 @@ const UserSchema = new mongoose.Schema(
     payments: [
       {
         amount: { type: Number, required: true, min: 1 },
-        paymentMethod: { type: String, required: true, enum: ["Credit Card", "Stripe"] },
-        status: { type: String, enum: ["Pending", "Completed", "Failed"], default: "Completed" },
+        paymentMethod: {
+          type: String,
+          required: true,
+          enum: ["Credit Card", "Stripe"],
+        },
+        status: {
+          type: String,
+          enum: ["Pending", "Completed", "Failed"],
+          default: "Completed",
+        },
         paymentDate: { type: Date, default: Date.now },
         festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival" }, // ✅ Link payment to a festival
       },
@@ -51,7 +73,6 @@ UserSchema.pre("save", async function (next) {
   }
 });
 
-// ✅ Prevent duplicate festival IDs in `favouriteFestivals`
 UserSchema.methods.addFavoriteFestival = async function (festivalId) {
   if (!this.favouriteFestivals.includes(festivalId.toString())) {
     this.favouriteFestivals.push(festivalId);

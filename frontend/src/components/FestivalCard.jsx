@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
+import { useState } from "react"; // Importera useState för att hantera lokal state
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import FavoriteButton from "./FavoriteButton";
 
 const Card = styled.div`
   display: flex;
@@ -54,6 +56,14 @@ const FestivalLink = styled(Link)`
 `;
 
 const FestivalCard = ({ id, name, imageUrl, location, genre }) => {
+  // Skapa en state för att hålla reda på favoritstatusen
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Funktion för att toggla favoritstatusen
+  const toggleFavorite = () => {
+    setIsFavorite((prevState) => !prevState);
+  };
+
   return (
     <Card>
       <CardImage src={imageUrl} alt={name} />
@@ -68,6 +78,12 @@ const FestivalCard = ({ id, name, imageUrl, location, genre }) => {
         >
           #{genre}
         </Link>
+        {/* Lägg till FavoriteButton här */}
+        <FavoriteButton
+          festivalId={id}
+          isFavorite={isFavorite}
+          onToggleFavorite={toggleFavorite}
+        />
       </CardContent>
     </Card>
   );
