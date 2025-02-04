@@ -16,6 +16,9 @@ const FestivalSchema = new mongoose.Schema(
         message: "Festival date must be in the future.",
       },
     },
+    genre: { type: String, required: true, trim: true }, // ✅ Add genre field
+    bio: { type: String, required: true, trim: true }, // ✅ Add bio field
+    image: { type: String, default: "" }, // ✅ Add image field with default value
   },
   { timestamps: true } // ✅ Adds createdAt & updatedAt fields automatically
 );

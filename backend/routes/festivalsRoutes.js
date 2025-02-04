@@ -110,6 +110,9 @@ festivalRouter.get("/:id", async (req, res) => {
     const festivalWithImage = {
       ...festival.toObject(),
       image: randomImage.url,
+      bio: festival.bio, // ✅ Ensure bio is included in response
+      genre: festival.genre, // ✅ Ensure genre is included in response
+      location: festival.location, // ✅ Ensure location is included in response
     };
 
     res.status(200).json(festivalWithImage);

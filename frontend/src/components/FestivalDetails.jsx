@@ -77,6 +77,9 @@ const FestivalDetails = ({ festivalId }) => {
       <p>
         <strong>Available Tickets:</strong> {festival.availableTickets}
       </p>
+      <p>
+        <strong></strong> {festival.bio}
+      </p>
       <FestivalImage src={festival.image} alt={festival.name} />
     </DetailsContainer>
   );
