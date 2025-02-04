@@ -52,6 +52,22 @@ app.get("/test", (req, res) => {
   res.json({ message: "🟢 Server is running!" });
 });
 
+// ✅ API Information Endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to the Events API! Here are the available endpoints:",
+    endpoints: [
+      { path: "/festivals", methods: ["GET"], description: "Get all festivals" },
+      { path: "/festivals/:id", methods: ["GET"], description: "Get a specific festival by ID" },
+      { path: "/tickets", methods: ["POST"], description: "Purchase tickets" },
+      { path: "/users/register", methods: ["POST"], description: "Register a new user" },
+      { path: "/users/login", methods: ["POST"], description: "Login a user" },
+      { path: "/users/me/profile", methods: ["GET"], description: "View user profile", middlewares: ["authenticated"] },
+      { path: "/payments/create-payment-intent", methods: ["POST"], description: "Create a payment intent", middlewares: ["authenticated"] }
+    ]
+  });
+});
+
 // 🔹 Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error("❌ Error:", err.stack);
