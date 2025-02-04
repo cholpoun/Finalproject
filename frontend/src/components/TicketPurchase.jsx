@@ -5,60 +5,65 @@ import styled from "styled-components";
 import { loadStripe } from "@stripe/stripe-js";
 import StripeCheckout from "./Stripe/StripeCheckout";
 
-const TicketPurchaseContainer = styled.div`
-  background-color: #000;
-  color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  width: 320px;
-  margin: 20px auto;
+const PaymentContainer = styled.div`
+  background: linear-gradient(135deg, #3e1f47 0%, #8b4f8b 100%);
+  border: 2px solid #ff9800;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
+  color: #f9f9f9;
+  font-family: "Quicksand", sans-serif;
+  max-width: 450px;
+  margin: auto;
 `;
 
 const Title = styled.h2`
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
   color: #ff9800;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const QuantityControl = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 15px;
+  margin: 20px 0;
 `;
 
 const QuantityButton = styled.button`
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #ff9800;
-  padding: 8px 12px;
-  margin: 0 5px;
-  border-radius: 4px;
+  background-color: #ff9800;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: #ff9800;
-    color: #fff;
+    background-color: #e07000;
   }
 `;
 
 const QuantityInput = styled.input`
   width: 60px;
   text-align: center;
-  border: 1px solid #ff9800;
-  border-radius: 4px;
+  border: 2px solid #ff9800;
+  border-radius: 8px;
   font-size: 16px;
   color: #fff;
-  background-color: #000;
+  background-color: #3e1f47;
 `;
 
 const TotalPrice = styled.p`
-  font-size: 18px;
+  font-size: 1.4rem;
   font-weight: bold;
   color: #ff9800;
-  margin-top: 10px;
+  margin-top: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -70,7 +75,6 @@ export default function TicketPurchase({ festivalId }) {
   const [error, setError] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // Fetch Festival Details
   useEffect(() => {
     const fetchFestival = async () => {
       try {
@@ -89,7 +93,6 @@ export default function TicketPurchase({ festivalId }) {
     fetchFestival();
   }, [festivalId]);
 
-  // Fetch Client Secret for Stripe Payment
   useEffect(() => {
     if (!festival || quantity < 1) return;
 
@@ -125,7 +128,6 @@ export default function TicketPurchase({ festivalId }) {
     fetchClientSecret();
   }, [festival, quantity, festivalId]);
 
-  // Function to Confirm Ticket Purchase After Payment
   const confirmTicketPurchase = async (paymentIntent) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -144,7 +146,7 @@ export default function TicketPurchase({ festivalId }) {
           },
           body: JSON.stringify({
             quantity,
-            paymentIntentId: paymentIntent.id, // Send the Stripe Payment ID
+            paymentIntentId: paymentIntent.id,
           }),
         }
       );
@@ -166,13 +168,16 @@ export default function TicketPurchase({ festivalId }) {
   const totalPrice = festival ? quantity * festival.ticketPrice : 0;
 
   return (
-    <TicketPurchaseContainer>
-      <Title>Ticket Checkout</Title>
+    <PaymentContainer>
+      <Title>Complete Your Payment</Title>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: "#ff0000" }}>{error}</p>}
 
       {festival ? (
         <>
+          <p><strong>{festival.name}</strong></p>
+          <p><strong>Location:</strong> {festival.location}</p>
+          <p><strong>Date:</strong> {new Date(festival.date).toLocaleDateString()}</p>
           <QuantityControl>
             <QuantityButton onClick={decreaseQuantity}>-</QuantityButton>
             <QuantityInput type="number" value={quantity} readOnly />
@@ -190,7 +195,7 @@ export default function TicketPurchase({ festivalId }) {
             <Elements stripe={stripePromise} options={{ clientSecret }}>
               <StripeCheckout
                 clientSecret={clientSecret}
-                onPaymentSuccess={confirmTicketPurchase} // Call `confirmTicketPurchase` on success
+                onPaymentSuccess={confirmTicketPurchase}
               />
             </Elements>
           ) : (
@@ -200,7 +205,7 @@ export default function TicketPurchase({ festivalId }) {
       ) : (
         <p>Loading festival details...</p>
       )}
-    </TicketPurchaseContainer>
+    </PaymentContainer>
   );
 }
 
