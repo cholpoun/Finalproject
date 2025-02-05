@@ -5,9 +5,6 @@ import ImageModel from "../models/Image.js";
 
 const festivalRouter = express.Router();
 
-/**
- * Utility function to attach a random image to each festival
- */
 const attachRandomImages = async (festivals) => {
   try {
     const images = await ImageModel.find();
@@ -53,9 +50,6 @@ festivalRouter.get("/recreate-mongo-data-from-json", async (req, res) => {
   }
 });
 
-/**
- * Route to fetch all festivals with random images attached
- */
 festivalRouter.get("/", async (req, res) => {
   const genreFilter = req.query.genre || "";
 
@@ -87,9 +81,6 @@ festivalRouter.get("/", async (req, res) => {
   }
 });
 
-/**
- * Route to fetch a single festival by ID and attach a random image
- */
 festivalRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -110,9 +101,9 @@ festivalRouter.get("/:id", async (req, res) => {
     const festivalWithImage = {
       ...festival.toObject(),
       image: randomImage.url,
-      bio: festival.bio, // ✅ Ensure bio is included in response
-      genre: festival.genre, // ✅ Ensure genre is included in response
-      location: festival.location, // ✅ Ensure location is included in response
+      bio: festival.bio,
+      genre: festival.genre,
+      location: festival.location,
     };
 
     res.status(200).json(festivalWithImage);
