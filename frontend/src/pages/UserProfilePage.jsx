@@ -22,7 +22,7 @@ const InfoContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: space-between;
+  justify-content: center;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -131,12 +131,9 @@ const Profile = () => {
       }
 
       try {
-        const response = await axios.get(
-          `${API_URL}/users/me/profile`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get(`${API_URL}/users/me/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (isMounted && response.data) {
           setUser(response.data);
