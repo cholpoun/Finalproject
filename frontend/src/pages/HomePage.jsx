@@ -26,7 +26,7 @@ const Button = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #002f6c;
+    background-color: #1b93d1;
   }
 
   &:focus {

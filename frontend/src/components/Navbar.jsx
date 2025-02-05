@@ -30,8 +30,8 @@ const NavbarContent = styled.div`
   max-width: 1200px;
   display: flex;
   align-items: center;
-  height: 4rem;
-  gap: 1rem;
+  height: 64px;
+  gap: 16px;
 `;
 
 const Logo = styled.div`
@@ -44,7 +44,7 @@ const NavLinks = styled.div`
   display: none;
   flex-direction: column;
   position: absolute;
-  top: 4rem;
+  top: 64px;
   left: 0;
   width: 100%;
   gap: 20px;
@@ -94,7 +94,7 @@ const NavbarIcons = styled.div`
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    margin-right: 1.5rem;
+    margin-right: 24px;
   }
 `;
 
@@ -104,13 +104,17 @@ const HamburgerMenu = styled.button`
   background-color: transparent;
 
   svg {
-    width: 2rem;
-    height: 2rem;
+    width: 32px;
+    height: 32px;
     color: white;
+    transition: transform 0.3s ease-in-out;
   }
 
   &:hover {
     opacity: 0.8;
+    svg {
+      transform: scale(1.2); /* Apply scale effect */
+    }
   }
 
   @media (min-width: ${breakpoints.tablet}) {
@@ -120,7 +124,7 @@ const HamburgerMenu = styled.button`
 
 const Sidebar = styled.div`
   position: fixed;
-  top: 4rem;
+  top: 64px;
   right: 0;
   min-height: 100%;
   width: auto;
@@ -142,14 +146,21 @@ const Sidebar = styled.div`
 const SidebarLinks = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 24px;
   align-items: center;
-  padding: 1rem;
+  padding: 16px;
 
   & a {
-    color: #333;
-    font-size: 1.5rem;
+    color: #004aad;
+    font-size: 24px;
     text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  & a:hover {
+    color: #1b93d1;
   }
 `;
 
