@@ -6,6 +6,7 @@ import FestivalsList from "../components/FestivalsList.jsx";
 const FestivalSection = styled.section`
   text-align: center;
   margin: 64px 16px 32px 16px;
+  padding-top: 40px;
 `;
 
 const Button = styled.button`
