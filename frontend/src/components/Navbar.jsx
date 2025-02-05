@@ -20,7 +20,6 @@ const NavbarContainer = styled.nav`
   transition: top 0.3s ease-in-out;
   border-radius: 0 0 12px 12px;
   left: 0;
-  padding: 0 12px;
   display: flex;
   justify-content: center;
 `;
@@ -32,6 +31,7 @@ const NavbarContent = styled.div`
   align-items: center;
   height: 64px;
   gap: 16px;
+  margin: 0 16px;
 `;
 
 const Logo = styled.div`
@@ -47,7 +47,7 @@ const NavLinks = styled.div`
   top: 64px;
   left: 0;
   width: 100%;
-  gap: 20px;
+  gap: 32px;
 
   &.open {
     display: flex;
@@ -76,7 +76,7 @@ const NavLink = styled(Link)`
 
 const NavbarIcons = styled.div`
   display: flex;
-  gap: 1.1rem;
+  gap: 17.6px;
   margin-left: auto;
 
   button {
@@ -107,14 +107,10 @@ const HamburgerMenu = styled.button`
     width: 32px;
     height: 32px;
     color: white;
-    transition: transform 0.3s ease-in-out;
   }
 
   &:hover {
     opacity: 0.8;
-    svg {
-      transform: scale(1.2); /* Apply scale effect */
-    }
   }
 
   @media (min-width: ${breakpoints.tablet}) {
@@ -166,7 +162,6 @@ const SidebarLinks = styled.div`
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [prevScroll, setPrevScroll] = useState(0);
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
 
@@ -192,7 +187,6 @@ const Navbar = () => {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
 
-    // När man klickar på favoriter, skrollar vi till den rätta sektionen.
     setTimeout(() => {
       const favoritesSection = document.getElementById("favorite-festivals");
 
@@ -214,20 +208,6 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      if (prevScroll > currentScroll) {
-        document.querySelector("nav").style.top = "0";
-      } else {
-        document.querySelector("nav").style.top = "-80px";
-      }
-      setPrevScroll(currentScroll);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScroll]);
 
   return (
     <NavbarContainer>
