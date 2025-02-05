@@ -34,7 +34,7 @@ const FestivalDetails = ({ festivalId }) => {
 
       try {
         const response = await fetch(
-          `http://localhost:3000/festivals/${festivalId}`
+          `${API_URL}/festivals/${festivalId}`
         );
         if (!response.ok) {
           throw new Error(

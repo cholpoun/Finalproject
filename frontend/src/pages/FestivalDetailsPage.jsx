@@ -47,7 +47,7 @@ const FestivalDetailsSection = styled.section`
   .ticket-purchase {
     flex: 1;
     min-width: 300px;
-    text-align: center; /* Centrerar texten i båda sektionerna */
+    text-align: center; 
   }
 `;
 

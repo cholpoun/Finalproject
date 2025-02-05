@@ -42,7 +42,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchFestivals = async () => {
       try {
-        const response = await fetch(`${API_URL}/messages/festivals`);
+        const response = await fetch(`${API_URL}/festivals`);
         const data = await response.json();
         console.log("API Response:", data);
         setFestivals(data.data);
