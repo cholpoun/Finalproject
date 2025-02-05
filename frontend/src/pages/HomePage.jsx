@@ -34,13 +34,15 @@ const Button = styled.button`
   }
 `;
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const HomePage = () => {
   const [festivals, setFestivals] = useState([]);
 
   useEffect(() => {
     const fetchFestivals = async () => {
       try {
-        const response = await fetch("http://localhost:3000/festivals");
+        const response = await fetch(`${API_URL}/messages/festivals`);
         const data = await response.json();
         console.log("API Response:", data);
         setFestivals(data.data);

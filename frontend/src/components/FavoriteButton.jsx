@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -16,7 +16,7 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
 
     const fetchFavorites = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/users/me/favorites`, {
+        const response = await fetch(`${API_URL}/users/me/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -46,7 +46,7 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
     try {
       const method = isFavorite ? "DELETE" : "PUT";
       const response = await fetch(
-        `${API_BASE_URL}/users/me/favorite/${festivalId}`,
+        `${API_URL}/users/me/favorite/${festivalId}`,
         {
           method,
           headers: {

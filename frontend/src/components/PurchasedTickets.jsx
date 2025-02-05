@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function PurchasedTickets() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,7 +10,7 @@ export default function PurchasedTickets() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch("http://localhost:3000/users/me/tickets", {
+        const response = await fetch(`${API_URL}/users/me/tickets`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

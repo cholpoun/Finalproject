@@ -1,14 +1,15 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar.jsx";
 import Footer from "./Footer.jsx";
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // För att säkerställa att scrollningen sker efter att sidan har laddats.
+    // Funktion som scrollar till rätt element
     const scrollToElement = () => {
       const element = document.querySelector(location.hash);
       if (element) {
@@ -16,19 +17,25 @@ const Layout = () => {
       }
     };
 
-    // Vänta tills sidan är helt laddad
-    window.addEventListener("load", scrollToElement);
-
-    // Kontrollera om det finns en hash i URL:en när användaren navigerar
+    // Om vi har en hash i URL:en
     if (location.hash) {
-      scrollToElement();
+      // Kolla om vi redan är på den sidan och scrolla direkt, eller navigera först
+      if (
+        location.pathname === "/profile" &&
+        location.hash === "#favorite-festivals"
+      ) {
+        setTimeout(() => {
+          scrollToElement();
+        }, 100);
+      } else {
+        // Navigera till rätt sida (profile eller annan) och sen scrolla
+        navigate(location.pathname, { replace: true });
+        setTimeout(() => {
+          scrollToElement();
+        }, 100);
+      }
     }
-
-    // Ta bort event listenern när komponenten unmountar
-    return () => {
-      window.removeEventListener("load", scrollToElement);
-    };
-  }, [location]);
+  }, [location, navigate]); // Beroende på både location och navigate
 
   return (
     <>

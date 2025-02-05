@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { loadStripe } from "@stripe/stripe-js";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const stripePromise = loadStripe("your-publishable-key-here");
 
 const FestivalTickets = ({ festivalId, userToken }) => {
@@ -12,9 +14,7 @@ const FestivalTickets = ({ festivalId, userToken }) => {
   useEffect(() => {
     const fetchFestival = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/festivals/${festivalId}`
-        );
+        const response = await fetch(`${API_URL}/festivals/${festivalId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch festival information");
         }
@@ -37,7 +37,7 @@ const FestivalTickets = ({ festivalId, userToken }) => {
 
     try {
       const response = await fetch(
-        `https://finalproject-vol6.onrender.com/api/stripe/create-checkout-session`,
+        `${API_URL}/api/stripe/create-checkout-session`,
         {
           method: "POST",
           headers: {

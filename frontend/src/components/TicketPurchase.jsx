@@ -75,6 +75,8 @@ const InfoBox = styled.div`
   width: 80%;
 `;
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function TicketPurchase({ festivalId }) {
@@ -87,9 +89,7 @@ export default function TicketPurchase({ festivalId }) {
   useEffect(() => {
     const fetchFestival = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/festivals/${festivalId}`
-        );
+        const response = await fetch(`${API_URL}/festivals/${festivalId}`);
         if (!response.ok) throw new Error("Failed to fetch festival details.");
         const data = await response.json();
         setFestival(data);
@@ -114,7 +114,7 @@ export default function TicketPurchase({ festivalId }) {
 
       try {
         const response = await fetch(
-          "http://localhost:3000/api/tickets/create-payment-intent",
+          `${API_URL}/api/tickets/create-payment-intent`,
           {
             method: "POST",
             headers: {
@@ -145,20 +145,17 @@ export default function TicketPurchase({ festivalId }) {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/tickets/${festivalId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            quantity,
-            paymentIntentId: paymentIntent.id,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/tickets/${festivalId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          quantity,
+          paymentIntentId: paymentIntent.id,
+        }),
+      });
 
       if (!response.ok) throw new Error("Failed to save ticket purchase.");
 

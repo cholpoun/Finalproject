@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000"; // Update this for production
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Set up Axios instance with Authorization header
 const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
@@ -12,7 +11,7 @@ const axiosInstance = axios.create({
 
 export const getFestivalDetails = async (festivalId) => {
   try {
-    const response = await axiosInstance.get(`/festivals/${festivalId}`); // Use correct route
+    const response = await axiosInstance.get(`/festivals/${festivalId}`);
     return response.data;
   } catch (error) {
     console.error(
@@ -23,7 +22,6 @@ export const getFestivalDetails = async (festivalId) => {
   }
 };
 
-// Function to purchase a ticket
 export const purchaseTicket = async (
   festivalId,
   quantity,
@@ -48,7 +46,6 @@ export const purchaseTicket = async (
   }
 };
 
-// ✅ Function to fetch user tickets (Fixed API route)
 export const getUserTickets = async (token) => {
   try {
     const response = await axiosInstance.get("/tickets/user", {

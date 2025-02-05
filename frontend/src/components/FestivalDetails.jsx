@@ -20,6 +20,8 @@ const FestivalImage = styled.img`
   margin-top: 10px;
 `;
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const FestivalDetails = ({ festivalId }) => {
   const [festival, setFestival] = useState(null);
   const [loading, setLoading] = useState(true);

@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import FavoriteButton from "./FavoriteButton";
 import styled from "styled-components";
 
-const API_BASE_URL = "http://localhost:3000";
-
 const Card = styled.div`
   display: flex;
   flex-direction: column;
@@ -70,6 +68,8 @@ const GridContainer = styled.div`
   }
 `;
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const FavoriteList = () => {
   const [favorites, setFavorites] = useState([]);
 
@@ -82,7 +82,7 @@ const FavoriteList = () => {
           return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/users/me/favorites`, {
+        const response = await fetch(`${API_URL}/users/me/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -107,7 +107,7 @@ const FavoriteList = () => {
     const fetchFavorites = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`${API_BASE_URL}/users/me/favorites`, {
+        const response = await fetch(`${API_URL}/users/me/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
