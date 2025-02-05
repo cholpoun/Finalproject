@@ -35,7 +35,6 @@ const AllFestivals = () => {
   const genreFilter = searchParams.get("genre") || "";
   const locationFilter = searchParams.get("location") || "";
   const sortOption = searchParams.get("sort") || "";
-  const limit = 15;
 
   const [uniqueGenres, setUniqueGenres] = useState([]);
   const [uniqueLocations, setUniqueLocations] = useState([]);
@@ -45,9 +44,7 @@ const AllFestivals = () => {
     const locationQuery = locationFilter ? `&location=${locationFilter}` : "";
 
     axios
-      .get(
-        `http://localhost:3000/festivals?limit=${limit}${genreQuery}${locationQuery}`
-      )
+      .get(`http://localhost:3000/festivals${genreQuery}${locationQuery}`)
       .then((response) => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
@@ -57,8 +54,9 @@ const AllFestivals = () => {
           ...new Set(response.data.data.map((festival) => festival.genre)),
         ];
 
-        // Se till att alla genrer finns kvar
-        setUniqueGenres((prevGenres) => [...prevGenres, ...genres]);
+        setUniqueGenres((prevGenres) =>
+          Array.from(new Set([...prevGenres, ...genres]))
+        );
 
         const allLocations = response.data.data.map(
           (festival) => festival.location
@@ -83,11 +81,12 @@ const AllFestivals = () => {
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
-  }, [genreFilter, locationFilter, limit, sortOption]);
+  }, [genreFilter, locationFilter, sortOption]);
 
   useEffect(() => {
     let filtered = festivals;
 
+    // Filter for genre and location
     if (genreFilter) {
       filtered = filtered.filter((festival) =>
         festival.genre.toLowerCase().includes(genreFilter.toLowerCase())
@@ -100,14 +99,17 @@ const AllFestivals = () => {
       );
     }
 
+    // Sorting logic for name and genre
     if (sortOption) {
       filtered = [...filtered].sort((a, b) => {
-        if (sortOption === "name") {
+        if (sortOption === "name-asc") {
           return a.name.localeCompare(b.name);
-        } else if (sortOption === "date") {
-          return new Date(a.date) - new Date(b.date);
-        } else if (sortOption === "price") {
-          return a.ticketPrice - b.ticketPrice;
+        } else if (sortOption === "name-desc") {
+          return b.name.localeCompare(a.name);
+        } else if (sortOption === "genre-asc") {
+          return a.genre.localeCompare(b.genre);
+        } else if (sortOption === "genre-desc") {
+          return b.genre.localeCompare(a.genre);
         }
         return 0;
       });

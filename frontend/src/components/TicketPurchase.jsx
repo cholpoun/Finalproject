@@ -4,25 +4,44 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { loadStripe } from "@stripe/stripe-js";
 import StripeCheckout from "./Stripe/StripeCheckout";
+import { Plus, Minus } from "lucide-react";
 
 const PaymentContainer = styled.div`
-  background: linear-gradient(135deg, #3e1f47 0%, #8b4f8b 100%);
-  border: 2px solid #ff9800;
+  background: linear-gradient(#0e72a4 0%, #fadae4 100%);
   border-radius: 16px;
-  padding: 30px;
+  padding: 8px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
   color: #f9f9f9;
-  font-family: "Quicksand", sans-serif;
   max-width: 450px;
-  margin: auto;
+  position: relative;
 `;
 
 const Title = styled.h2`
   margin-bottom: 20px;
   font-size: 1.8rem;
-  color: #ff9800;
+  color: #ffffff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+`;
+
+const QuantityButton = styled.button`
+  background-color: #ffffff;
+  color: #000000;
+  width: 40px;
+  height: 40px;
+  border: 1px solid;
+  padding: 0;
+  margin: 0 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #f7b97a;
+  }
 `;
 
 const QuantityControl = styled.div`
@@ -32,38 +51,29 @@ const QuantityControl = styled.div`
   margin: 20px 0;
 `;
 
-const QuantityButton = styled.button`
-  background-color: #ff9800;
-  color: #fff;
-  border: none;
-  padding: 10px 15px;
-  margin: 0 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  &:hover {
-    background-color: #e07000;
-  }
-`;
-
 const QuantityInput = styled.input`
-  width: 60px;
+  width: 40px;
   text-align: center;
-  border: 2px solid #ff9800;
+  border: 1px solid #000000;
   border-radius: 8px;
   font-size: 16px;
-  color: #fff;
-  background-color: #3e1f47;
+  color: #000000;
+  background-color: #ffffff;
 `;
 
 const TotalPrice = styled.p`
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #ff9800;
-  margin-top: 15px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  color: #000000;
+`;
+
+const InfoBox = styled.div`
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  text-align: left;
+  margin: 8px auto;
+  width: 80%;
 `;
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -175,16 +185,34 @@ export default function TicketPurchase({ festivalId }) {
 
       {festival ? (
         <>
-          <p><strong>{festival.name}</strong></p>
-          <p><strong>Location:</strong> {festival.location}</p>
-          <p><strong>Date:</strong> {new Date(festival.date).toLocaleDateString()}</p>
+          <p>
+            <strong>{festival.name}</strong>
+          </p>
+          <p>
+            <strong>Location:</strong> {festival.location}
+          </p>
+          <p>
+            <strong>Date:</strong>{" "}
+            {new Date(festival.date).toLocaleDateString()}
+          </p>
           <QuantityControl>
-            <QuantityButton onClick={decreaseQuantity}>-</QuantityButton>
+            <QuantityButton onClick={decreaseQuantity}>
+              <Minus size={20} />
+            </QuantityButton>
             <QuantityInput type="number" value={quantity} readOnly />
-            <QuantityButton onClick={increaseQuantity}>+</QuantityButton>
+            <QuantityButton onClick={increaseQuantity}>
+              <Plus size={20} />
+            </QuantityButton>
           </QuantityControl>
 
           <TotalPrice>Total Price: {totalPrice} SEK</TotalPrice>
+
+          <InfoBox>
+            Stripe test payment
+            <br />
+            Kortnummer: 4242424242424242 <br /> CVC-kod: Any 3 digits <br />{" "}
+            Sista giltighetsdag: Any future date
+          </InfoBox>
 
           {paymentSuccess ? (
             <p>

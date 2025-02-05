@@ -40,9 +40,16 @@ export default function PurchasedTickets() {
         <ul>
           {tickets.map((ticket) => (
             <li key={ticket.festivalId._id}>
-              <p><strong>Festival:</strong> {ticket.festivalId.name}</p>
-              <p><strong>Quantity:</strong> {ticket.quantity}</p>
-              <p><strong>Purchase Date:</strong> {new Date(ticket.purchaseDate).toLocaleDateString()}</p>
+              <p>
+                <strong>Festival:</strong> {ticket.festivalId.name}
+              </p>
+              <p>
+                <strong>Quantity:</strong> {ticket.quantity}
+              </p>
+              <p>
+                <strong>Purchase Date:</strong>{" "}
+                {new Date(ticket.purchaseDate).toLocaleDateString()}
+              </p>
             </li>
           ))}
         </ul>

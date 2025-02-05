@@ -6,15 +6,10 @@ import TicketPurchase from "../components/TicketPurchase.jsx";
 const FestivalDetailsSection = styled.section`
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center all items horizontally */
+  align-items: center;
   text-align: center;
   margin: 32px 16px;
-  padding-top: 4rem;
-
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 16px;
-  }
+  padding-top: 60px;
 
   p {
     font-size: 1.2rem;
@@ -32,32 +27,28 @@ const FestivalDetailsSection = styled.section`
     }
   }
 
-  /* Layout adjustments */
   .festival-content {
     display: flex;
-    flex-direction: column; /* Stack content on mobile */
-    gap: 2rem; /* Gap between elements */
-    align-items: center; /* Center content horizontally */
+    flex-direction: column;
+    gap: 2rem;
     width: 100%;
-    max-width: 1000px; /* Limit max width for larger screens */
 
     @media (min-width: 768px) {
-      flex-direction: row; /* Place content side by side from tablet size */
-      justify-content: space-between; /* Space them out */
+      flex-direction: row;
+      justify-content: space-between;
     }
   }
 
-  /* Adjustments for individual components */
   .festival-info,
   .ticket-purchase {
     flex: 1;
-    min-width: 300px; /* Ensure each section has enough space */
+    min-width: 300px;
   }
 `;
 
 const FestivalDetailsPage = () => {
-  const { id: festivalId } = useParams(); // Get festivalId from URL
-  const token = localStorage.getItem("token"); // Get stored user token
+  const { id: festivalId } = useParams();
+  const token = localStorage.getItem("token");
 
   return (
     <>

@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { ChevronDown } from 'lucide-react';
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { ChevronDown } from "lucide-react";
 
 const SelectWrapper = styled.div`
   position: relative;
@@ -42,11 +42,15 @@ const IconWrapper = styled.div`
 const SortOptions = ({ sortOption, setSortOption }) => {
   return (
     <SelectWrapper>
-      <Select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+      <Select
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+      >
         <option value="">Sort By</option>
-        <option value="name">Name</option>
-        <option value="date">Date</option>
-        <option value="price">Price</option>
+        <option value="name-asc">Name (A-Ö)</option>
+        <option value="name-desc">Name (Ö-A)</option>
+        <option value="genre-asc">Genre (A-Ö)</option>
+        <option value="genre-desc">Genre (Ö-A)</option>
       </Select>
       <IconWrapper>
         <ChevronDown size={20} color="black" />

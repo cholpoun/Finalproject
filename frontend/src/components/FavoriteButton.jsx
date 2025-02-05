@@ -1,22 +1,21 @@
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Heart } from "lucide-react";
 
-const API_BASE_URL = "http://localhost:3000"; // Ersätt med din backend-URL
+const API_BASE_URL = "http://localhost:3000";
 
 const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
-  const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Sätt till true om token finns
+
+    if (!token) return;
+
     const fetchFavorites = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.log("Ingen token hittades.");
-          return;
-        }
-
         const response = await fetch(`${API_BASE_URL}/users/me/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,13 +41,7 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
   }, [festivalId]);
 
   const handleToggle = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.log("Ingen token hittades. Omdirigerar till inloggning...");
-      navigate("/users/authenticate");
-      return;
-    }
+    if (!isLoggedIn) return;
 
     try {
       const method = isFavorite ? "DELETE" : "PUT";
@@ -58,7 +51,7 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
           method,
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -69,19 +62,34 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
         throw new Error(`Serverfel: ${errorText}`);
       }
 
-      const data = await response.json();
-      console.log("Favoriter uppdaterade:", data);
-
       setIsFavorite(!isFavorite);
-      onToggleFavorite();
+      onToggleFavorite(); // Uppdatera favoritantalet direkt
     } catch (error) {
       console.error("Fel vid hantering av favorit:", error);
     }
   };
 
   return (
-    <button onClick={handleToggle} aria-label="Toggle favorite">
-      {isFavorite ? "❤️" : "🤍"}
+    <button
+      onClick={handleToggle}
+      disabled={!isLoggedIn} // Inaktiverad om inte inloggad
+      aria-label={isLoggedIn ? "Toggle favorite" : "Log in to add favorite"}
+      title={isLoggedIn ? "" : "Log in to add favorite"} // Tooltip om ej inloggad
+      style={{
+        background: "transparent",
+        border: "none",
+        cursor: isLoggedIn ? "pointer" : "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: isLoggedIn ? 1 : 0.5,
+      }}
+    >
+      <Heart
+        size={24}
+        fill={isFavorite ? "red" : "none"}
+        stroke={isFavorite ? "none" : "red"}
+      />
     </button>
   );
 };

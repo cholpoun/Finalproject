@@ -7,7 +7,7 @@ const FooterContainer = styled.footer`
   width: 100%;
   border-radius: 12px 12px 0 0;
   box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
-  position: relative; /* Lägg till för att kunna positionera inre innehåll om det behövs */
+  position: relative;
 `;
 
 const FooterContent = styled.div`
@@ -18,9 +18,9 @@ const FooterContent = styled.div`
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 4rem; /* Increased gap between columns */
+  gap: 4rem;
   text-align: center;
-  justify-items: center; /* Centers content within each grid cell */
+  justify-items: center;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -30,48 +30,46 @@ const FooterGrid = styled.div`
 
 const FooterColumn = styled.div`
   h3 {
-    font-size: 1.5rem; /* Default size for mobile */
+    font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
-    font-family: "Poppins", sans-serif;
 
     @media (min-width: 768px) {
-      font-size: 1.75rem; /* Tablet size */
+      font-size: 1.75rem;
     }
 
     @media (min-width: 1024px) {
-      font-size: 2rem; /* Laptop size */
+      font-size: 2rem;
     }
   }
 
   h4 {
-    font-size: 1.25rem; /* Default size for mobile */
+    font-size: 1.25rem;
     font-weight: bold;
     margin-bottom: 1rem;
-    font-family: "Quicksand", sans-serif;
 
     @media (min-width: 768px) {
-      font-size: 1.5rem; /* Tablet size */
+      font-size: 1.5rem;
     }
 
     @media (min-width: 1024px) {
-      font-size: 1.75rem; /* Laptop size */
+      font-size: 1.75rem;
     }
   }
 
   p,
   a {
-    font-size: 1rem; /* Default size for mobile */
+    font-size: 1rem;
     color: white;
     text-decoration: none;
     transition: color 0.3s;
 
     @media (min-width: 768px) {
-      font-size: 1.1rem; /* Tablet size */
+      font-size: 1.1rem;
     }
 
     @media (min-width: 1024px) {
-      font-size: 1.2rem; /* Laptop size */
+      font-size: 1.2rem;
     }
   }
 
@@ -92,11 +90,11 @@ const FooterBottom = styled.div`
   font-size: 0.9rem;
 
   @media (min-width: 768px) {
-    font-size: 1rem; /* Tablet size */
+    font-size: 1rem;
   }
 
   @media (min-width: 1024px) {
-    font-size: 1.1rem; /* Laptop size */
+    font-size: 1.1rem;
   }
 `;
 

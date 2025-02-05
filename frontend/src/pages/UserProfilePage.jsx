@@ -16,7 +16,50 @@ const ProfileContainer = styled.div`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   color: #f4f4f4;
-  font-family: "Quicksand", sans-serif;
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+`;
+
+const SectionContainer = styled.div`
+  flex: 1 1 100%;
+  padding: 20px;
+  background: #fff;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+
+  @media (min-width: 768px) {
+    flex: 1 1 48%;
+  }
+
+  @media (min-width: 1024px) {
+    flex: 1 1 30%;
+  }
+`;
+
+const TicketsGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 20px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 `;
 
 const TicketCard = styled.div`
@@ -25,8 +68,8 @@ const TicketCard = styled.div`
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
   text-align: center;
+  padding-bottom: 20px;
 `;
 
 const QRCodeContainer = styled.div`
@@ -40,7 +83,7 @@ const QRCodeContainer = styled.div`
 const SignOutButton = styled.button`
   margin-bottom: 20px;
   padding: 10px 15px;
-  background: linear-gradient(135deg, #ff7eb3 0%, #ff758c 100%);
+  background: #0b0157;
   color: white;
   border: none;
   border-radius: 8px;
@@ -128,43 +171,62 @@ const Profile = () => {
   if (!user) return <p>No profile found.</p>;
 
   return (
-    <>
-      <ProfileContainer>
-        <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
-        <h1>
-          Welcome,{" "}
-          {user.username.charAt(0).toUpperCase() + user.username.slice(1)}!
-        </h1>
-        <p>
-          <strong>Email:</strong> {user.email}
-        </p>
+    <ProfileContainer>
+      <InfoContainer>
+        <SectionContainer>
+          <h1>
+            Welcome,{" "}
+            {user.username.charAt(0).toUpperCase() + user.username.slice(1)}!
+          </h1>
+          <p>
+            Here you&apos;ll find lists of your
+            <a href="#favorite-festivals"> favorite festivals</a> and
+            <a href="#your-tickets"> tickets</a>.
+          </p>
+        </SectionContainer>
+        <SectionContainer>
+          <h2>Your Info</h2>
+          <p>
+            <strong>Username:</strong> {user.username}
+            <br />
+            <strong>Email:</strong> {user.email}
+          </p>
+          <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
+        </SectionContainer>
+      </InfoContainer>
 
+      <SectionContainer id="favorite-festivals">
+        <h2>Your Favorite Festivals</h2>
+        <FavoriteList />
+      </SectionContainer>
+
+      <SectionContainer id="your-tickets">
         <h2>Your Tickets</h2>
         {user.purchasedTickets.length === 0 ? (
           <p>You have not purchased any tickets yet.</p>
         ) : (
-          user.purchasedTickets.map((ticket, index) => (
-            <TicketCard key={index}>
-              <h3>{ticket.festivalName}</h3>
-              <p>
-                <strong>Quantity:</strong> {ticket.quantity}
-              </p>
-              <p>
-                <strong>Total Price:</strong> {ticket.totalPrice} SEK
-              </p>
-              <QRCodeContainer>
-                <QRCode
-                  value={String(ticket.festivalName + " " + ticket.quantity)}
-                  size={100}
-                />
-              </QRCodeContainer>
-            </TicketCard>
-          ))
+          <TicketsGrid>
+            {user.purchasedTickets.map((ticket, index) => (
+              <TicketCard key={index}>
+                <h3>{ticket.festivalName}</h3>
+                <p>
+                  <strong>Quantity:</strong> {ticket.quantity}
+                </p>
+                <p>
+                  <strong>Total Price:</strong> {ticket.totalPrice} SEK
+                </p>
+                <QRCodeContainer>
+                  <QRCode
+                    value={String(ticket.festivalName + " " + ticket.quantity)}
+                    size={100}
+                  />
+                </QRCodeContainer>
+              </TicketCard>
+            ))}
+          </TicketsGrid>
         )}
-        <h2>Your Favorite Festivals</h2>
-        <FavoriteList />
-      </ProfileContainer>
-    </>
+      </SectionContainer>
+    </ProfileContainer>
   );
 };
 

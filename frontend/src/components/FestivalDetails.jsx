@@ -9,7 +9,6 @@ const DetailsContainer = styled.div`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   color: #f4f4f4;
-  font-family: "Quicksand", sans-serif;
   max-width: 500px;
   margin: auto;
 `;
@@ -61,7 +60,12 @@ const FestivalDetails = ({ festivalId }) => {
 
   return (
     <DetailsContainer>
+      <FestivalImage src={festival.image} alt={festival.name} />
       <h1>{festival.name}</h1>
+      <p>
+        <strong></strong> {festival.bio}
+      </p>
+      <br />
       <p>
         <strong>Location:</strong> {festival.location}
       </p>
@@ -77,10 +81,6 @@ const FestivalDetails = ({ festivalId }) => {
       <p>
         <strong>Available Tickets:</strong> {festival.availableTickets}
       </p>
-      <p>
-        <strong></strong> {festival.bio}
-      </p>
-      <FestivalImage src={festival.image} alt={festival.name} />
     </DetailsContainer>
   );
 };

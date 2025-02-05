@@ -3,7 +3,6 @@ import { Suspense, lazy } from "react";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import Layout from "../components/Layout.jsx";
 
-// Lazy-loaded components
 const HomePage = lazy(() => import("../pages/HomePage.jsx"));
 const FestivalDetailsPage = lazy(() =>
   import("../pages/FestivalDetailsPage.jsx")

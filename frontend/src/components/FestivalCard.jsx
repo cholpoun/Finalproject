@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react"; // Importera useState för att hantera lokal state
+import { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import FavoriteButton from "./FavoriteButton";
@@ -12,31 +12,40 @@ const Card = styled.div`
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  padding: 16px;
   transition: transform 0.3s ease-in-out;
+  height: 90%;
+  margin: auto;
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
+`;
+
+const CardImageContainer = styled.div`
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
 `;
 
 const CardImage = styled.img`
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
 `;
 
 const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 16px;
-  text-align: center;
-  font-family: "Quicksand", sans-serif;
-  color: #f4f4f4;
+  width: 100%;
+  height: 75%;
 `;
 
 const FestivalDetails = styled.p`
   font-size: 0.9rem;
   color: #f4f4f4;
-  margin: 4px 0;
+  margin: 0 auto;
 `;
 
 const FestivalLink = styled(Link)`
@@ -47,6 +56,7 @@ const FestivalLink = styled(Link)`
     color: #f4f4f4;
     transition: color 0.3s ease, text-decoration 0.3s ease;
     font-size: 20px;
+    margin: 16px auto;
   }
 
   &:hover h2 {
@@ -55,35 +65,47 @@ const FestivalLink = styled(Link)`
   }
 `;
 
+const GenreLink = styled(Link)`
+  font-size: 0.9rem;
+  color: #eeffaf;
+  text-decoration: none;
+  margin-top: 8px;
+`;
+
+const FavoriteButtonWrapper = styled.div`
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 8px;
+`;
+
 const FestivalCard = ({ id, name, imageUrl, location, genre }) => {
-  // Skapa en state för att hålla reda på favoritstatusen
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // Funktion för att toggla favoritstatusen
   const toggleFavorite = () => {
     setIsFavorite((prevState) => !prevState);
   };
 
   return (
     <Card>
-      <CardImage src={imageUrl} alt={name} />
+      <CardImageContainer>
+        <CardImage src={imageUrl} alt={name} />
+      </CardImageContainer>
       <CardContent>
         <FestivalLink to={`/festivals/${id}`}>
           <h2>{name}</h2>
         </FestivalLink>
         <FestivalDetails>{location}</FestivalDetails>
-        <Link
-          to={`/festivals?genre=${encodeURIComponent(genre)}`}
-          style={{ color: "#eeffaf", textDecoration: "none" }}
-        >
+        <GenreLink to={`/festivals?genre=${encodeURIComponent(genre)}`}>
           #{genre}
-        </Link>
-        {/* Lägg till FavoriteButton här */}
-        <FavoriteButton
-          festivalId={id}
-          isFavorite={isFavorite}
-          onToggleFavorite={toggleFavorite}
-        />
+        </GenreLink>
+        <FavoriteButtonWrapper>
+          <FavoriteButton
+            festivalId={id}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
+          />
+        </FavoriteButtonWrapper>
       </CardContent>
     </Card>
   );

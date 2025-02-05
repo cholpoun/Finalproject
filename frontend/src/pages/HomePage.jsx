@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Importera Link
 import styled from "styled-components";
 import FestivalsList from "../components/FestivalsList.jsx";
 
@@ -10,6 +11,22 @@ const FestivalSection = styled.section`
   h2 {
     font-size: 2rem;
     margin-bottom: 24px;
+  }
+`;
+
+const Button = styled.button`
+  background-color: #176b91;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #e07ba1;
   }
 `;
 
@@ -36,7 +53,12 @@ const HomePage = () => {
     <>
       <FestivalSection>
         <h2>New Festivals</h2>
-        <FestivalsList festivals={festivals.slice(0, 9)} />
+        <FestivalsList festivals={festivals.slice(0, 8)} />
+
+        {/* Lägger till en knapp som länkar till /festivals */}
+        <Link to="/festivals">
+          <Button>See All Festivals</Button>
+        </Link>
       </FestivalSection>
     </>
   );

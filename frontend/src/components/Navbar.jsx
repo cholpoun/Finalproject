@@ -47,7 +47,6 @@ const Logo = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   color: #fff;
-  font-family: "Poppins", sans-serif;
 
   @media (min-width: ${breakpoints.tablet}) {
     font-size: 2rem;
@@ -90,7 +89,7 @@ const NavLink = styled(Link)`
   border-radius: 8px;
 
   &:hover {
-    color: #ffd700;
+    color: #230097;
     transform: scale(1.1);
     transition: transform 0.2s ease-in-out;
   }
@@ -204,6 +203,22 @@ const Navbar = () => {
     }
   };
 
+  const handleFavoritesClick = (e) => {
+    e.preventDefault();
+    const userId = localStorage.getItem("userId");
+
+    setTimeout(() => {
+      const favoritesSection = document.getElementById("favorite-festivals");
+      console.log("Found section:", favoritesSection); // Se till att den hittas
+
+      if (favoritesSection) {
+        favoritesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        navigate(`/profile/${userId}`);
+      }
+    }, 100);
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
@@ -250,6 +265,13 @@ const Navbar = () => {
             <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
               Profile
             </NavLink>
+            <NavLink
+              to="#"
+              onClick={handleFavoritesClick}
+              aria-label="Favorites"
+            >
+              Favorites
+            </NavLink>
           </NavLinks>
         </div>
         <HamburgerMenu onClick={toggleSidebar} aria-label="Toggle Menu">
@@ -270,6 +292,9 @@ const Navbar = () => {
           </NavLink>
           <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
             Profile
+          </NavLink>
+          <NavLink to="#" onClick={handleFavoritesClick} aria-label="Favorites">
+            Favorites
           </NavLink>
         </SidebarLinks>
       </Sidebar>

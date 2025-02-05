@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-// Styled components
+import styled from "styled-components";
 const HeroContainer = styled.div`
   position: relative;
   min-height: 80vh;
@@ -15,7 +14,7 @@ const HeroContainer = styled.div`
 const HeroBackground = styled.div`
   position: absolute;
   inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1600&auto=format&fit=crop');
+  background-image: url("https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1600&auto=format&fit=crop");
   background-size: cover;
   background-position: center;
 `;
@@ -59,14 +58,10 @@ const Hero = () => {
       <HeroBackground />
       <HeroOverlay />
       <HeroContent>
-        <HeroHeading>
-          Experience the Magic of Nordic Festivals
-        </HeroHeading>
+        <HeroHeading>Experience the Magic of Nordic Festivals</HeroHeading>
         <HeroParagraph>
           Discover and book tickets to the most exciting Scandinavian festivals
         </HeroParagraph>
-        
-   
       </HeroContent>
     </HeroContainer>
   );
