@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe("your-publishable-key-here"); // Replace with your actual publishable key
+const stripePromise = loadStripe("your-publishable-key-here");
 
 const FestivalTickets = ({ festivalId, userToken }) => {
   const [festival, setFestival] = useState(null);
@@ -12,7 +12,9 @@ const FestivalTickets = ({ festivalId, userToken }) => {
   useEffect(() => {
     const fetchFestival = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/festivals/${festivalId}`);
+        const response = await fetch(
+          `http://localhost:3000/festivals/${festivalId}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch festival information");
         }
@@ -34,9 +36,8 @@ const FestivalTickets = ({ festivalId, userToken }) => {
     }
 
     try {
-      // Request the backend to create a Stripe session
       const response = await fetch(
-        `https://finalproject-vol6.onrender.com/api/stripe/create-checkout-session`, 
+        `https://finalproject-vol6.onrender.com/api/stripe/create-checkout-session`,
         {
           method: "POST",
           headers: {
@@ -50,12 +51,13 @@ const FestivalTickets = ({ festivalId, userToken }) => {
       const result = await response.json();
 
       if (response.ok) {
-        // Redirect to Stripe Checkout with the session ID
         const stripe = await stripePromise;
-        const { error } = await stripe.redirectToCheckout({ sessionId: result.id });
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: result.id,
+        });
 
         if (error) {
-          console.error('Stripe Checkout error:', error);
+          console.error("Stripe Checkout error:", error);
           setMessage("There was an issue redirecting to Stripe Checkout.");
         }
       } else {

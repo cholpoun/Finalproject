@@ -14,6 +14,7 @@ const Card = styled.div`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
   height: 90%;
+  width: 90%;
   margin: auto;
   &:hover {
     transform: scale(1.02);
@@ -22,9 +23,8 @@ const Card = styled.div`
 
 const CardImageContainer = styled.div`
   width: 100%;
-  height: 220px;
+  height: 280px;
   overflow: hidden;
-  border-radius: 8px;
 `;
 
 const CardImage = styled.img`
@@ -89,14 +89,24 @@ const FestivalCard = ({ id, name, imageUrl, location, genre }) => {
   return (
     <Card>
       <CardImageContainer>
-        <CardImage src={imageUrl} alt={name} />
+        <CardImage
+          src={imageUrl}
+          alt={`Image of the festival: ${name}`}
+          aria-labelledby="festival-name"
+        />
       </CardImageContainer>
       <CardContent>
-        <FestivalLink to={`/festivals/${id}`}>
-          <h2>{name}</h2>
+        <FestivalLink
+          to={`/festivals/${id}`}
+          aria-label={`Go to details of ${name}`}
+        >
+          <h2 id="festival-name">{name}</h2>
         </FestivalLink>
         <FestivalDetails>{location}</FestivalDetails>
-        <GenreLink to={`/festivals?genre=${encodeURIComponent(genre)}`}>
+        <GenreLink
+          to={`/festivals?genre=${encodeURIComponent(genre)}`}
+          aria-label={`See other ${genre} festivals`}
+        >
           #{genre}
         </GenreLink>
         <FavoriteButtonWrapper>
@@ -104,6 +114,10 @@ const FestivalCard = ({ id, name, imageUrl, location, genre }) => {
             festivalId={id}
             isFavorite={isFavorite}
             onToggleFavorite={toggleFavorite}
+            aria-pressed={isFavorite}
+            aria-label={
+              isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
           />
         </FavoriteButtonWrapper>
       </CardContent>

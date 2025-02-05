@@ -63,6 +63,7 @@ const FooterColumn = styled.div`
     color: white;
     text-decoration: none;
     transition: color 0.3s;
+    outline: none;
 
     @media (min-width: 768px) {
       font-size: 1.1rem;
@@ -77,8 +78,10 @@ const FooterColumn = styled.div`
     color: #ffd700;
   }
 
-  a:hover {
+  a:hover,
+  a:focus {
     color: #ffcc00;
+    text-decoration: underline;
   }
 `;
 
@@ -116,18 +119,29 @@ const Footer = () => {
               and enjoy exclusive access to the best festivals across Sweden,
               Norway, Denmark, and Finland.
             </p>
-            <a href="/users/authenticate">Login or register now!</a>
+            <a
+              href="/users/authenticate"
+              aria-label="Login or register now to become a member"
+            >
+              Login or register now!
+            </a>
           </FooterColumn>
           <FooterColumn>
             <h4>Quick Links</h4>
             <p>
-              <a href="/about">About Us</a>
+              <a href="/about" aria-label="Learn more about NextFest">
+                About Us
+              </a>
             </p>
             <p>
-              <a href="/festivals">Festivals</a>
+              <a href="/festivals" aria-label="Explore upcoming festivals">
+                Festivals
+              </a>
             </p>
             <p>
-              <a href="/users/authenticate">Join us</a>
+              <a href="/users/authenticate" aria-label="Join NextFest">
+                Join us
+              </a>
             </p>
           </FooterColumn>
         </FooterGrid>

@@ -67,7 +67,9 @@ const TicketCard = styled.div`
   color: #333;
   padding: 10px;
   border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border: 0.5px solid #004aad;
+  width: 80%;
+  margin: 0 auto;
   text-align: center;
   padding-bottom: 20px;
 `;
@@ -82,8 +84,8 @@ const QRCodeContainer = styled.div`
 
 const SignOutButton = styled.button`
   margin-bottom: 20px;
-  padding: 10px 15px;
-  background: #0b0157;
+  padding: 12px 18px;
+  background: #004aad;
   color: white;
   border: none;
   border-radius: 8px;
@@ -91,17 +93,20 @@ const SignOutButton = styled.button`
   font-size: 1rem;
   transition: background 0.3s;
   &:hover {
-    background: linear-gradient(135deg, #ff5c8a 0%, #ff3d6e 100%);
+    background: #002f6c;
+  }
+  &:focus {
+    outline: 3px solid #ffcc00;
   }
 `;
 
 const Message = styled.span`
   margin-top: 100px;
   padding: 20px;
-  background: #f8f8f8;
   border-radius: 8px;
   display: inline-block;
   font-size: 20px;
+  color: #333;
 `;
 
 const Profile = () => {
@@ -217,7 +222,7 @@ const Profile = () => {
                 </p>
                 <QRCodeContainer>
                   <QRCode
-                    value={String(ticket.festivalName + " " + ticket.quantity)}
+                    value={`${ticket.festivalName} ${ticket.quantity}`}
                     size={100}
                   />
                 </QRCodeContainer>

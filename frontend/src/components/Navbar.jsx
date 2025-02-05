@@ -32,7 +32,6 @@ const NavbarContainer = styled.nav`
 const NavbarContent = styled.div`
   width: 100%;
   max-width: 1200px;
-  padding: 0 2rem;
   display: flex;
   align-items: center;
   height: 4rem;
@@ -207,9 +206,9 @@ const Navbar = () => {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
 
+    // När man klickar på favoriter, skrollar vi till den rätta sektionen.
     setTimeout(() => {
       const favoritesSection = document.getElementById("favorite-festivals");
-      console.log("Found section:", favoritesSection); // Se till att den hittas
 
       if (favoritesSection) {
         favoritesSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -247,21 +246,27 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <NavbarContent>
-        <NavLink to="/">
+        <NavLink to="/" aria-label="Go to Home">
           <Logo>NextFest</Logo>
         </NavLink>
         <div
           style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}
         >
           <NavbarIcons>
-            <button onClick={handleProfileClick} aria-label="Profile">
+            <button onClick={handleProfileClick} aria-label="Go to Profile">
               <Smile style={{ color: "white" }} />
             </button>
           </NavbarIcons>
           <NavLinks>
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/about">About Us</NavLink>
-            <NavLink to="/festivals">Festivals</NavLink>
+            <NavLink to="/" aria-label="Go to Home">
+              Home
+            </NavLink>
+            <NavLink to="/about" aria-label="About Us">
+              About Us
+            </NavLink>
+            <NavLink to="/festivals" aria-label="View Festivals">
+              Festivals
+            </NavLink>
             <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">
               Profile
             </NavLink>
@@ -281,13 +286,17 @@ const Navbar = () => {
 
       <Sidebar className={isSidebarOpen ? "open" : ""} ref={sidebarRef}>
         <SidebarLinks>
-          <NavLink to="/" onClick={closeSidebar}>
+          <NavLink to="/" onClick={closeSidebar} aria-label="Go to Home">
             Home
           </NavLink>
-          <NavLink to="/about" onClick={closeSidebar}>
+          <NavLink to="/about" onClick={closeSidebar} aria-label="About Us">
             About Us
           </NavLink>
-          <NavLink to="/festivals" onClick={closeSidebar}>
+          <NavLink
+            to="/festivals"
+            onClick={closeSidebar}
+            aria-label="View Festivals"
+          >
             Festivals
           </NavLink>
           <NavLink to="#" onClick={handleProfileClick} aria-label="Profile">

@@ -10,7 +10,7 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Sätt till true om token finns
+    setIsLoggedIn(!!token);
 
     if (!token) return;
 
@@ -63,7 +63,7 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
       }
 
       setIsFavorite(!isFavorite);
-      onToggleFavorite(); // Uppdatera favoritantalet direkt
+      onToggleFavorite();
     } catch (error) {
       console.error("Fel vid hantering av favorit:", error);
     }
@@ -72,9 +72,22 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
   return (
     <button
       onClick={handleToggle}
-      disabled={!isLoggedIn} // Inaktiverad om inte inloggad
-      aria-label={isLoggedIn ? "Toggle favorite" : "Log in to add favorite"}
-      title={isLoggedIn ? "" : "Log in to add favorite"} // Tooltip om ej inloggad
+      disabled={!isLoggedIn}
+      aria-label={
+        isLoggedIn
+          ? isFavorite
+            ? "Ta bort favorit"
+            : "Lägg till favorit"
+          : "Logga in för att lägga till favorit"
+      }
+      title={
+        isLoggedIn
+          ? isFavorite
+            ? "Ta bort favorit"
+            : "Lägg till favorit"
+          : "Logga in för att lägga till favorit"
+      }
+      aria-disabled={!isLoggedIn}
       style={{
         background: "transparent",
         border: "none",
@@ -89,6 +102,7 @@ const FavoriteButton = ({ festivalId, onToggleFavorite }) => {
         size={24}
         fill={isFavorite ? "red" : "none"}
         stroke={isFavorite ? "none" : "red"}
+        aria-hidden="true"
       />
     </button>
   );

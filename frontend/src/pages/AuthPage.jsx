@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Login from "../components/Login";
 import Register from "../components/Register";
-import Navbar from "../components/Navbar"; // Import Navbar
-import Footer from "../components/Footer"; // Import Footer
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import styled from "styled-components";
 
 const PageContainer = styled.div`

@@ -21,12 +21,13 @@ const Select = styled.select`
   color: black;
   transition: all 0.3s ease;
 
-  &:hover {
-    border-color: #333;
+  &:hover,
+  &:focus {
+    border-color: #0056b3;
   }
 
   &:focus {
-    border-color: #222;
+    border-color: #003366;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   }
 `;
@@ -62,6 +63,7 @@ const Filters = ({
         <Select
           value={genreFilter}
           onChange={(e) => setGenreFilter(e.target.value, locationFilter)}
+          aria-label="Select a genre"
         >
           <option value="">All Genres</option>
           {uniqueGenres.map((genre) => (
@@ -79,6 +81,7 @@ const Filters = ({
         <Select
           value={locationFilter}
           onChange={(e) => setLocationFilter(genreFilter, e.target.value)}
+          aria-label="Select a location"
         >
           <option value="">All Locations</option>
           {uniqueLocations.map((location) => (

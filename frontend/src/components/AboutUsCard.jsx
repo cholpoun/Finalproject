@@ -94,10 +94,10 @@ const AboutUsCard = () => {
             />
             <SubHeading>Nella</SubHeading>
             <Text>
-              Nella is a Junior Developer with a background in administration
-              and education. With a natural curiosity and strong problem-solving
-              skills, she creates user-centered digital solutions that spark
-              innovation and efficiency. 💻✨
+              Nella is a driven Junior Developer with a background in
+              administration and education. Her curiosity and problem-solving
+              skills make her a valuable asset in developing user-centered
+              digital solutions that promote innovation and efficiency. 💻✨
             </Text>
           </Column>
 

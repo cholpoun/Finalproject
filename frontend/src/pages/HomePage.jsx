@@ -15,7 +15,7 @@ const FestivalSection = styled.section`
 `;
 
 const Button = styled.button`
-  background-color: #176b91;
+  background-color: #004aad;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -26,7 +26,11 @@ const Button = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #e07ba1;
+    background-color: #002f6c;
+  }
+
+  &:focus {
+    outline: 3px solid #ffcc00;
   }
 `;
 
@@ -52,12 +56,11 @@ const HomePage = () => {
   return (
     <>
       <FestivalSection>
-        <h2>New Festivals</h2>
+        <h1>New Festivals</h1>
         <FestivalsList festivals={festivals.slice(0, 8)} />
 
-        {/* Lägger till en knapp som länkar till /festivals */}
         <Link to="/festivals">
-          <Button>See All Festivals</Button>
+          <Button aria-label="See all festivals">See All Festivals</Button>
         </Link>
       </FestivalSection>
     </>

@@ -105,23 +105,33 @@ const Login = () => {
     <LoginContainer>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button type="submit">Login</Button>
+        <div>
+          <label htmlFor="email">Email</label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            aria-describedby="emailHelp"
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            aria-describedby="passwordHelp"
+          />
+        </div>
+        <Button type="submit" aria-label="Login to your account">
+          Login
+        </Button>
       </form>
-      {message && <Message>{message}</Message>}
+      {message && <Message aria-live="polite">{message}</Message>}
     </LoginContainer>
   );
 };

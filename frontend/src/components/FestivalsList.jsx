@@ -37,7 +37,9 @@ const FestivalsList = ({ festivals }) => {
             imageUrl={imageUrl}
             location={location}
             genre={genre}
-            bio={festival.bio} // ✅ Ensure bio is passed to FestivalCard
+            bio={festival.bio}
+            alt={festival.name + " image"}
+            aria-label={`Festival: ${festival.name}, Location: ${location}, Genre: ${genre}`}
           />
         );
       })}
@@ -53,7 +55,7 @@ FestivalsList.propTypes = {
       image: PropTypes.string,
       location: PropTypes.string,
       genre: PropTypes.string,
-      bio: PropTypes.string, // ✅ Add bio to prop types
+      bio: PropTypes.string,
     })
   ).isRequired,
 };

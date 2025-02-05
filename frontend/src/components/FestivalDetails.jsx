@@ -54,16 +54,20 @@ const FestivalDetails = ({ festivalId }) => {
     }
   }, [festivalId]);
 
-  if (error) return <p>Error: {error}</p>;
-  if (loading) return <p>Loading...</p>;
+  if (error) return <p role="alert">Error: {error}</p>;
+  if (loading) return <p role="status">Loading...</p>;
   if (!festival) return <p>No festival found.</p>;
 
   return (
     <DetailsContainer>
-      <FestivalImage src={festival.image} alt={festival.name} />
-      <h1>{festival.name}</h1>
+      <FestivalImage
+        src={festival.image}
+        alt={`Image of ${festival.name}`}
+        aria-describedby="festival-name"
+      />
+      <h1 id="festival-name">{festival.name}</h1>
       <p>
-        <strong></strong> {festival.bio}
+        <strong>Bio:</strong> {festival.bio}
       </p>
       <br />
       <p>

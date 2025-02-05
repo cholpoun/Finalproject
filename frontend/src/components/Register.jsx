@@ -67,7 +67,7 @@ const Register = () => {
         email,
         password,
       });
-      setMessage("Registration successful!");
+      setMessage("Registration successful! Now you can login.");
       navigate("/users/authenticate");
     } catch (error) {
       setMessage(error.response?.data?.error || "Failed to register user.");
@@ -78,30 +78,41 @@ const Register = () => {
     <RegisterContainer>
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button type="submit">Register</Button>
+        <div>
+          <label htmlFor="username">Username</label>
+          <Input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email</label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <Button type="submit" aria-label="Register to create an account">
+          Register
+        </Button>
       </form>
-      {message && <Message>{message}</Message>}
+      {message && <Message aria-live="polite">{message}</Message>}
     </RegisterContainer>
   );
 };

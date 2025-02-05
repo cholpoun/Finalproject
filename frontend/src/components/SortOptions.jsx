@@ -45,6 +45,7 @@ const SortOptions = ({ sortOption, setSortOption }) => {
       <Select
         value={sortOption}
         onChange={(e) => setSortOption(e.target.value)}
+        aria-label="Sort by"
       >
         <option value="">Sort By</option>
         <option value="name-asc">Name (A-Ö)</option>
@@ -52,7 +53,7 @@ const SortOptions = ({ sortOption, setSortOption }) => {
         <option value="genre-asc">Genre (A-Ö)</option>
         <option value="genre-desc">Genre (Ö-A)</option>
       </Select>
-      <IconWrapper>
+      <IconWrapper aria-hidden="true">
         <ChevronDown size={20} color="black" />
       </IconWrapper>
     </SelectWrapper>

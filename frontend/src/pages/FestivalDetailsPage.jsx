@@ -7,6 +7,7 @@ const FestivalDetailsSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   margin: 32px 16px;
   padding-top: 60px;
@@ -17,13 +18,15 @@ const FestivalDetailsSection = styled.section`
   }
 
   .login-link {
-    color: white;
+    color: #ffd700;
     text-decoration: underline;
     font-weight: bold;
     cursor: pointer;
 
-    &:hover {
-      color: darkblue;
+    &:hover,
+    &:focus {
+      color: #ff9900;
+      outline: 2px solid #ff9900;
     }
   }
 
@@ -32,10 +35,11 @@ const FestivalDetailsSection = styled.section`
     flex-direction: column;
     gap: 2rem;
     width: 100%;
+    align-items: center;
 
     @media (min-width: 768px) {
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: center;
     }
   }
 
@@ -43,7 +47,16 @@ const FestivalDetailsSection = styled.section`
   .ticket-purchase {
     flex: 1;
     min-width: 300px;
+    text-align: center; /* Centrerar texten i båda sektionerna */
   }
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
 `;
 
 const FestivalDetailsPage = () => {
@@ -53,24 +66,30 @@ const FestivalDetailsPage = () => {
   return (
     <>
       <FestivalDetailsSection>
-        <div className="festival-content">
+        <h1 id="festival-heading">Festival Details</h1>
+        <div
+          className="festival-content"
+          role="region"
+          aria-labelledby="festival-heading"
+        >
           <div className="festival-info">
-            <FestivalDetails festivalId={festivalId} />{" "}
-            {/* Show festival details */}
+            <FestivalDetails festivalId={festivalId} />
           </div>
-          <div className="ticket-purchase">
-            {token ? (
-              <TicketPurchase festivalId={festivalId} token={token} />
-            ) : (
-              <p>
-                You need to log in to purchase a ticket.{" "}
-                <Link to="/users/authenticate" className="login-link">
-                  Log in here
-                </Link>
-                .
-              </p>
-            )}
-          </div>
+          <Wrapper>
+            <div className="ticket-purchase">
+              {token ? (
+                <TicketPurchase festivalId={festivalId} token={token} />
+              ) : (
+                <p aria-live="polite">
+                  You need to log in to purchase a ticket.{" "}
+                  <Link to="/users/authenticate" className="login-link">
+                    Log in here
+                  </Link>
+                  .
+                </p>
+              )}
+            </div>{" "}
+          </Wrapper>
         </div>
       </FestivalDetailsSection>
     </>

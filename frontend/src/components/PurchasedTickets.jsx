@@ -30,14 +30,19 @@ export default function PurchasedTickets() {
     fetchTickets();
   }, []);
 
-  if (loading) return <p>Loading tickets...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p aria-live="assertive">Loading tickets...</p>;
+  if (error)
+    return (
+      <p aria-live="assertive" role="alert">
+        Error: {error}
+      </p>
+    );
 
   return (
     <div>
-      <h2>My Purchased Tickets</h2>
+      <h2 id="purchased-tickets">My Purchased Tickets</h2>
       {tickets.length > 0 ? (
-        <ul>
+        <ul aria-labelledby="purchased-tickets">
           {tickets.map((ticket) => (
             <li key={ticket.festivalId._id}>
               <p>

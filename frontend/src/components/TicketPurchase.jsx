@@ -9,11 +9,11 @@ import { Plus, Minus } from "lucide-react";
 const PaymentContainer = styled.div`
   background: linear-gradient(#0e72a4 0%, #fadae4 100%);
   border-radius: 16px;
-  padding: 8px;
+  padding: 12px;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
   color: #f9f9f9;
-  max-width: 450px;
+  width: 100%;
   position: relative;
 `;
 
@@ -21,7 +21,6 @@ const Title = styled.h2`
   margin-bottom: 20px;
   font-size: 1.8rem;
   color: #ffffff;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const QuantityButton = styled.button`
@@ -29,7 +28,7 @@ const QuantityButton = styled.button`
   color: #000000;
   width: 40px;
   height: 40px;
-  border: 1px solid;
+  border: 1px solid #004aad;
   padding: 0;
   margin: 0 10px;
   border-radius: 50%;
@@ -54,7 +53,7 @@ const QuantityControl = styled.div`
 const QuantityInput = styled.input`
   width: 40px;
   text-align: center;
-  border: 1px solid #000000;
+  border: 1px solid #004aad;
   border-radius: 8px;
   font-size: 16px;
   color: #000000;
@@ -171,17 +170,17 @@ export default function TicketPurchase({ festivalId }) {
     }
   };
 
-  const increaseQuantity = () => setQuantity((prev) => prev + 1);
-  const decreaseQuantity = () =>
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
   const totalPrice = festival ? quantity * festival.ticketPrice : 0;
 
   return (
     <PaymentContainer>
       <Title>Complete Your Payment</Title>
 
-      {error && <p style={{ color: "#ff0000" }}>{error}</p>}
+      {error && (
+        <p role="alert" aria-live="assertive" style={{ color: "#ff0000" }}>
+          {error}
+        </p>
+      )}
 
       {festival ? (
         <>
@@ -195,29 +194,42 @@ export default function TicketPurchase({ festivalId }) {
             <strong>Date:</strong>{" "}
             {new Date(festival.date).toLocaleDateString()}
           </p>
+
           <QuantityControl>
-            <QuantityButton onClick={decreaseQuantity}>
+            <QuantityButton
+              onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
+              aria-label="Decrease ticket quantity"
+            >
               <Minus size={20} />
             </QuantityButton>
-            <QuantityInput type="number" value={quantity} readOnly />
-            <QuantityButton onClick={increaseQuantity}>
+            <QuantityInput
+              type="number"
+              value={quantity}
+              readOnly
+              aria-labelledby="quantity-label"
+            />
+            <QuantityButton
+              onClick={() => setQuantity((prev) => prev + 1)}
+              aria-label="Increase ticket quantity"
+            >
               <Plus size={20} />
             </QuantityButton>
           </QuantityControl>
 
-          <TotalPrice>Total Price: {totalPrice} SEK</TotalPrice>
+          <TotalPrice id="quantity-label">
+            Total Price: {totalPrice} SEK
+          </TotalPrice>
 
-          <InfoBox>
+          <InfoBox role="status">
             Stripe test payment
             <br />
-            Kortnummer: 4242424242424242 <br /> CVC-kod: Any 3 digits <br />{" "}
+            Kortnummer: 4242424242424242 <br /> CVC-kod: Any 3 digits <br />
             Sista giltighetsdag: Any future date
           </InfoBox>
 
           {paymentSuccess ? (
-            <p>
-              ✅ Payment Successful! Your tickets are confirmed and saved to
-              your profile!
+            <p role="status">
+              ✅ Payment Successful! Your tickets are confirmed!
             </p>
           ) : clientSecret ? (
             <Elements stripe={stripePromise} options={{ clientSecret }}>

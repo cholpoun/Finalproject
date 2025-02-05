@@ -49,7 +49,6 @@ const AllFestivals = () => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
 
-        // Uppdatera unika genrer utan att rensa tidigare värden
         const genres = [
           ...new Set(response.data.data.map((festival) => festival.genre)),
         ];
@@ -86,7 +85,6 @@ const AllFestivals = () => {
   useEffect(() => {
     let filtered = festivals;
 
-    // Filter for genre and location
     if (genreFilter) {
       filtered = filtered.filter((festival) =>
         festival.genre.toLowerCase().includes(genreFilter.toLowerCase())
@@ -99,7 +97,6 @@ const AllFestivals = () => {
       );
     }
 
-    // Sorting logic for name and genre
     if (sortOption) {
       filtered = [...filtered].sort((a, b) => {
         if (sortOption === "name-asc") {
@@ -145,7 +142,7 @@ const AllFestivals = () => {
       <StyledSection>
         <h1>All Festivals</h1>
 
-        <StyledControls>
+        <StyledControls role="region" aria-labelledby="festival-filters">
           <Filters
             genreFilter={genreFilter}
             setGenreFilter={handleFilterChange}
@@ -160,7 +157,7 @@ const AllFestivals = () => {
           />
         </StyledControls>
 
-        <FestivalsList festivals={filteredFestivals} />
+        <FestivalsList festivals={filteredFestivals} aria-live="polite" />
       </StyledSection>
     </>
   );
