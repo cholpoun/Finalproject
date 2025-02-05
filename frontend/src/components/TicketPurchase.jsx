@@ -220,8 +220,8 @@ export default function TicketPurchase({ festivalId }) {
           <InfoBox role="status">
             Stripe test payment
             <br />
-            Kortnummer: 4242424242424242 <br /> CVC-kod: Any 3 digits <br />
-            Sista giltighetsdag: Any future date
+            Card number: 4242424242424242 <br /> CVC: Any 3 digits <br />
+            Expiry date: Any future date
           </InfoBox>
 
           {paymentSuccess ? (

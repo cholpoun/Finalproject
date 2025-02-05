@@ -26,6 +26,29 @@ const StyledSection = styled.section`
   text-align: center;
 `;
 
+const PaginationControls = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+`;
+
 const AllFestivals = () => {
   const [festivals, setFestivals] = useState([]);
   const [filteredFestivals, setFilteredFestivals] = useState([]);
@@ -39,12 +62,17 @@ const AllFestivals = () => {
   const [uniqueGenres, setUniqueGenres] = useState([]);
   const [uniqueLocations, setUniqueLocations] = useState([]);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const festivalsPerPage = 5; // Change this number as needed
+
   useEffect(() => {
     const genreQuery = genreFilter ? `&genre=${genreFilter}` : "";
     const locationQuery = locationFilter ? `&location=${locationFilter}` : "";
+    const pageQuery = `?page=${currentPage}&limit=${festivalsPerPage}`;
 
     axios
-      .get(`http://localhost:3000/festivals${genreQuery}${locationQuery}`)
+      .get(`http://localhost:3000/festivals${pageQuery}${genreQuery}${locationQuery}`)
       .then((response) => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
@@ -80,7 +108,7 @@ const AllFestivals = () => {
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
-  }, [genreFilter, locationFilter, sortOption]);
+  }, [genreFilter, locationFilter, sortOption, currentPage]);
 
   useEffect(() => {
     let filtered = festivals;
@@ -137,6 +165,21 @@ const AllFestivals = () => {
     });
   };
 
+  // Pagination handlers
+  const totalPages = Math.ceil(festivals.length / festivalsPerPage);
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
   return (
     <>
       <StyledSection>
@@ -158,6 +201,17 @@ const AllFestivals = () => {
         </StyledControls>
 
         <FestivalsList festivals={filteredFestivals} aria-live="polite" />
+
+        {/* Pagination Controls */}
+        <PaginationControls>
+          <button onClick={prevPage} disabled={currentPage === 1}>
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button onClick={nextPage} disabled={currentPage === totalPages}>
+            Next
+          </button>
+        </PaginationControls>
       </StyledSection>
     </>
   );
