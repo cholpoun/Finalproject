@@ -20,13 +20,9 @@ const NavbarContainer = styled.nav`
   transition: top 0.3s ease-in-out;
   border-radius: 0 0 12px 12px;
   left: 0;
-  padding: 0 2rem;
+  padding: 0 12px;
   display: flex;
   justify-content: center;
-
-  @media (max-width: ${breakpoints.laptop}) {
-    padding: 0 1.5rem;
-  }
 `;
 
 const NavbarContent = styled.div`
@@ -36,20 +32,12 @@ const NavbarContent = styled.div`
   align-items: center;
   height: 4rem;
   gap: 1rem;
-
-  @media (max-width: ${breakpoints.laptop}) {
-    max-width: 100%;
-  }
 `;
 
 const Logo = styled.div`
-  font-size: 1.5rem;
+  font-size: 32px;
   font-weight: bold;
   color: #fff;
-
-  @media (min-width: ${breakpoints.tablet}) {
-    font-size: 2rem;
-  }
 `;
 
 const NavLinks = styled.div`
@@ -59,9 +47,7 @@ const NavLinks = styled.div`
   top: 4rem;
   left: 0;
   width: 100%;
-  background: rgba(248, 205, 218, 0.9);
-  padding: 1rem;
-  gap: 1.5rem;
+  gap: 20px;
 
   &.open {
     display: flex;
@@ -72,8 +58,6 @@ const NavLinks = styled.div`
     flex-direction: row;
     position: static;
     background: transparent;
-    padding: 0;
-    gap: 2rem;
   }
 `;
 
@@ -82,20 +66,11 @@ const NavLink = styled(Link)`
   color: white;
   text-decoration: none;
   font-weight: bold;
-  font-size: 1.1rem;
   font-family: "Quicksand", sans-serif;
-  padding: 0.5rem 1rem;
   border-radius: 8px;
 
   &:hover {
-    color: #230097;
-    transform: scale(1.1);
-    transition: transform 0.2s ease-in-out;
-  }
-
-  @media (min-width: ${breakpoints.tablet}) {
-    padding: 0;
-    border-radius: 0;
+    color: #ffcc00;
   }
 `;
 

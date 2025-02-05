@@ -8,33 +8,29 @@ const AboutUsContainer = styled.div`
 `;
 
 const Card = styled.div`
-  background: white;
-  padding: 20px;
+  background: #ffffffd8;
+  padding: 40px;
   border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 1024px;
   text-align: center;
-  color: #333;
-  font-family: "Quicksand", sans-serif;
 `;
 
-const Heading = styled.h2`
-  font-size: 1.75rem;
+const Heading = styled.h1`
+  font-size: 30px;
   margin-bottom: 1rem;
 `;
 
 const Description = styled.p`
-  font-size: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 30px;
   line-height: 1.6;
-  padding: 2rem;
+  padding: 10px;
 `;
 
 const Columns = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 60px;
   justify-content: center;
 `;
 

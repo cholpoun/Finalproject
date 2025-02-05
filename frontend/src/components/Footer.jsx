@@ -1,77 +1,37 @@
 import styled from "styled-components";
 
 const FooterContainer = styled.footer`
-  background: #176b91;
+  background: #0349df;
   color: white;
-  padding: 3rem 1rem;
+  padding: 40px 10px;
   width: 100%;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
   position: relative;
 `;
 
 const FooterContent = styled.div`
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 40px;
 `;
 
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 4rem;
-  text-align: center;
-  justify-items: center;
+  gap: 100px;
+  text-align: left;
+  padding-top: 10px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
-    text-align: left;
   }
 `;
 
 const FooterColumn = styled.div`
-  h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-
-    @media (min-width: 768px) {
-      font-size: 1.75rem;
-    }
-
-    @media (min-width: 1024px) {
-      font-size: 2rem;
-    }
-  }
-
-  h4 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-
-    @media (min-width: 768px) {
-      font-size: 1.5rem;
-    }
-
-    @media (min-width: 1024px) {
-      font-size: 1.75rem;
-    }
-  }
-
   p,
   a {
-    font-size: 1rem;
     color: white;
     text-decoration: none;
     transition: color 0.3s;
     outline: none;
-
-    @media (min-width: 768px) {
-      font-size: 1.1rem;
-    }
-
-    @media (min-width: 1024px) {
-      font-size: 1.2rem;
-    }
   }
 
   a {
@@ -87,25 +47,16 @@ const FooterColumn = styled.div`
 
 const FooterBottom = styled.div`
   border-top: 1px solid rgba(255, 255, 255, 0.3);
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 20px;
+  padding-top: 15px;
   text-align: center;
-  font-size: 0.9rem;
-
-  @media (min-width: 768px) {
-    font-size: 1rem;
-  }
-
-  @media (min-width: 1024px) {
-    font-size: 1.1rem;
-  }
 `;
 
 const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-        <h3 style={{ textAlign: "center", marginBottom: "2rem" }}>NextFest</h3>
+        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>NextFest</h2>
         <p>
           Discover the best festivals in Scandinavia with NextFest! Enjoy a wide
           range of events tailored to your taste. Our members always get early
@@ -113,7 +64,7 @@ const Footer = () => {
         </p>
         <FooterGrid>
           <FooterColumn>
-            <h4>Join Us!</h4>
+            <h3>Join Us!</h3>
             <p>
               Become a member of the largest festival community in Scandinavia
               and enjoy exclusive access to the best festivals across Sweden,
@@ -127,7 +78,7 @@ const Footer = () => {
             </a>
           </FooterColumn>
           <FooterColumn>
-            <h4>Quick Links</h4>
+            <h3>Quick Links</h3>
             <p>
               <a href="/about" aria-label="Learn more about NextFest">
                 About Us
