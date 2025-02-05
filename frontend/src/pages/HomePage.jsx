@@ -5,13 +5,7 @@ import FestivalsList from "../components/FestivalsList.jsx";
 
 const FestivalSection = styled.section`
   text-align: center;
-  margin: 32px 16px;
-  padding-top: 4rem;
-
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 24px;
-  }
+  margin: 64px 16px 32px 16px;
 `;
 
 const Button = styled.button`

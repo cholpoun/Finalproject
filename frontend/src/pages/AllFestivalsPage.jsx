@@ -22,6 +22,7 @@ const StyledSection = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 64px;
   padding: 40px 16px;
   text-align: center;
 `;

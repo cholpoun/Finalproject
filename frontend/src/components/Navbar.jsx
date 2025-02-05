@@ -124,7 +124,7 @@ const Sidebar = styled.div`
   right: 0;
   min-height: 100%;
   width: auto;
-  background: rgba(248, 205, 218, 0.9);
+  background: rgba(248, 205, 218, 0.947);
   z-index: 100;
   transition: transform 0.3s ease-in-out;
   transform: translateX(100%);
@@ -142,16 +142,14 @@ const Sidebar = styled.div`
 const SidebarLinks = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
   align-items: center;
-  padding: 16px;
 
   & a {
     color: #004aad;
     font-size: 24px;
     text-decoration: none;
     transition: background-color 0.3s, color 0.3s;
-    padding: 16px;
+    padding: 8px 12px;
     border-radius: 8px;
   }
 
