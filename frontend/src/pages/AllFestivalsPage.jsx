@@ -64,7 +64,6 @@ const AllFestivals = () => {
   const [uniqueGenres, setUniqueGenres] = useState([]);
   const [uniqueLocations, setUniqueLocations] = useState([]);
 
-  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const festivalsPerPage = 5; // Change this number as needed
 

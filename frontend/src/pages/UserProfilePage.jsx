@@ -109,6 +109,8 @@ const Message = styled.span`
   color: #333;
 `;
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -130,7 +132,7 @@ const Profile = () => {
 
       try {
         const response = await axios.get(
-          "http://localhost:3000/users/me/profile",
+          `${API_URL}/users/me/profile`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
