@@ -21,7 +21,7 @@ console.log("Stripe Secret Key:", process.env.VITE_STRIPE_SECRET_KEY ? "✅ Load
 // 🔹 CORS Configuration - Allow frontend access
 app.use(
   cors({
-    origin: ["http://localhost:5173"], // Allow frontend
+    origin: ["https://nextfest-final.netlify.app"], // Allow frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Allow cookies and authentication headers
