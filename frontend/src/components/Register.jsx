@@ -46,6 +46,9 @@ const Message = styled.p`
   margin-top: 20px;
 `;
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -62,7 +65,7 @@ const Register = () => {
     }
 
     try {
-      await axios.post("http://localhost:3000/users/register", {
+      await axios.post(`${API_URL}/users/register`, {
         username,
         email,
         password,

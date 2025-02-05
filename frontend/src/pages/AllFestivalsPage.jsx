@@ -49,6 +49,8 @@ const PaginationControls = styled.div`
   }
 `;
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const AllFestivals = () => {
   const [festivals, setFestivals] = useState([]);
   const [filteredFestivals, setFilteredFestivals] = useState([]);
@@ -62,7 +64,6 @@ const AllFestivals = () => {
   const [uniqueGenres, setUniqueGenres] = useState([]);
   const [uniqueLocations, setUniqueLocations] = useState([]);
 
-  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const festivalsPerPage = 5; // Change this number as needed
 
@@ -72,7 +73,7 @@ const AllFestivals = () => {
     const pageQuery = `?page=${currentPage}&limit=${festivalsPerPage}`;
 
     axios
-      .get(`http://localhost:3000/festivals${pageQuery}${genreQuery}${locationQuery}`)
+      .get(`${API_URL}/festivals${pageQuery}${genreQuery}${locationQuery}`)
       .then((response) => {
         setFestivals(response.data.data);
         setFilteredFestivals(response.data.data);
