@@ -2,26 +2,26 @@ import mongoose from "mongoose";
 
 const FestivalSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true, trim: true }, // ✅ Ensures unique festival names
-    ticketPrice: { type: Number, required: true, min: 0 }, // ✅ Prevents negative prices
-    availableTickets: { type: Number, required: true, min: 0 }, // ✅ Prevents negative ticket count
+    name: { type: String, required: true, unique: true, trim: true },
+    ticketPrice: { type: Number, required: true, min: 0 },
+    availableTickets: { type: Number, required: true, min: 0 },
     location: { type: String, required: true, trim: true },
-    date: { 
-      type: Date, 
+    date: {
+      type: Date,
       required: true,
       validate: {
         validator: function (value) {
-          return value > new Date(); // Ensures the festival date is in the future
+          return value > new Date();
         },
         message: "Festival date must be in the future.",
       },
     },
-    genre: { type: String, required: true, trim: true }, // ✅ Add genre field
-    bio: { type: String, required: true, trim: true }, // ✅ Add bio field
-    image: { type: String, default: "" }, // ✅ Add image field with default value
+    genre: { type: String, required: true, trim: true },
+    bio: { type: String, required: true, trim: true },
+    image: { type: String, default: "" },
   },
-  { timestamps: true } // ✅ Adds createdAt & updatedAt fields automatically
+  { timestamps: true }
 );
 
-const FestivalModel = mongoose.model("Festival", FestivalSchema); // ✅ Ensure "Festival" matches your `ref`
+const FestivalModel = mongoose.model("Festival", FestivalSchema);
 export default FestivalModel;

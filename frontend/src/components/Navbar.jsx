@@ -20,13 +20,8 @@ const NavbarContainer = styled.nav`
   transition: top 0.3s ease-in-out;
   border-radius: 0 0 12px 12px;
   left: 0;
-  padding: 0 2rem;
   display: flex;
   justify-content: center;
-
-  @media (max-width: ${breakpoints.laptop}) {
-    padding: 0 1.5rem;
-  }
 `;
 
 const NavbarContent = styled.div`
@@ -34,34 +29,25 @@ const NavbarContent = styled.div`
   max-width: 1200px;
   display: flex;
   align-items: center;
-  height: 4rem;
-  gap: 1rem;
-
-  @media (max-width: ${breakpoints.laptop}) {
-    max-width: 100%;
-  }
+  height: 64px;
+  gap: 16px;
+  margin: 0 16px;
 `;
 
 const Logo = styled.div`
-  font-size: 1.5rem;
+  font-size: 32px;
   font-weight: bold;
   color: #fff;
-
-  @media (min-width: ${breakpoints.tablet}) {
-    font-size: 2rem;
-  }
 `;
 
 const NavLinks = styled.div`
   display: none;
   flex-direction: column;
   position: absolute;
-  top: 4rem;
+  top: 64px;
   left: 0;
   width: 100%;
-  background: rgba(248, 205, 218, 0.9);
-  padding: 1rem;
-  gap: 1.5rem;
+  gap: 32px;
 
   &.open {
     display: flex;
@@ -72,8 +58,6 @@ const NavLinks = styled.div`
     flex-direction: row;
     position: static;
     background: transparent;
-    padding: 0;
-    gap: 2rem;
   }
 `;
 
@@ -82,26 +66,17 @@ const NavLink = styled(Link)`
   color: white;
   text-decoration: none;
   font-weight: bold;
-  font-size: 1.1rem;
   font-family: "Quicksand", sans-serif;
-  padding: 0.5rem 1rem;
   border-radius: 8px;
 
   &:hover {
-    color: #230097;
-    transform: scale(1.1);
-    transition: transform 0.2s ease-in-out;
-  }
-
-  @media (min-width: ${breakpoints.tablet}) {
-    padding: 0;
-    border-radius: 0;
+    color: #ffcc00;
   }
 `;
 
 const NavbarIcons = styled.div`
   display: flex;
-  gap: 1.1rem;
+  gap: 17.6px;
   margin-left: auto;
 
   button {
@@ -119,7 +94,7 @@ const NavbarIcons = styled.div`
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    margin-right: 1.5rem;
+    margin-right: 24px;
   }
 `;
 
@@ -129,8 +104,8 @@ const HamburgerMenu = styled.button`
   background-color: transparent;
 
   svg {
-    width: 2rem;
-    height: 2rem;
+    width: 32px;
+    height: 32px;
     color: white;
   }
 
@@ -145,11 +120,11 @@ const HamburgerMenu = styled.button`
 
 const Sidebar = styled.div`
   position: fixed;
-  top: 4rem;
+  top: 64px;
   right: 0;
   min-height: 100%;
   width: auto;
-  background: rgba(248, 205, 218, 0.9);
+  background: rgba(248, 205, 218, 0.947);
   z-index: 100;
   transition: transform 0.3s ease-in-out;
   transform: translateX(100%);
@@ -167,20 +142,24 @@ const Sidebar = styled.div`
 const SidebarLinks = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
   align-items: center;
-  padding: 1rem;
 
   & a {
-    color: #333;
-    font-size: 1.5rem;
+    color: #004aad;
+    font-size: 24px;
     text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  & a:hover {
+    color: #1b93d1;
   }
 `;
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [prevScroll, setPrevScroll] = useState(0);
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
 
@@ -206,7 +185,6 @@ const Navbar = () => {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
 
-    // När man klickar på favoriter, skrollar vi till den rätta sektionen.
     setTimeout(() => {
       const favoritesSection = document.getElementById("favorite-festivals");
 
@@ -228,20 +206,6 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      if (prevScroll > currentScroll) {
-        document.querySelector("nav").style.top = "0";
-      } else {
-        document.querySelector("nav").style.top = "-80px";
-      }
-      setPrevScroll(currentScroll);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScroll]);
 
   return (
     <NavbarContainer>

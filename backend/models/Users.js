@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema(
     favouriteFestivals: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Festival", // ✅ Ensure correct reference
+        ref: "Festival",
       },
     ],
 
@@ -26,12 +26,12 @@ const UserSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Ticket",
           required: true,
-        }, // ✅ Store the actual Ticket ID
+        },
         festivalId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Festival",
           required: true,
-        }, // ✅ Reference festival
+        },
         quantity: { type: Number, required: true, min: 1 },
         purchaseDate: { type: Date, required: true, default: Date.now },
       },
@@ -51,7 +51,7 @@ const UserSchema = new mongoose.Schema(
           default: "Completed",
         },
         paymentDate: { type: Date, default: Date.now },
-        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival" }, // ✅ Link payment to a festival
+        festivalId: { type: mongoose.Schema.Types.ObjectId, ref: "Festival" },
       },
     ],
 
@@ -60,7 +60,6 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ Hash password before saving (only if modified)
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
@@ -80,14 +79,12 @@ UserSchema.methods.addFavoriteFestival = async function (festivalId) {
   }
 };
 
-// ✅ Remove password & sensitive data from API responses
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;
   return user;
 };
 
-// ✅ Ensure proper population of `purchasedTickets`
 UserSchema.methods.getPurchasedTickets = async function () {
   return await this.populate({
     path: "purchasedTickets.festivalId",

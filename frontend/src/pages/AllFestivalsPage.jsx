@@ -22,7 +22,8 @@ const StyledSection = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 16px;
+  margin-top: 64px;
+  padding: 40px 16px;
   text-align: center;
 `;
 
@@ -37,14 +38,14 @@ const PaginationControls = styled.div`
     padding: 10px 15px;
     border: none;
     cursor: pointer;
-    background-color: #007bff;
+    background-color: #004aad;
     color: white;
     border-radius: 5px;
     font-size: 16px;
 
     &:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
+      background-color: #bababa;
+      cursor: auto;
     }
   }
 `;
@@ -65,7 +66,7 @@ const AllFestivals = () => {
   const [uniqueLocations, setUniqueLocations] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const festivalsPerPage = 5; // Change this number as needed
+  const festivalsPerPage = 8;
 
   useEffect(() => {
     const genreQuery = genreFilter ? `&genre=${genreFilter}` : "";
@@ -153,6 +154,7 @@ const AllFestivals = () => {
         sort: prevParams.get("sort") || "",
       };
     });
+    setCurrentPage(1);
   };
 
   const handleSortChange = (newSort) => {
@@ -164,10 +166,10 @@ const AllFestivals = () => {
         location: prevParams.get("location") || "",
       };
     });
+    setCurrentPage(1);
   };
 
-  // Pagination handlers
-  const totalPages = Math.ceil(festivals.length / festivalsPerPage);
+  const totalPages = Math.ceil(filteredFestivals.length / festivalsPerPage);
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -180,6 +182,11 @@ const AllFestivals = () => {
       setCurrentPage((prevPage) => prevPage - 1);
     }
   };
+
+  const currentFestivals = filteredFestivals.slice(
+    (currentPage - 1) * festivalsPerPage,
+    currentPage * festivalsPerPage
+  );
 
   return (
     <>
@@ -201,14 +208,15 @@ const AllFestivals = () => {
           />
         </StyledControls>
 
-        <FestivalsList festivals={filteredFestivals} aria-live="polite" />
+        <FestivalsList festivals={currentFestivals} aria-live="polite" />
 
-        {/* Pagination Controls */}
         <PaginationControls>
           <button onClick={prevPage} disabled={currentPage === 1}>
             Previous
           </button>
-          <span>Page {currentPage} of {totalPages}</span>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
           <button onClick={nextPage} disabled={currentPage === totalPages}>
             Next
           </button>

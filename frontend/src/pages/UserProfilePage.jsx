@@ -10,7 +10,7 @@ const ProfileContainer = styled.div`
   width: 90%;
   max-width: 1200px;
   margin: 80px auto 40px auto;
-  background: linear-gradient(135deg, #d85a94 0%, #145a7a 100%);
+  background: rgb(216, 90, 148);
   border-radius: 12px;
   padding: 40px 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -22,7 +22,7 @@ const InfoContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: space-between;
+  justify-content: center;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -131,12 +131,9 @@ const Profile = () => {
       }
 
       try {
-        const response = await axios.get(
-          `${API_URL}/users/me/profile`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get(`${API_URL}/users/me/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (isMounted && response.data) {
           setUser(response.data);

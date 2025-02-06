@@ -31,7 +31,6 @@ const CardContent = styled.div`
 `;
 
 const FestivalDetails = styled.p`
-  font-size: 0.9rem;
   color: #f4f4f4;
   margin: 4px 0;
   word-wrap: break-word;
@@ -78,7 +77,7 @@ const FavoriteList = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          console.log("Ingen token hittades.");
+          console.log("No token found.");
           return;
         }
 
@@ -89,14 +88,14 @@ const FavoriteList = () => {
         });
 
         if (!response.ok) {
-          console.error("Kunde inte hämta favoriter:", response.statusText);
+          console.error("Could not fetch favorites:", response.statusText);
           return;
         }
 
         const data = await response.json();
         setFavorites(data.favorites);
       } catch (error) {
-        console.error("Fel vid hämtning av favoritfestivaler:", error);
+        console.error("Error fetching favorite festivals:", error);
       }
     };
 
@@ -118,7 +117,7 @@ const FavoriteList = () => {
           setFavorites(data.favorites);
         }
       } catch (error) {
-        console.error("Fel vid hämtning av favoritfestivaler:", error);
+        console.error("Error fetching favorite festivals:", error);
       }
     };
 
@@ -126,7 +125,7 @@ const FavoriteList = () => {
   };
 
   if (favorites.length === 0) {
-    return <p>Du har inga favoriter sparade.</p>;
+    return <p>You have no favorites saved.</p>;
   }
 
   return (

@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Importera Link
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import FestivalsList from "../components/FestivalsList.jsx";
 
 const FestivalSection = styled.section`
   text-align: center;
-  margin: 32px 16px;
-  padding-top: 4rem;
-
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 24px;
-  }
+  margin: 64px 16px 32px 16px;
+  padding-top: 40px;
 `;
 
 const Button = styled.button`
@@ -26,7 +21,7 @@ const Button = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #002f6c;
+    background-color: #1b93d1;
   }
 
   &:focus {
