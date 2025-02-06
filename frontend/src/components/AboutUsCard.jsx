@@ -108,8 +108,8 @@ const AboutUsCard = () => {
             />
             <SubHeading>Cholpon</SubHeading>
             <Text>
-              Cholpon is a Junior Developer with a background in **marketing and
-              product marketing**. She combines technical skills with strategic
+              Cholpon is a Junior Developer with a background in marketing and
+              product marketing. She combines technical skills with strategic
               thinking to build user-friendly solutions while leveraging her
               expertise in branding and market analysis. 🚀
             </Text>
